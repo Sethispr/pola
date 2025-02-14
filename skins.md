@@ -37,14 +37,14 @@
 ### Christmas
 | Rarity  | Skins                                      |
 |--------|------------------------------------------|
-| **Red**  | Redmaster, Yellowflame (2022)                |
-| **Pink** | Golden Rod, Whisper (2022)                   |
-| **Teal**  | Gingerblade (2022), Candy Cane (2023), Iceblade (2024) |
+| Red  | Redmaster, Yellowflame (2022)                |
+| Pink | Golden Rod, Whisper (2022)                   |
+| Teal  | Gingerblade (2022), Candy Cane (2023), Iceblade (2024) |
 
 ### Easter
 | Rarity  | Skins                                      |
 |--------|------------------------------------------|
-| **Pink** | Azurite (2022), Corrupted (2023), Sun Slayer (2024) |
+| Pink | Azurite (2022), Corrupted (2023), Sun Slayer (2024) |
 
 ### Summer
 | Year  | Rarity  | Skins                                      |
@@ -88,8 +88,8 @@
 ### Exquisite Case (Pinks & Reds)
 | Rarity  | Skins                                      |
 |-------|------------------------------------------|
-| **Pink** | Behemoth, Blizzard, Crescendo, Demon, Overseer, Rainbow Periastron (Valentine), Redcliff, Skeletal, Telamonster, Unseen |
-| **Red**  | Bombastic, Crimsonwrath, Sanctum, Surge (Birthday) |
+| Pink | Behemoth, Blizzard, Crescendo, Demon, Overseer, Rainbow Periastron (Valentine), Redcliff, Skeletal, Telamonster, Unseen |
+| Red  | Bombastic, Crimsonwrath, Sanctum, Surge (Birthday) |
 
 ### Other Crates
 
