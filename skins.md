@@ -77,3 +77,171 @@
 | Skin     | Restrictions        |
 |---------|--------------------|
 | Blastoff | Only Pistol        |
+
+# Normal Pinks
+
+# Exquisite Crate Skins
+
+| Skin              | Crate       |
+|------------------|------------|
+| Behemoth         | Exquisite   |
+| Blizzard         | Exquisite   |
+| Crescendo        | Exquisite   |
+| Demon           | Exquisite   |
+| Overseer        | Exquisite   |
+| Rainbow Periastron | Exquisite/Valentine |
+| Redcliff        | Exquisite   |
+| Skeletal        | Exquisite   |
+| Telamonster     | Exquisite   |
+| Unseen          | Exquisite   |
+
+---
+
+# Nature Crate Skins
+
+| Skin        | Crate  |
+|------------|--------|
+| Crystallised | Nature |
+| Elven       | Nature |
+| Molten      | Nature |
+
+---
+
+# Animal Crate Skins
+
+| Skin     | Crate  |
+|---------|--------|
+| Spider   | Animal |
+| Unicorn  | Animal |
+
+---
+
+# Material Crate Skins
+
+| Skin    | Crate    |
+|--------|----------|
+| Crystal | Material |
+
+---
+
+# Future Crate Skins
+
+| Skin      | Crate  |
+|----------|--------|
+| Laser    | Future |
+| Orinthan | Future |
+
+---
+
+# Pattern Crate Skins
+
+| Skin       | Crate   |
+|-----------|--------|
+| Monochrome | Pattern |
+
+---
+
+# Camouflage Crate - Pink
+
+| Skin          | Crate      |
+|--------------|------------|
+| Dragon's Forge | Camouflage |
+| Glacial       | Camouflage |
+
+# Exquisite Crate - Red
+
+| Skin         | Crate      |
+|-------------|-----------|
+| Bombastic   | Exquisite |
+| Crimsonwrath | Exquisite |
+| Sanctum     | Exquisite |
+| Surge       | Exquisite/Birthday |
+
+---
+
+# Refined Crate - Red
+
+| Skin      | Crate    |
+|----------|----------|
+| Archon   | Refined |
+| Breaker  | Refined |
+| Divine   | Refined |
+| Enforcer | Refined |
+| Frosted  | Refined |
+| Hunter   | Refined |
+| Neon     | Refined |
+| Pharaoh  | Refined |
+| Skyward  | Refined |
+| Steampunk | Refined |
+
+---
+
+# Nature Crate - Red
+
+| Skin      | Crate  |
+|----------|--------|
+| Autumnal | Nature |
+| Beach    | Nature |
+| Breeze   | Nature |
+| Earth    | Nature |
+| Ocean    | Nature |
+
+---
+
+# Animal Crate - Red
+
+| Skin              | Crate      |
+|------------------|------------|
+| Bacon           | Animal     |
+| Ivory Periastron | Animal/Valentine |
+| Salmon          | Animal     |
+| Shark           | Animal     |
+| Slither         | Animal     |
+
+---
+
+# Material Crate - Red
+
+| Skin       | Crate     |
+|-----------|-----------|
+| Adurite   | Material  |
+| Bluesteel | Material  |
+| Diamond   | Material/Valentine |
+| Golden    | Material/Birthday |
+| Wooden    | Material  |
+
+---
+
+# Future Crate - Red
+
+| Skin              | Crate   |
+|------------------|---------|
+| Azure Periastron | Future  |
+| Celestial       | Future  |
+| Galactic        | Future  |
+| Green Energy    | Future  |
+| Motherboard     | Future  |
+| Omega           | Future  |
+
+---
+
+# Pattern Crate - Red
+
+| Skin             | Crate     |
+|----------------|-----------|
+| Epicblueness   | Pattern/Birthday |
+| Epicredness    | Pattern/Valentine |
+| Relic          | Pattern   |
+| Sorcus        | Pattern   |
+
+---
+
+# Camouflage Crate - Red
+
+| Skin               | Crate       |
+|-------------------|-------------|
+| Chartreuse Periastron | Camouflage |
+| Fallen           | Camouflage   |
+| Prehistoric      | Camouflage   |
+| Shadow          | Camouflage   |
+| Violet Energy   | Camouflage   |
