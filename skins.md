@@ -2,6 +2,9 @@
 
 ## Case Event Skins
 
+> [!NOTE]  
+> Some skins mentioned here are also obtainable through Exquisite case.
+
 ### Pinks
 | Event              | Skins                                      |
 |-------------------|------------------------------------------|
