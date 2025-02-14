@@ -1,6 +1,6 @@
 # Seasonal Pinks & Reds
 
-## Case Event Skins
+## Seasonal Case Skins
 
 > [!NOTE]  
 > Some skins mentioned here are also obtainable through Exquisite case.
