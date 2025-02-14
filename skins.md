@@ -30,8 +30,8 @@
 ### Christmas
 | Tier   | Skins                                      |
 |--------|------------------------------------------|
-| **Red**  | Redmaster, Yellowflame                 |
-| **Pinks** | Golden Rod, Whisper                   |
+| **Red**  | Redmaster, Yellowflame (2022)                |
+| **Pinks** | Golden Rod, Whisper (2022)                   |
 | **Teal**  | Gingerblade (2022), Candy Cane (2023), Iceblade (2024) |
 
 ### Easter
