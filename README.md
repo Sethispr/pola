@@ -15,7 +15,7 @@
   - **Source** (Case, Event, Bundle)
 
 ### 2. Gather High-Quality Skin Images
-- Get **clear images** of each skin in-game
+- Get **clear images** of each skin in-game (some sources: https://www.youtube.com/watch?v=iZGB3j8N9eQ)
 - Contribution credits if applicable
 
 ### 3. Collect Case & Bundle Images
