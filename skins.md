@@ -28,25 +28,25 @@
 ## Event Bundles
 
 ### Christmas
-| Tier   | Skins                                      |
+| Rarity  | Skins                                      |
 |--------|------------------------------------------|
 | **Red**  | Redmaster, Yellowflame (2022)                |
-| **Pinks** | Golden Rod, Whisper (2022)                   |
+| **Pink** | Golden Rod, Whisper (2022)                   |
 | **Teal**  | Gingerblade (2022), Candy Cane (2023), Iceblade (2024) |
 
 ### Easter
-| Tier   | Skins                                      |
+| Rarity  | Skins                                      |
 |--------|------------------------------------------|
-| **Pinks** | Azurite (2022), Corrupted (2023), Sun Slayer (2024) |
+| **Pink** | Azurite (2022), Corrupted (2023), Sun Slayer (2024) |
 
 ### Summer
-| Year  | Tier   | Skins                                      |
+| Year  | Rarity  | Skins                                      |
 |-------|-------|------------------------------------------|
 | 2023  | **Teal** | Cartoony Rainbow, Cyberlight, Frostburn, Inferno Angel |
 | 2024  | **Teal** | Azure Dragon, Darkness, Vilethorn, Winged |
 
 ### Valentine
-| Year  | Tier   | Skins                                      |
+| Year  | Rarity  | Skins                                      |
 |-------|-------|------------------------------------------|
 | 2025  | **Teal** | Cupid's Revenge, Love Scepter, Wicked Rose |
 
@@ -73,20 +73,20 @@
 ## Crate Skins
 
 ### Exquisite Crate (Pinks & Reds)
-| Tier  | Skins                                      |
+| Rarity  | Skins                                      |
 |-------|------------------------------------------|
 | **Pink** | Behemoth, Blizzard, Crescendo, Demon, Overseer, Rainbow Periastron (Valentine), Redcliff, Skeletal, Telamonster, Unseen |
 | **Red**  | Bombastic, Crimsonwrath, Sanctum, Surge (Birthday) |
 
-### Other Crates
-| Crate       | Pinks                                      | Reds                                      |
+### Other Crates (Alphabetical Order)
+| Crate       | Pink                                       | Red                                       |
 |------------|------------------------------------------|------------------------------------------|
-| **Nature**  | Crystallised, Elven, Molten             | Autumnal, Beach, Breeze, Earth, Ocean   |
 | **Animal**  | Spider, Unicorn                         | Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither |
-| **Material**| Crystal                                 | Adurite, Bluesteel, Diamond (Valentine), Golden (Birthday), Wooden |
-| **Future**  | Laser, Orinthan                         | Azure Periastron, Celestial, Galactic, Green Energy, Motherboard, Omega |
-| **Pattern** | Monochrome                              | Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus |
 | **Camouflage** | Dragon's Forge, Glacial             | Chartreuse Periastron, Fallen, Prehistoric, Shadow, Violet Energy |
+| **Future**  | Laser, Orinthan                         | Azure Periastron, Celestial, Galactic, Green Energy, Motherboard, Omega |
+| **Material**| Crystal                                 | Adurite, Bluesteel, Diamond (Valentine), Golden (Birthday), Wooden |
+| **Nature**  | Crystallised, Elven, Molten             | Autumnal, Beach, Breeze, Earth, Ocean   |
+| **Pattern** | Monochrome                              | Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus |
 | **Refined** (also in Exquisite) | -                                      | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
 
 ---
