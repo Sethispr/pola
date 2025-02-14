@@ -34,25 +34,25 @@
 > Each bundle costs 249 RBX, usually 1 teal is worth 2-3 pinks (?)
 > Event seasonal skins are obtained through event tasks or winning the leaderboard.
 
-### Christmas
+### Christmas Event
 | Rarity  | Skins                                      |
 |--------|------------------------------------------|
 | Red  | Redmaster, Yellowflame (2022)                |
 | Pink | Golden Rod, Whisper (2022)                   |
 | Teal  | Gingerblade (2022), Candy Cane (2023), Iceblade (2024) |
 
-### Easter
+### Easter Event
 | Rarity  | Skins                                      |
 |--------|------------------------------------------|
 | Pink | Azurite (2022), Corrupted (2023), Sun Slayer (2024) |
 
-### Summer
+### Summer Bundle
 | Year  | Rarity  | Skins                                      |
 |-------|-------|------------------------------------------|
 | 2023  | **Teal** | Cartoony Rainbow, Cyberlight, Frostburn, Inferno Angel |
 | 2024  | **Teal** | Azure Dragon, Darkness, Vilethorn, Winged |
 
-### Valentine
+### Valentine Bundle
 | Year  | Rarity  | Skins                                      |
 |-------|-------|------------------------------------------|
 | 2025  | **Teal** | Cupid's Revenge, Love Scepter, Wicked Rose |
