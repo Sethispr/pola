@@ -1,6 +1,6 @@
-[<div align="center">
-  <video src="https://raw.githubusercontent.com/your-username/your-repo/main/assets/demo.mp4" style="max-width: 400px; width: 100%; height: auto;" controls></video>
-</div>](https://s4.ezgif.com/tmp/ezgif-4a161d6fbdec95.gif)
+<div align="center">
+  ![image](https://github.com/user-attachments/assets/dfa64f33-7d96-4c28-8e9e-834ee160cef2)
+</div>
 
 sadb is a terminal-based application or TUI for searching all known skins in SA (reds, pinks, teals). Blazing fast search speeds for filtering skins by name, rarity, event, year tags. The application is built using Rust and uses the `ratatui` crate.
 
