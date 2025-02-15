@@ -2,7 +2,8 @@ use std::collections::HashSet;
 use std::io;
 use std::time::Duration;
 use ratatui::widgets::{Block, Borders, List, ListItem, ListState, Paragraph};
-use ratatui::text::{Span, Line};
+use ratatui::text::{Span, Line, Text};
+use ratatui::widgets::Clear;
 use ratatui::prelude::*;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEventKind, KeyModifiers, MouseEventKind},
@@ -25,28 +26,58 @@ struct AppState {
     skins: Vec<Skin>,
     results: Vec<Skin>,
     list_state: ListState,
+    all_terms: HashSet<String>,
+    suggestion: Option<String>,
+    show_detail: bool,
 }
 
 impl AppState {
     fn new() -> Self {
-        let skins = load_skins();
+        let skins = load_skins(); // Assume this function is defined elsewhere
+        let all_terms = load_all_terms(&skins);
         let results = skins.clone();
         AppState {
             input: String::new(),
             skins,
             results,
             list_state: ListState::default().with_selected(Some(0)),
+            all_terms,
+            suggestion: None,
+            show_detail: false,
         }
     }
 
     fn update_search(&mut self) {
         let binding = self.input.to_lowercase();
         let tags: HashSet<&str> = binding.split_whitespace().collect();
-        self.results = search_skins(&self.skins, &tags);
+        self.results = search_skins(&self.skins, &tags); // Assume this function is defined elsewhere
         self.list_state.select(Some(0));
+        self.update_suggestion();
     }
 
-    // Scroll down the list (same as pressing the down key)
+    fn update_suggestion(&mut self) {
+        let input_parts: Vec<&str> = self.input.split_whitespace().collect();
+        let last_part = input_parts.last().cloned().unwrap_or("").to_lowercase();
+        self.suggestion = None;
+
+        if !last_part.is_empty() {
+            let matcher = fuzzy_matcher::skim::SkimMatcherV2::default();
+            let mut best_score = i64::MIN;
+            let mut best_term = None;
+
+            for term in &self.all_terms {
+                if let Some(score) = matcher.fuzzy_match(term, &last_part) {
+                    if score > best_score {
+                        best_score = score;
+                        best_term = Some(term.clone());
+                    }
+                }
+            }
+
+            self.suggestion = best_term;
+        }
+    }
+
     fn next(&mut self) {
         if let Some(selected) = self.list_state.selected() {
             if selected + 1 < self.results.len() {
@@ -54,7 +85,7 @@ impl AppState {
             }
         }
     }
-    // Scroll up the list (same as pressing the up key)
+
     fn previous(&mut self) {
         if let Some(selected) = self.list_state.selected() {
             if selected > 0 {
@@ -65,7 +96,6 @@ impl AppState {
 }
 
 fn main() -> io::Result<()> {
-    // Setup terminal in raw mode and enter alternate screen.
     enable_raw_mode()?;
     execute!(
         io::stdout(),
@@ -86,11 +116,9 @@ fn main() -> io::Result<()> {
         if event::poll(Duration::from_millis(50))? {
             match event::read()? {
                 Event::Key(key) => {
-                    // Only process key press events.
                     if key.kind != KeyEventKind::Press {
                         continue;
                     }
-                    // Ctrl+L clears the search input.
                     if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('l') {
                         app.input.clear();
                         app.update_search();
@@ -106,23 +134,34 @@ fn main() -> io::Result<()> {
                             app.input.pop();
                             app.update_search();
                         }
-                        KeyCode::Down => {
-                            app.next();
+                        KeyCode::Down => app.next(),
+                        KeyCode::Up => app.previous(),
+                        KeyCode::Home => app.list_state.select(Some(0)),
+                        KeyCode::End => app.list_state.select(Some(app.results.len().saturating_sub(1))),
+                        KeyCode::Tab => {
+                            if let Some(suggestion) = &app.suggestion {
+                                let mut parts: Vec<&str> = app.input.split_whitespace().collect();
+                                if parts.is_empty() {
+                                    app.input = format!("{} ", suggestion);
+                                } else {
+                                    parts.pop();
+                                    parts.push(suggestion);
+                                    app.input = parts.join(" ") + " ";
+                                }
+                                app.update_search();
+                            }
                         }
-                        KeyCode::Up => {
-                            app.previous();
-                        }
-                        KeyCode::Home => {
-                            app.list_state.select(Some(0));
-                        }
-                        KeyCode::End => {
-                            app.list_state.select(Some(app.results.len().saturating_sub(1)));
+                        KeyCode::Enter => {
+                            if app.show_detail {
+                                app.show_detail = false;
+                            } else if app.list_state.selected().is_some() {
+                                app.show_detail = true;
+                            }
                         }
                         _ => {}
                     }
                 }
                 Event::Mouse(mouse_event) => {
-                    // When scrolling, treat MouseWheel events like arrow keys.
                     match mouse_event.kind {
                         MouseEventKind::ScrollDown => app.next(),
                         MouseEventKind::ScrollUp => app.previous(),
@@ -134,7 +173,6 @@ fn main() -> io::Result<()> {
         }
     }
 
-    // Restore terminal state.
     disable_raw_mode()?;
     execute!(
         io::stdout(),
@@ -147,23 +185,52 @@ fn main() -> io::Result<()> {
 }
 
 fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
-    // Create a vertical layout with a search input area, a results list, and a status bar.
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .margin(1)
         .constraints(
             [
-                Constraint::Length(3), // Search input area.
-                Constraint::Min(3),    // Results list.
-                Constraint::Length(1), // Status bar.
+                Constraint::Length(3),
+                Constraint::Min(3),
+                Constraint::Length(1),
             ]
             .as_ref(),
         )
         .split(f.size());
 
-    // Render the search input.
-    let search_input = Paragraph::new(app.input.as_str())
-        .style(Style::default().fg(Color::LightCyan))
+    // Search input with placeholder and suggestions
+    let input_text = if app.input.is_empty() {
+        Text::from(Line::from(Span::styled(
+            "Type to search skins...",
+            Style::default().fg(Color::DarkGray).add_modifier(Modifier::ITALIC),
+        )))
+    } else {
+        let mut line = Line::default();
+        let parts: Vec<&str> = app.input.split_whitespace().collect();
+        let last_part = parts.last().cloned().unwrap_or("");
+        let last_part_lower = last_part.to_lowercase();
+
+        for (i, part) in parts.iter().enumerate() {
+            if i > 0 {
+                line.spans.push(Span::raw(" "));
+            }
+            line.spans.push(Span::raw(*part));
+        }
+
+        if let Some(suggestion) = &app.suggestion {
+            if suggestion.starts_with(&last_part_lower) {
+                let suffix = &suggestion[last_part.len()..];
+                line.spans.push(Span::styled(
+                    suffix,
+                    Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM),
+                ));
+            }
+        }
+
+        Text::from(line)
+    };
+
+    let search_input = Paragraph::new(input_text)
         .block(
             Block::default()
                 .borders(Borders::ALL)
@@ -171,53 +238,184 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         );
     f.render_widget(search_input, chunks[0]);
 
-    // Render the results list.
-    let items: Vec<ListItem> = app.results.iter().enumerate().map(|(i, skin)| {
-        let is_selected = app.list_state.selected() == Some(i);
-        // _base_style is declared but not used; it's here for potential future styling.
-        let _base_style = if is_selected {
-            Style::default().bg(Color::DarkGray).add_modifier(Modifier::BOLD)
-        } else {
-            Style::default()
-        };
+    // Results list or no results message
+    if app.show_detail {
+        render_detail_view(f, app);
+    } else {
+        render_list_view(f, app, chunks[1]);
+    }
 
-        let name = skin.name.clone();
-        let rarity = skin.rarity.clone();
-        let event_name = skin.event.clone();
-        let year = skin.year.map_or("N/A".to_string(), |y| y.to_string());
-        let tags_text = skin.tags.join(", ");
-
-        ListItem::new(Line::from(vec![
-            Span::styled(name, Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
-            Span::raw(" ("),
-            Span::styled(rarity, Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)),
-            Span::raw(" - "),
-            Span::styled(event_name, Style::default().fg(Color::Magenta).add_modifier(Modifier::BOLD)),
-            Span::raw(" - "),
-            Span::styled(year, Style::default().fg(Color::Blue).add_modifier(Modifier::BOLD)),
-            Span::raw(") "),
-            Span::styled(tags_text, Style::default().fg(Color::DarkGray)),
-        ]))
-    }).collect();
-
-    let list = List::new(items)
-        .block(
-            Block::default()
-                .borders(Borders::ALL)
-                .title(format!(
-                    "Results: {} | Selected: {} | ESC: Exit | Ctrl+L: Clear | Home/End: Jump",
-                    app.results.len(),
-                    app.list_state.selected().map(|i| i + 1).unwrap_or(0)
-                ))
-                .border_style(Style::default().fg(Color::White)),
-        )
-        .highlight_style(Style::default().bg(Color::Rgb(70, 70, 70)).add_modifier(Modifier::BOLD));
-    f.render_stateful_widget(list, chunks[1], &mut app.list_state);
-
-    // Render a simple status bar.
-    let status = Paragraph::new("Press ESC to exit.")
+    let status = Paragraph::new("Press ESC to exit | Tab to accept suggestion | Enter: Details")
         .style(Style::default().fg(Color::LightBlue));
     f.render_widget(status, chunks[2]);
+}
+
+fn render_list_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rect) {
+    if app.results.is_empty() {
+        let block = Block::default()
+            .borders(Borders::ALL)
+            .title(format!("Results: 0 | No matches found"))
+            .border_style(Style::default().fg(Color::White));
+
+        let message = Paragraph::new("No results found. Try a different search.")
+            .block(block)
+            .alignment(Alignment::Center)
+            .style(Style::default().fg(Color::Red).add_modifier(Modifier::BOLD));
+        f.render_widget(message, area);
+    } else {
+        let items: Vec<ListItem> = app.results.iter().enumerate().map(|(i, skin)| {
+            let is_selected = app.list_state.selected() == Some(i);
+            let style = if is_selected {
+                Style::default().bg(Color::DarkGray).add_modifier(Modifier::BOLD)
+            } else {
+                Style::default()
+            };
+
+            let name = skin.name.clone();
+            let rarity = skin.rarity.clone();
+            let event_name = skin.event.clone();
+            let year = skin.year.map_or("N/A".to_string(), |y| y.to_string());
+            let tags_text = skin.tags.join(", ");
+
+            ListItem::new(Line::from(vec![
+                Span::styled(name, Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
+                Span::raw(" ("),
+                Span::styled(rarity, Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)),
+                Span::raw(" - "),
+                Span::styled(event_name, Style::default().fg(Color::Magenta).add_modifier(Modifier::BOLD)),
+                Span::raw(" - "),
+                Span::styled(year, Style::default().fg(Color::Blue).add_modifier(Modifier::BOLD)),
+                Span::raw(") "),
+                Span::styled(tags_text, Style::default().fg(Color::DarkGray)),
+            ])).style(style)
+        }).collect();
+
+        let list = List::new(items)
+            .block(
+                Block::default()
+                    .borders(Borders::ALL)
+                    .title(format!(
+                        "Results: {} | Selected: {} | ESC: Exit | Ctrl+L: Clear | Home/End: Jump",
+                        app.results.len(),
+                        app.list_state.selected().map(|i| i + 1).unwrap_or(0)
+                    ))
+                    .border_style(Style::default().fg(Color::White)),
+            )
+            .highlight_style(Style::default().bg(Color::Rgb(70, 70, 70)).add_modifier(Modifier::BOLD));
+        f.render_stateful_widget(list, area, &mut app.list_state);
+    }
+}
+
+fn render_detail_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
+    let area = centered_rect(60, 60, f.size());
+    f.render_widget(Clear, area);
+    
+    let block = Block::default()
+        .borders(Borders::ALL)
+        .title("Skin Details")
+        .style(Style::default().bg(Color::Rgb(30, 30, 30)));
+    f.render_widget(block, area);
+
+    if let Some(selected) = app.list_state.selected() {
+        if let Some(skin) = app.results.get(selected) {
+            let inner_area = area.inner(&Margin { vertical: 1, horizontal: 1 });
+            let chunks = Layout::default()
+                .direction(Direction::Horizontal)
+                .margin(1)
+                .constraints([Constraint::Length(20), Constraint::Min(20)])
+                .split(inner_area);
+
+            // Image placeholder
+            let image_block = Block::default()
+                .borders(Borders::ALL)
+                .title("Image")
+                .style(Style::default().bg(Color::DarkGray));
+            f.render_widget(image_block, chunks[0]);
+
+            // Details text
+            let details = vec![
+                Line::from(vec![
+                    Span::styled("Name: ", Style::default().fg(Color::Cyan)),
+                    Span::styled(&skin.name, Style::default().fg(Color::White)),
+                ]),
+                Line::from(vec![
+                    Span::styled("Rarity: ", Style::default().fg(Color::Yellow)),
+                    Span::styled(&skin.rarity, Style::default().fg(Color::White)),
+                ]),
+                Line::from(vec![
+                    Span::styled("Event: ", Style::default().fg(Color::Magenta)),
+                    Span::styled(&skin.event, Style::default().fg(Color::White)),
+                ]),
+                Line::from(vec![
+                    Span::styled("Year: ", Style::default().fg(Color::Blue)),
+                    Span::styled(
+                        skin.year.map_or(String::from("N/A"), |y| y.to_string()),
+                        Style::default().fg(Color::White)
+                    ),
+                ]),
+                Line::from(vec![
+                    Span::styled("Tags: ", Style::default().fg(Color::Green)),
+                    Span::styled(
+                        skin.tags.join(", "),
+                        Style::default().fg(Color::White)
+                    ),
+                ]),
+            ];
+
+            let details_paragraph = Paragraph::new(details)
+                .block(Block::default().borders(Borders::NONE))
+                .alignment(Alignment::Left);
+            f.render_widget(details_paragraph, chunks[1]);
+        }
+    }
+}
+
+fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
+    let popup_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints(
+            [
+                Constraint::Percentage((100 - percent_y) / 2),
+                Constraint::Percentage(percent_y),
+                Constraint::Percentage((100 - percent_y) / 2),
+            ]
+            .as_ref(),
+        )
+        .split(r);
+
+    Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints(
+            [
+                Constraint::Percentage((100 - percent_x) / 2),
+                Constraint::Percentage(percent_x),
+                Constraint::Percentage((100 - percent_x) / 2),
+            ]
+            .as_ref(),
+        )
+        .split(popup_layout[1])[1]
+}
+
+fn load_all_terms(skins: &[Skin]) -> HashSet<String> {
+    let mut terms = HashSet::new();
+    for skin in skins {
+        terms.insert(skin.name.to_lowercase());
+        for word in skin.name.to_lowercase().split_whitespace() {
+            terms.insert(word.to_string());
+        }
+        terms.insert(skin.event.to_lowercase());
+        for word in skin.event.to_lowercase().split_whitespace() {
+            terms.insert(word.to_string());
+        }
+        for tag in &skin.tags {
+            terms.insert(tag.to_lowercase());
+        }
+        terms.insert(skin.rarity.to_lowercase());
+        if let Some(year) = skin.year {
+            terms.insert(year.to_string());
+        }
+    }
+    terms
 }
 
 fn load_skins() -> Vec<Skin> {
