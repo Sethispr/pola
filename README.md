@@ -64,10 +64,6 @@ Type: pink summer
 
 ---
 
-## Screenshots
-
----
-
 ## Frameworks
 
 - [ratatui](https://github.com/tui-rs-revival/ratatui) for the terminal UI framework.
