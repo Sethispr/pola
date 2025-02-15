@@ -47,11 +47,10 @@ sadb is a terminal-based application or TUI for searching all known skins in SA 
 
 ### Keyboard Shortcuts
 
-- **Type**: Start typing to search for skins.
-- **Tab**: Accept the suggested search term.
-- **Up/Down Arrows**: Navigate through the search results.
+- **Tab**: Automatically fills in the suggested search term.
+- **Up/Down Arrows (or mouse scroll)**: Navigate through the search results.
 - **Home/End**: Jump to the first or last result.
-- **Enter**: View detailed information about the selected skin.
+- **Enter**: View detailed information about the selected skin. (Image and details, confirmed owners soon)
 - **Ctrl+L**: Clear the search input.
 - **Esc**: Exit the application.
 
