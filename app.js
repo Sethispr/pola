@@ -30,7 +30,7 @@ class SkinDatabase {
 
     updateResults() {
         const query = this.input.toLowerCase();
-        const tags = new Set(query.split(/\s+/).filter(t => t);
+        const tags = new Set(query.split(/\s+/).filter(t => t));
 
         this.results = this.searchSkins(tags);
         this.selectedIndex = Math.min(this.selectedIndex, this.results.length - 1);
