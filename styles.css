@@ -1,0 +1,131 @@
+:root {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --accent: #4a90e2;
+    --rarity-pink: #ff69b4;
+    --rarity-red: #ff4444;
+    --rarity-teal: #20b2aa;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.search-container {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+#search {
+    width: 100%;
+    padding: 1rem;
+    background: #2d2d2d;
+    border: 2px solid #3d3d3d;
+    border-radius: 8px;
+    color: white;
+    font-size: 1.1rem;
+}
+
+#search:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.suggestions {
+    position: absolute;
+    width: 100%;
+    background: #333;
+    border-radius: 0 0 8px 8px;
+    display: none;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.results-panel {
+    background: #252525;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr;
+    padding: 1rem;
+    background: #333;
+    font-weight: bold;
+}
+
+.results-list {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.result-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr 1fr;
+    padding: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.result-item:hover {
+    background: #333;
+}
+
+.result-item.selected {
+    background: var(--accent);
+    color: white;
+}
+
+.rarity-pink { color: var(--rarity-pink); }
+.rarity-red { color: var(--rarity-red); }
+.rarity-teal { color: var(--rarity-teal); }
+
+.details-panel {
+    background: #252525;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.details-content > div {
+    margin-bottom: 1rem;
+}
+
+.detail-label {
+    color: #888;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.status-bar {
+    margin-top: 1rem;
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+}
