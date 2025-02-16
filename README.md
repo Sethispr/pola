@@ -53,7 +53,7 @@
 
 ---
 
-## Example Usage of Tags
+### Example Usage of Tags
 
 ```bash
 # Search for skins with the case tag "summer" and the rarity tag "pink"
@@ -62,7 +62,7 @@ Type: pink summer
 
 ---
 
-## Frameworks
+### Frameworks
 
 - [ratatui](https://github.com/tui-rs-revival/ratatui) for the terminal UI framework.
 - [crossterm](https://github.com/crossterm-rs/crossterm) for cross-platform terminal handling.
