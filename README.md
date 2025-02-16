@@ -3,9 +3,9 @@
 </p>
 
 <p align="center">
-    Rust TUI for searching all known skins in SA faster.  
+    <a href="https://sethispr.github.io/sadb/">Online Demo (Unstable)</a>
     <br><br>
-    <a href="https://sethispr.github.io/sadb/">Online Demo</a>
+    Rust TUI for searching all known skins in SA faster.
 </p>
 
 ---
