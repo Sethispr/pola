@@ -4,7 +4,7 @@
 </h1>
 
 <p align="center">
-    sadb is a TUI for searching all known skins in SA faster.
+    Rust TUI for searching all known skins in SA faster.
     <br />
     </p>
 
