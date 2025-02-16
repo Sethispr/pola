@@ -1,174 +1,52 @@
-fn load_skins() -> Vec<Skin> {
-    vec![
-        // Valentine Case
-        Skin { name: "Cupid".to_string(), rarity: "Pink".to_string(), event: "Valentine Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Rainbow Periastron".to_string(), rarity: "Pink".to_string(), event: "Valentine Case (Exquisite)".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Crimson Periastron".to_string(), rarity: "Red".to_string(), event: "Valentine Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Heartsong".to_string(), rarity: "Red".to_string(), event: "Valentine Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Ivory Periastron".to_string(), rarity: "Red".to_string(), event: "Valentine Case (Exquisite)".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Diamond".to_string(), rarity: "Red".to_string(), event: "Valentine Case (Exquisite)".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Epicredness".to_string(), rarity: "Red".to_string(), event: "Valentine Case (Exquisite)".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skin Search</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fuzzysort@2.0.4/fuzzysort.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <div class="search-container">
+      <div class="input-wrapper">
+        <div class="suggestion-background"></div>
+        <div class="search-icon">
+          <i class="ri-search-line"></i>
+        </div>
+        <input type="text" id="search-input" placeholder="Search skins by name, rarity, event...">
+        <div class="suggestions-container"></div>
+        <div class="clear-icon">
+          <i class="ri-close-line"></i>
+        </div>
+      </div>
+      <div id="search-stats"></div>
+    </div>
+    
+    <div class="main-content">
+      <div class="results-container">
+        <div class="table-header"></div>
+        <table id="results-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Rarity</th>
+              <th>Event</th>
+              <th>Year</th>
+              <th>Tags</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      
+      <div class="details-panel" id="skin-details">
+      </div>
+    </div>
+  </div>
 
-        // Birthday Case
-        Skin { name: "Ghostly".to_string(), rarity: "Pink".to_string(), event: "Birthday Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Hellfire".to_string(), rarity: "Pink".to_string(), event: "Birthday Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Surge".to_string(), rarity: "Pink".to_string(), event: "Birthday Case (Exquisite)".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Epicblueness".to_string(), rarity: "Red".to_string(), event: "Birthday Case (Exquisite)".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Golden".to_string(), rarity: "Red".to_string(), event: "Birthday Case (Exquisite)".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Grimgold Periastron".to_string(), rarity: "Red".to_string(), event: "Birthday Case".to_string(), year: None, tags: vec!["case".to_string()] },
-
-        // Easter Case
-        Skin { name: "Spring Growth".to_string(), rarity: "Pink".to_string(), event: "Easter Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Amethyst Periastron".to_string(), rarity: "Red".to_string(), event: "Easter Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Bunny".to_string(), rarity: "Red".to_string(), event: "Easter Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Guitar".to_string(), rarity: "Red".to_string(), event: "Easter Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Joyful Periastron".to_string(), rarity: "Red".to_string(), event: "Easter Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Noir Periastron".to_string(), rarity: "Red".to_string(), event: "Easter Case".to_string(), year: None, tags: vec!["case".to_string()] },
-
-        // Summer Case
-        Skin { name: "Midsummer".to_string(), rarity: "Pink".to_string(), event: "Summer Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Mystic".to_string(), rarity: "Pink".to_string(), event: "Summer Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Void Lord".to_string(), rarity: "Pink".to_string(), event: "Summer Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Warlord".to_string(), rarity: "Pink".to_string(), event: "Summer Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Cythrex".to_string(), rarity: "Red".to_string(), event: "Summer Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Dog".to_string(), rarity: "Red".to_string(), event: "Summer Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Fire Wyvern".to_string(), rarity: "Red".to_string(), event: "Summer Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Ghostfire".to_string(), rarity: "Red".to_string(), event: "Summer Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Inscription".to_string(), rarity: "Red".to_string(), event: "Summer Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Mummy".to_string(), rarity: "Red".to_string(), event: "Summer Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Retrowave".to_string(), rarity: "Red".to_string(), event: "Summer Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Shikai".to_string(), rarity: "Red".to_string(), event: "Summer Case".to_string(), year: None, tags: vec!["case".to_string()] },
-
-        // Halloween Case
-        Skin { name: "All Hallow's".to_string(), rarity: "Pink".to_string(), event: "Halloween Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Anansi".to_string(), rarity: "Pink".to_string(), event: "Halloween Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Dusekkar".to_string(), rarity: "Pink".to_string(), event: "Halloween Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Count".to_string(), rarity: "Red".to_string(), event: "Halloween Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Dracula".to_string(), rarity: "Red".to_string(), event: "Halloween Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Hallowing".to_string(), rarity: "Red".to_string(), event: "Halloween Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Orange Energy".to_string(), rarity: "Red".to_string(), event: "Halloween Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Pumpkin".to_string(), rarity: "Red".to_string(), event: "Halloween Case".to_string(), year: None, tags: vec!["case".to_string()] },
-
-        // Christmas Case
-        Skin { name: "Evergreen".to_string(), rarity: "Pink".to_string(), event: "Christmas Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Icycle".to_string(), rarity: "Pink".to_string(), event: "Christmas Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Santa".to_string(), rarity: "Pink".to_string(), event: "Christmas Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Candy Energy".to_string(), rarity: "Red".to_string(), event: "Christmas Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Festive Periastron".to_string(), rarity: "Red".to_string(), event: "Christmas Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Snowflake".to_string(), rarity: "Red".to_string(), event: "Christmas Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Snowman".to_string(), rarity: "Red".to_string(), event: "Christmas Case".to_string(), year: None, tags: vec!["case".to_string()] },
-
-        // Easter Event
-        Skin { name: "Azurite".to_string(), rarity: "Pink".to_string(), event: "Easter Event".to_string(), year: Some(2022), tags: vec!["event".to_string()] },
-        Skin { name: "Corrupted".to_string(), rarity: "Pink".to_string(), event: "Easter Event".to_string(), year: Some(2023), tags: vec!["event".to_string()] },
-        Skin { name: "Sun Slayer".to_string(), rarity: "Pink".to_string(), event: "Easter Event".to_string(), year: Some(2024), tags: vec!["event".to_string()] },
-
-        // Summer Bundle
-        Skin { name: "Cartoony Rainbow".to_string(), rarity: "Teal".to_string(), event: "Summer Bundle".to_string(), year: Some(2023), tags: vec!["bundle".to_string()] },
-        Skin { name: "Cyberlight".to_string(), rarity: "Teal".to_string(), event: "Summer Bundle".to_string(), year: Some(2023), tags: vec!["bundle".to_string()] },
-        Skin { name: "Frostburn".to_string(), rarity: "Teal".to_string(), event: "Summer Bundle".to_string(), year: Some(2023), tags: vec!["bundle".to_string()] },
-        Skin { name: "Inferno Angel".to_string(), rarity: "Teal".to_string(), event: "Summer Bundle".to_string(), year: Some(2023), tags: vec!["bundle".to_string()] },
-        Skin { name: "Azure Dragon".to_string(), rarity: "Teal".to_string(), event: "Summer Bundle".to_string(), year: Some(2024), tags: vec!["bundle".to_string()] },
-        Skin { name: "Darkness".to_string(), rarity: "Teal".to_string(), event: "Summer Bundle".to_string(), year: Some(2024), tags: vec!["bundle".to_string()] },
-        Skin { name: "Vilethorn".to_string(), rarity: "Teal".to_string(), event: "Summer Bundle".to_string(), year: Some(2024), tags: vec!["bundle".to_string()] },
-        Skin { name: "Winged".to_string(), rarity: "Teal".to_string(), event: "Summer Bundle".to_string(), year: Some(2024), tags: vec!["bundle".to_string()] },
-
-        // Valentine Bundle
-        Skin { name: "Cupid's Revenge".to_string(), rarity: "Teal".to_string(), event: "Valentine Bundle".to_string(), year: Some(2025), tags: vec!["bundle".to_string()] },
-        Skin { name: "Love Scepter".to_string(), rarity: "Teal".to_string(), event: "Valentine Bundle".to_string(), year: Some(2025), tags: vec!["bundle".to_string()] },
-        Skin { name: "Wicked Rose".to_string(), rarity: "Teal".to_string(), event: "Valentine Bundle".to_string(), year: Some(2025), tags: vec!["bundle".to_string()] },
-
-        // Christmas Event
-        Skin { name: "Redmaster".to_string(), rarity: "Red".to_string(), event: "Christmas Event".to_string(), year: Some(2022), tags: vec!["event".to_string()] },
-        Skin { name: "Yellowflame".to_string(), rarity: "Red".to_string(), event: "Christmas Event".to_string(), year: Some(2022), tags: vec!["event".to_string()] },
-        Skin { name: "Goldenrod".to_string(), rarity: "Pink".to_string(), event: "Christmas Event".to_string(), year: Some(2022), tags: vec!["event".to_string()] },
-        Skin { name: "Whisper".to_string(), rarity: "Pink".to_string(), event: "Christmas Event".to_string(), year: Some(2022), tags: vec!["event".to_string()] },
-        Skin { name: "Gingerblade".to_string(), rarity: "Teal".to_string(), event: "Christmas Event".to_string(), year: Some(2022), tags: vec!["event".to_string()] },
-        Skin { name: "Candy Cane".to_string(), rarity: "Teal".to_string(), event: "Christmas Event".to_string(), year: Some(2023), tags: vec!["event".to_string()] },
-        Skin { name: "Iceblade".to_string(), rarity: "Teal".to_string(), event: "Christmas Event".to_string(), year: Some(2024), tags: vec!["event".to_string()] },
-
-        // Code Redeemed Skins (Teal)
-        Skin { name: "Bubbles".to_string(), rarity: "Teal".to_string(), event: "Code Redeemed".to_string(), year: None, tags: vec!["code".to_string()] },
-        Skin { name: "Butter".to_string(), rarity: "Teal".to_string(), event: "Code Redeemed".to_string(), year: None, tags: vec!["code".to_string()] },
-        Skin { name: "Fireworks".to_string(), rarity: "Teal".to_string(), event: "Code Redeemed".to_string(), year: None, tags: vec!["code".to_string()] },
-        Skin { name: "Pearl".to_string(), rarity: "Teal".to_string(), event: "Code Redeemed".to_string(), year: None, tags: vec!["code".to_string()] },
-        Skin { name: "Tin".to_string(), rarity: "Teal".to_string(), event: "Code Redeemed".to_string(), year: None, tags: vec!["code".to_string()] },
-
-        // Launch Skins (Teal)
-        Skin { name: "Blastoff".to_string(), rarity: "Teal".to_string(), event: "Launch".to_string(), year: None, tags: vec!["launch".to_string()] },
-
-        // Exquisite Case (Pinks & Reds)
-        Skin { name: "Behemoth".to_string(), rarity: "Pink".to_string(), event: "Exquisite Case".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Blizzard".to_string(), rarity: "Pink".to_string(), event: "Exquisite Case".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Crescendo".to_string(), rarity: "Pink".to_string(), event: "Exquisite Case".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Demon".to_string(), rarity: "Pink".to_string(), event: "Exquisite Case".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Overseer".to_string(), rarity: "Pink".to_string(), event: "Exquisite Case".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Redcliff".to_string(), rarity: "Pink".to_string(), event: "Exquisite Case".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Skeletal".to_string(), rarity: "Pink".to_string(), event: "Exquisite Case".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Telamonster".to_string(), rarity: "Pink".to_string(), event: "Exquisite Case".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Unseen".to_string(), rarity: "Pink".to_string(), event: "Exquisite Case".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Bombastic".to_string(), rarity: "Red".to_string(), event: "Exquisite Case".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Crimsonwrath".to_string(), rarity: "Red".to_string(), event: "Exquisite Case".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-        Skin { name: "Sanctum".to_string(), rarity: "Red".to_string(), event: "Exquisite Case".to_string(), year: None, tags: vec!["case".to_string(), "exquisite".to_string()] },
-
-        // Animal Case
-        Skin { name: "Spider".to_string(), rarity: "Pink".to_string(), event: "Animal Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Unicorn".to_string(), rarity: "Pink".to_string(), event: "Animal Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Bacon".to_string(), rarity: "Red".to_string(), event: "Animal Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Salmon".to_string(), rarity: "Red".to_string(), event: "Animal Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Shark".to_string(), rarity: "Red".to_string(), event: "Animal Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Slither".to_string(), rarity: "Red".to_string(), event: "Animal Case".to_string(), year: None, tags: vec!["case".to_string()] },
-
-        // Camouflage Case
-        Skin { name: "Dragon's Forge".to_string(), rarity: "Pink".to_string(), event: "Camouflage Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Glacial".to_string(), rarity: "Pink".to_string(), event: "Camouflage Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Chartreuse Periastron".to_string(), rarity: "Red".to_string(), event: "Camouflage Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Fallen".to_string(), rarity: "Red".to_string(), event: "Camouflage Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Prehistoric".to_string(), rarity: "Red".to_string(), event: "Camouflage Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Shadow".to_string(), rarity: "Red".to_string(), event: "Camouflage Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Violet Energy".to_string(), rarity: "Red".to_string(), event: "Camouflage Case".to_string(), year: None, tags: vec!["case".to_string()] },
-
-        // Future Case
-        Skin { name: "Laser".to_string(), rarity: "Pink".to_string(), event: "Future Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Orinthan".to_string(), rarity: "Pink".to_string(), event: "Future Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Azure Periastron".to_string(), rarity: "Red".to_string(), event: "Future Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Celestial".to_string(), rarity: "Red".to_string(), event: "Future Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Galactic".to_string(), rarity: "Red".to_string(), event: "Future Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Green Energy".to_string(), rarity: "Red".to_string(), event: "Future Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Motherboard".to_string(), rarity: "Red".to_string(), event: "Future Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Omega".to_string(), rarity: "Red".to_string(), event: "Future Case".to_string(), year: None, tags: vec!["case".to_string()] },
-
-        // Material Case
-        Skin { name: "Crystal".to_string(), rarity: "Pink".to_string(), event: "Material Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Adurite".to_string(), rarity: "Red".to_string(), event: "Material Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Bluesteel".to_string(), rarity: "Red".to_string(), event: "Material Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Wooden".to_string(), rarity: "Red".to_string(), event: "Material Case".to_string(), year: None, tags: vec!["case".to_string()] },
-
-        // Nature Case
-        Skin { name: "Crystallised".to_string(), rarity: "Pink".to_string(), event: "Nature Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Elven".to_string(), rarity: "Pink".to_string(), event: "Nature Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Molten".to_string(), rarity: "Pink".to_string(), event: "Nature Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Autumnal".to_string(), rarity: "Red".to_string(), event: "Nature Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Beach".to_string(), rarity: "Red".to_string(), event: "Nature Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Breeze".to_string(), rarity: "Red".to_string(), event: "Nature Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Earth".to_string(), rarity: "Red".to_string(), event: "Nature Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Ocean".to_string(), rarity: "Red".to_string(), event: "Nature Case".to_string(), year: None, tags: vec!["case".to_string()] },
-
-        // Pattern Case
-        Skin { name: "Monochrome".to_string(), rarity: "Pink".to_string(), event: "Pattern Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Relic".to_string(), rarity: "Red".to_string(), event: "Pattern Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Sorcus".to_string(), rarity: "Red".to_string(), event: "Pattern Case".to_string(), year: None, tags: vec!["case".to_string()] },
-
-        // Refined Case
-        Skin { name: "Archon".to_string(), rarity: "Red".to_string(), event: "Refined Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Breaker".to_string(), rarity: "Red".to_string(), event: "Refined Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Divine".to_string(), rarity: "Red".to_string(), event: "Refined Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Enforcer".to_string(), rarity: "Red".to_string(), event: "Refined Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Frosted".to_string(), rarity: "Red".to_string(), event: "Refined Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Hunter".to_string(), rarity: "Red".to_string(), event: "Refined Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Neon".to_string(), rarity: "Red".to_string(), event: "Refined Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Pharaoh".to_string(), rarity: "Red".to_string(), event: "Refined Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Skyward".to_string(), rarity: "Red".to_string(), event: "Refined Case".to_string(), year: None, tags: vec!["case".to_string()] },
-        Skin { name: "Steampunk".to_string(), rarity: "Red".to_string(), event: "Refined Case".to_string(), year: None, tags: vec!["case".to_string()] },
-    ]
-}
+  <script src="main.js"></script>
+</body>
+</html>
