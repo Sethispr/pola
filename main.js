@@ -98,20 +98,6 @@ const MOCK_SKINS = [
     tags: ["launch"]
   },
   {
-    name: "Dragon Slayer",
-    rarity: "Legendary",
-    event: "Summer Games",
-    year: 2023,
-    tags: ["Dragon", "Fantasy", "Epic"]
-  },
-  {
-    name: "Neon Rider",
-    rarity: "Epic",
-    event: "Anniversary",
-    year: 2022,
-    tags: ["Cyberpunk", "Colorful"]
-  },
-  {
     name: "Ivory Periastron",
     rarity: "Red", 
     event: "Valentine Case (Exquisite)",
@@ -167,7 +153,6 @@ const MOCK_SKINS = [
     year: null,
     tags: ["case"]
   },
-  // Additional Skins
   {
     name: "Epicredness",
     rarity: "Red",
