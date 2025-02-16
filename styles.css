@@ -203,16 +203,22 @@ body {
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid var(--border-color);
+  max-height: 100%;
 }
 
-.table-header {
-  padding: 1rem;
-  border-bottom: 1px solid var(--border-color);
+.table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+}
+
+tbody {
+  overflow-y: auto;
 }
 
 th, td {
@@ -222,11 +228,12 @@ th, td {
 }
 
 th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   background: var(--highlight-bg);
   color: var(--text-secondary);
   font-weight: 500;
-  position: sticky;
-  top: 0;
   font-size: 0.875rem;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -236,13 +243,6 @@ tr {
   transition: background-color 0.1s ease;
   will-change: background-color;
   transform: translateZ(0);
-}
-
-tr:nth-child(even) {
-  background: var(--highlight-bg);
-}
-
-tr:nth-child(odd) {
   background: var(--secondary-bg);
 }
 
@@ -329,9 +329,26 @@ tr.selected {
   border: 1px solid var(--border-color);
 }
 
-.rarity-Pink { color: var(--accent-pink); }
-.rarity-Red { color: var(--accent-red); }
-.rarity-Teal { color: var(--accent-teal); }
+.rarity-Pink { 
+  color: var(--accent-pink);
+  font-weight: 600;
+}
+.rarity-Red { 
+  color: var(--accent-red);
+  font-weight: 600;
+}
+.rarity-Teal { 
+  color: var(--accent-teal);
+  font-weight: 600;
+}
+.rarity-Legendary {
+  color: #ffd700;
+  font-weight: 600;
+}
+.rarity-Epic {
+  color: #9147ff;
+  font-weight: 600;
+}
 
 ::-webkit-scrollbar {
   width: 8px;
