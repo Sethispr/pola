@@ -1185,4 +1185,3 @@ class AppState {
 
 const app = new AppState();
 window.app = app;
-
