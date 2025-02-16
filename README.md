@@ -93,4 +93,6 @@ Made by [sethyl](https://github.com/sethispr)
 - Add db to nerd discord bot? use the dropdown list embed for filtering
 - Scammer/duper watchlist username
 - Comment section/forum (no login required)
+- Maps images, escape location, spawn, etc
+- All stuff in sa
   
