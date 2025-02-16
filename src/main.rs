@@ -1,12 +1,14 @@
 use std::collections::HashSet;
 use std::io;
 use std::time::Duration;
-use ratatui::widgets::{Block, Borders, List, ListItem, ListState, Paragraph};
-use ratatui::text::{Span, Line, Text};
-use ratatui::widgets::Clear;
-use ratatui::prelude::*;
+use ratatui::{
+    prelude::*,
+    widgets::*,
+    text::{Line, Span},
+    layout::Constraint,
+};
 use crossterm::{
-    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEventKind, KeyModifiers, MouseEventKind},
+    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEventKind, KeyModifiers, MouseButton, MouseEventKind},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -25,35 +27,44 @@ struct AppState {
     input: String,
     skins: Vec<Skin>,
     results: Vec<Skin>,
-    list_state: ListState,
+    table_state: TableState,
     all_terms: HashSet<String>,
     suggestion: Option<String>,
-    show_detail: bool,
 }
 
 impl AppState {
     fn new() -> Self {
-        let skins = load_skins(); // Assume this function is defined elsewhere
+        let skins = load_skins();
         let all_terms = load_all_terms(&skins);
         let results = skins.clone();
         AppState {
             input: String::new(),
             skins,
             results,
-            list_state: ListState::default().with_selected(Some(0)),
+            table_state: TableState::default().with_selected(Some(0)),
             all_terms,
             suggestion: None,
-            show_detail: false,
         }
     }
 
     fn update_search(&mut self) {
-        let binding = self.input.to_lowercase();
-        let tags: HashSet<&str> = binding.split_whitespace().collect();
-        self.results = search_skins(&self.skins, &tags); // Assume this function is defined elsewhere
-        self.list_state.select(Some(0));
-        self.update_suggestion();
+    if self.input.trim().is_empty() {
+        // When no search text is provided, clone all skins and sort them alphabetically (case-insensitively)
+        self.results = self.skins.clone();
+        self.results.sort_by(|a, b| {
+            a.name.to_lowercase().cmp(&b.name.to_lowercase())
+        });
+        self.table_state.select(Some(0));
+        self.suggestion = None;
+        return;
     }
+    // Otherwise, update search using the fuzzy matching logic.
+    let binding = self.input.to_lowercase();
+    let tags: HashSet<&str> = binding.split_whitespace().collect();
+    self.results = search_skins(&self.skins, &tags);
+    self.table_state.select(Some(0));
+    self.update_suggestion();
+}
 
     fn update_suggestion(&mut self) {
         let input_parts: Vec<&str> = self.input.split_whitespace().collect();
@@ -79,19 +90,17 @@ impl AppState {
     }
 
     fn next(&mut self) {
-        if let Some(selected) = self.list_state.selected() {
-            if selected + 1 < self.results.len() {
-                self.list_state.select(Some(selected + 1));
-            }
-        }
+        let i = self.table_state.selected().map_or(0, |i| {
+            if i + 1 < self.results.len() { i + 1 } else { i }
+        });
+        self.table_state.select(Some(i));
     }
 
     fn previous(&mut self) {
-        if let Some(selected) = self.list_state.selected() {
-            if selected > 0 {
-                self.list_state.select(Some(selected - 1));
-            }
-        }
+        let i = self.table_state.selected().map_or(0, |i| {
+            if i > 0 { i - 1 } else { 0 }
+        });
+        self.table_state.select(Some(i));
     }
 }
 
@@ -136,8 +145,8 @@ fn main() -> io::Result<()> {
                         }
                         KeyCode::Down => app.next(),
                         KeyCode::Up => app.previous(),
-                        KeyCode::Home => app.list_state.select(Some(0)),
-                        KeyCode::End => app.list_state.select(Some(app.results.len().saturating_sub(1))),
+                        KeyCode::Home => app.table_state.select(Some(0)),
+                        KeyCode::End => app.table_state.select(Some(app.results.len().saturating_sub(1))),
                         KeyCode::Tab => {
                             if let Some(suggestion) = &app.suggestion {
                                 let mut parts: Vec<&str> = app.input.split_whitespace().collect();
@@ -151,13 +160,6 @@ fn main() -> io::Result<()> {
                                 app.update_search();
                             }
                         }
-                        KeyCode::Enter => {
-                            if app.show_detail {
-                                app.show_detail = false;
-                            } else if app.list_state.selected().is_some() {
-                                app.show_detail = true;
-                            }
-                        }
                         _ => {}
                     }
                 }
@@ -165,6 +167,16 @@ fn main() -> io::Result<()> {
                     match mouse_event.kind {
                         MouseEventKind::ScrollDown => app.next(),
                         MouseEventKind::ScrollUp => app.previous(),
+                        MouseEventKind::Down(button) => {
+                            let area = terminal.size()?;
+                            let table_start_row = 4; // Adjust based on your layout
+                            if mouse_event.row >= table_start_row && mouse_event.row < area.height - 1 {
+                                let idx = (mouse_event.row - table_start_row) as usize;
+                                if idx < app.results.len() {
+                                    app.table_state.select(Some(idx));
+                                }
+                            }
+                        }
                         _ => {}
                     }
                 }
@@ -198,7 +210,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         )
         .split(f.size());
 
-    // Search input with placeholder and suggestions
+    // Search input
     let input_text = if app.input.is_empty() {
         Text::from(Line::from(Span::styled(
             "Type to search skins...",
@@ -234,105 +246,89 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         .block(
             Block::default()
                 .borders(Borders::ALL)
-                .title("Search (e.g., 'pink summer')".bold()),
+                .title("Search [Ex: Pink Summer]".bold()),
         );
     f.render_widget(search_input, chunks[0]);
 
-    // Results list or no results message
-    if app.show_detail {
-        render_detail_view(f, app);
-    } else {
-        render_list_view(f, app, chunks[1]);
-    }
+    // Main content area
+    let main_chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Percentage(60), Constraint::Percentage(40)])
+        .split(chunks[1]);
 
-    let status = Paragraph::new("Press ESC to exit | Tab to accept suggestion | Enter: Details")
+    // Results table
+    render_table_view(f, app, main_chunks[0]);
+    // Detail panel
+    render_detail_panel(f, app, main_chunks[1]);
+
+    // Status bar
+    let status = Paragraph::new("Press ESC to exit | Tab to accept suggestion | Scroll to select")
         .style(Style::default().fg(Color::LightBlue));
     f.render_widget(status, chunks[2]);
 }
 
-fn render_list_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rect) {
+fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rect) {
     if app.results.is_empty() {
         let block = Block::default()
             .borders(Borders::ALL)
-            .title(format!("Results: 0 | No matches found"))
-            .border_style(Style::default().fg(Color::White));
+            .title("No results found. Try a different search.")
+            .border_style(Style::default().fg(Color::Red));
 
-        let message = Paragraph::new("No results found. Try a different search.")
+        let message = Paragraph::new("No matches found")
             .block(block)
             .alignment(Alignment::Center)
             .style(Style::default().fg(Color::Red).add_modifier(Modifier::BOLD));
         f.render_widget(message, area);
     } else {
-        let items: Vec<ListItem> = app.results.iter().enumerate().map(|(i, skin)| {
-            let is_selected = app.list_state.selected() == Some(i);
-            let style = if is_selected {
-                Style::default().bg(Color::DarkGray).add_modifier(Modifier::BOLD)
-            } else {
-                Style::default()
-            };
+        let header = Row::new(vec!["Name", "Rarity", "Event", "Year", "Tags"])
+            .style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
 
-            let name = skin.name.clone();
-            let rarity = skin.rarity.clone();
-            let event_name = skin.event.clone();
-            let year = skin.year.map_or("N/A".to_string(), |y| y.to_string());
-            let tags_text = skin.tags.join(", ");
-
-            ListItem::new(Line::from(vec![
-                Span::styled(name, Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
-                Span::raw(" ("),
-                Span::styled(rarity, Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)),
-                Span::raw(" - "),
-                Span::styled(event_name, Style::default().fg(Color::Magenta).add_modifier(Modifier::BOLD)),
-                Span::raw(" - "),
-                Span::styled(year, Style::default().fg(Color::Blue).add_modifier(Modifier::BOLD)),
-                Span::raw(") "),
-                Span::styled(tags_text, Style::default().fg(Color::DarkGray)),
-            ])).style(style)
+        let rows: Vec<Row> = app.results.iter().map(|skin| {
+            let year = skin.year.map_or(String::from("N/A"), |y| y.to_string());
+            Row::new(vec![
+                Line::from(Span::styled(&skin.name, Style::default().fg(Color::Cyan))),
+                Line::from(Span::styled(&skin.rarity, Style::default().fg(Color::White))),
+                Line::from(Span::styled(&skin.event, Style::default().fg(Color::Magenta))),
+                Line::from(Span::styled(year, Style::default().fg(Color::Blue))),
+                Line::from(Span::styled(skin.tags.join(", "), Style::default().fg(Color::White))),
+            ])
         }).collect();
 
-        let list = List::new(items)
+        let table = Table::new(rows)
+            .header(header)
             .block(
                 Block::default()
                     .borders(Borders::ALL)
                     .title(format!(
-                        "Results: {} | Selected: {} | ESC: Exit | Ctrl+L: Clear | Home/End: Jump",
+                        "Results: {} | Selected: {}",
                         app.results.len(),
-                        app.list_state.selected().map(|i| i + 1).unwrap_or(0)
+                        app.table_state.selected().map(|i| i + 1).unwrap_or(0)
                     ))
-                    .border_style(Style::default().fg(Color::White)),
-            )
-            .highlight_style(Style::default().bg(Color::Rgb(70, 70, 70)).add_modifier(Modifier::BOLD));
-        f.render_stateful_widget(list, area, &mut app.list_state);
+            ) // Closing parenthesis for `.block()`
+            .widths(&[
+                Constraint::Percentage(25),
+                Constraint::Percentage(15),
+                Constraint::Percentage(30),
+                Constraint::Percentage(10),
+                Constraint::Percentage(20),
+            ])
+            .highlight_style(Style::default().bg(Color::DarkGray).add_modifier(Modifier::BOLD));
+
+        f.render_stateful_widget(table, area, &mut app.table_state);
     }
 }
 
-fn render_detail_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
-    let area = centered_rect(60, 60, f.size());
-    f.render_widget(Clear, area);
-    
+fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect) {
     let block = Block::default()
         .borders(Borders::ALL)
-        .title("Skin Details")
+        .title("Details")
         .style(Style::default().bg(Color::Rgb(30, 30, 30)));
+
+    let inner_area = block.inner(area);
     f.render_widget(block, area);
 
-    if let Some(selected) = app.list_state.selected() {
+    if let Some(selected) = app.table_state.selected() {
         if let Some(skin) = app.results.get(selected) {
-            let inner_area = area.inner(&Margin { vertical: 1, horizontal: 1 });
-            let chunks = Layout::default()
-                .direction(Direction::Horizontal)
-                .margin(1)
-                .constraints([Constraint::Length(20), Constraint::Min(20)])
-                .split(inner_area);
-
-            // Image placeholder
-            let image_block = Block::default()
-                .borders(Borders::ALL)
-                .title("Image")
-                .style(Style::default().bg(Color::DarkGray));
-            f.render_widget(image_block, chunks[0]);
-
-            // Details text
             let details = vec![
                 Line::from(vec![
                     Span::styled("Name: ", Style::default().fg(Color::Cyan)),
@@ -364,36 +360,11 @@ fn render_detail_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
 
             let details_paragraph = Paragraph::new(details)
                 .block(Block::default().borders(Borders::NONE))
-                .alignment(Alignment::Left);
-            f.render_widget(details_paragraph, chunks[1]);
+                .alignment(Alignment::Left)
+                .wrap(Wrap { trim: true });
+            f.render_widget(details_paragraph, inner_area);
         }
     }
-}
-
-fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
-    let popup_layout = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints(
-            [
-                Constraint::Percentage((100 - percent_y) / 2),
-                Constraint::Percentage(percent_y),
-                Constraint::Percentage((100 - percent_y) / 2),
-            ]
-            .as_ref(),
-        )
-        .split(r);
-
-    Layout::default()
-        .direction(Direction::Horizontal)
-        .constraints(
-            [
-                Constraint::Percentage((100 - percent_x) / 2),
-                Constraint::Percentage(percent_x),
-                Constraint::Percentage((100 - percent_x) / 2),
-            ]
-            .as_ref(),
-        )
-        .split(popup_layout[1])[1]
 }
 
 fn load_all_terms(skins: &[Skin]) -> HashSet<String> {
@@ -501,7 +472,7 @@ fn load_skins() -> Vec<Skin> {
         // Christmas Event
         Skin { name: "Redmaster".to_string(), rarity: "Red".to_string(), event: "Christmas Event".to_string(), year: Some(2022), tags: vec!["event".to_string()] },
         Skin { name: "Yellowflame".to_string(), rarity: "Red".to_string(), event: "Christmas Event".to_string(), year: Some(2022), tags: vec!["event".to_string()] },
-        Skin { name: "Golden Rod".to_string(), rarity: "Pink".to_string(), event: "Christmas Event".to_string(), year: Some(2022), tags: vec!["event".to_string()] },
+        Skin { name: "Goldenrod".to_string(), rarity: "Pink".to_string(), event: "Christmas Event".to_string(), year: Some(2022), tags: vec!["event".to_string()] },
         Skin { name: "Whisper".to_string(), rarity: "Pink".to_string(), event: "Christmas Event".to_string(), year: Some(2022), tags: vec!["event".to_string()] },
         Skin { name: "Gingerblade".to_string(), rarity: "Teal".to_string(), event: "Christmas Event".to_string(), year: Some(2022), tags: vec!["event".to_string()] },
         Skin { name: "Candy Cane".to_string(), rarity: "Teal".to_string(), event: "Christmas Event".to_string(), year: Some(2023), tags: vec!["event".to_string()] },
