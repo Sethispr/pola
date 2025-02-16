@@ -30,6 +30,8 @@ struct AppState {
     table_state: TableState,
     all_terms: HashSet<String>,
     suggestion: Option<String>,
+    suggestion_list: Vec<String>,
+    suggestion_index: usize,
 }
 
 impl AppState {
@@ -44,48 +46,88 @@ impl AppState {
             table_state: TableState::default().with_selected(Some(0)),
             all_terms,
             suggestion: None,
+            suggestion_list: Vec::new(),
+            suggestion_index: 0,
         }
     }
 
     fn update_search(&mut self) {
-    if self.input.trim().is_empty() {
-        // When no search text is provided, clone all skins and sort them alphabetically (case-insensitively)
-        self.results = self.skins.clone();
-        self.results.sort_by(|a, b| {
-            a.name.to_lowercase().cmp(&b.name.to_lowercase())
-        });
+        if self.input.trim().is_empty() {
+            self.results = self.skins.clone();
+            self.results.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+            self.table_state.select(Some(0));
+            self.suggestion = None;
+            return;
+        }
+        
+        let binding = self.input.to_lowercase();
+        let tags: HashSet<&str> = binding.split_whitespace().collect();
+        self.results = search_skins(&self.skins, &tags);
         self.table_state.select(Some(0));
-        self.suggestion = None;
-        return;
+        self.update_suggestion();
     }
-    // Otherwise, update search using the fuzzy matching logic.
-    let binding = self.input.to_lowercase();
-    let tags: HashSet<&str> = binding.split_whitespace().collect();
-    self.results = search_skins(&self.skins, &tags);
-    self.table_state.select(Some(0));
-    self.update_suggestion();
-}
 
     fn update_suggestion(&mut self) {
         let input_parts: Vec<&str> = self.input.split_whitespace().collect();
-        let last_part = input_parts.last().cloned().unwrap_or("").to_lowercase();
-        self.suggestion = None;
+        let last_part = input_parts.last().cloned().unwrap_or("");
+        let last_part_lower = last_part.to_lowercase();
+        self.suggestion_list.clear();
+        self.suggestion_index = 0;
 
-        if !last_part.is_empty() {
+        if !last_part_lower.is_empty() {
             let matcher = fuzzy_matcher::skim::SkimMatcherV2::default();
-            let mut best_score = i64::MIN;
-            let mut best_term = None;
+            let mut suggestions = Vec::new();
 
             for term in &self.all_terms {
-                if let Some(score) = matcher.fuzzy_match(term, &last_part) {
-                    if score > best_score {
-                        best_score = score;
-                        best_term = Some(term.clone());
-                    }
+                let score = matcher.fuzzy_match(term, &last_part_lower).unwrap_or(i64::MIN);
+                
+                let prefix_boost = if term.starts_with(&last_part_lower) { 1000 } else { 0 };
+                let field_boost = if self.skins.iter().any(|s| 
+                    s.name.to_lowercase() == *term || 
+                    s.event.to_lowercase() == *term
+                ) { 500 } else { 0 };
+
+                if score + prefix_boost + field_boost > 50 {
+                    suggestions.push((score + prefix_boost + field_boost, term.clone()));
                 }
             }
 
-            self.suggestion = best_term;
+            suggestions.sort_by(|a, b| b.0.cmp(&a.0).then_with(|| a.1.cmp(&b.1)));
+            self.suggestion_list = suggestions.into_iter()
+                .map(|(_, term)| term)
+                .take(5)
+                .collect();
+
+            self.suggestion = self.suggestion_list.first().cloned();
+        } else {
+            self.suggestion = None;
+        }
+    }
+
+    fn cycle_suggestion(&mut self, direction: i32) {
+        if !self.suggestion_list.is_empty() {
+            self.suggestion_index = (self.suggestion_index as i32 + direction)
+                .rem_euclid(self.suggestion_list.len() as i32) as usize;
+            self.suggestion = Some(self.suggestion_list[self.suggestion_index].clone());
+        }
+    }
+
+    fn accept_suggestion(&mut self) {
+        if let Some(suggestion) = &self.suggestion {
+            let mut parts: Vec<&str> = self.input.split_whitespace().collect();
+            if parts.is_empty() {
+                self.input = format!("{} ", suggestion);
+            } else {
+                let last_part = parts.last().unwrap().to_lowercase();
+                if suggestion.starts_with(&last_part) {
+                    parts.pop();
+                }
+                parts.push(suggestion);
+                self.input = parts.join(" ") + " ";
+            }
+            self.update_search();
+            self.suggestion_list.clear();
+            self.suggestion_index = 0;
         }
     }
 
@@ -128,11 +170,6 @@ fn main() -> io::Result<()> {
                     if key.kind != KeyEventKind::Press {
                         continue;
                     }
-                    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('l') {
-                        app.input.clear();
-                        app.update_search();
-                        continue;
-                    }
                     match key.code {
                         KeyCode::Esc => break,
                         KeyCode::Char(c) => {
@@ -148,18 +185,13 @@ fn main() -> io::Result<()> {
                         KeyCode::Home => app.table_state.select(Some(0)),
                         KeyCode::End => app.table_state.select(Some(app.results.len().saturating_sub(1))),
                         KeyCode::Tab => {
-                            if let Some(suggestion) = &app.suggestion {
-                                let mut parts: Vec<&str> = app.input.split_whitespace().collect();
-                                if parts.is_empty() {
-                                    app.input = format!("{} ", suggestion);
-                                } else {
-                                    parts.pop();
-                                    parts.push(suggestion);
-                                    app.input = parts.join(" ") + " ";
-                                }
-                                app.update_search();
+                            if key.modifiers.contains(KeyModifiers::SHIFT) {
+                                app.cycle_suggestion(-1);
+                            } else {
+                                app.cycle_suggestion(1);
                             }
                         }
+                        KeyCode::Right => app.accept_suggestion(),
                         _ => {}
                     }
                 }
@@ -169,7 +201,7 @@ fn main() -> io::Result<()> {
                         MouseEventKind::ScrollUp => app.previous(),
                         MouseEventKind::Down(button) => {
                             let area = terminal.size()?;
-                            let table_start_row = 4; // Adjust based on your layout
+                            let table_start_row = 6;
                             if mouse_event.row >= table_start_row && mouse_event.row < area.height - 1 {
                                 let idx = (mouse_event.row - table_start_row) as usize;
                                 if idx < app.results.len() {
@@ -200,61 +232,81 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .margin(1)
-        .constraints(
-            [
-                Constraint::Length(3),
-                Constraint::Min(3),
-                Constraint::Length(1),
-            ]
-            .as_ref(),
-        )
+        .constraints([
+            Constraint::Length(3),
+            Constraint::Length(5),
+            Constraint::Min(3),
+            Constraint::Length(1),
+        ])
         .split(f.size());
 
     // Search input
-    let input_text = if app.input.is_empty() {
-        Text::from(Line::from(Span::styled(
-            "Type to search skins...",
-            Style::default().fg(Color::DarkGray).add_modifier(Modifier::ITALIC),
-        )))
-    } else {
-        let mut line = Line::default();
-        let parts: Vec<&str> = app.input.split_whitespace().collect();
-        let last_part = parts.last().cloned().unwrap_or("");
-        let last_part_lower = last_part.to_lowercase();
+let input_text = if app.input.is_empty() {
+    Text::from(Line::from(Span::styled(
+        "Type to search skins...",
+        Style::default().fg(Color::DarkGray).add_modifier(Modifier::ITALIC),
+    )))
+} else {
+    let mut line = Line::default();
+    let parts: Vec<&str> = app.input.split_whitespace().collect();
+    let last_part = parts.last().cloned().unwrap_or("");
+    let last_part_lower = last_part.to_lowercase();
 
-        for (i, part) in parts.iter().enumerate() {
-            if i > 0 {
-                line.spans.push(Span::raw(" "));
-            }
-            line.spans.push(Span::raw(*part));
+    for (i, part) in parts.iter().enumerate() {
+        if i > 0 {
+            line.spans.push(Span::raw(" "));
         }
+        line.spans.push(Span::raw(*part));
+    }
 
-        if let Some(suggestion) = &app.suggestion {
-            if suggestion.starts_with(&last_part_lower) {
-                let suffix = &suggestion[last_part.len()..];
-                line.spans.push(Span::styled(
-                    suffix,
-                    Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM),
-                ));
-            }
+    if let Some(suggestion) = &app.suggestion {
+        if suggestion.starts_with(&last_part_lower) {
+            let suffix = &suggestion[last_part.len()..];
+            line.spans.push(Span::styled(
+                suffix,
+                Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM),
+            ));
         }
+    }
 
-        Text::from(line)
-    };
+    Text::from(line)
+};
 
     let search_input = Paragraph::new(input_text)
-        .block(
-            Block::default()
-                .borders(Borders::ALL)
-                .title("Search [Ex: Pink Summer]".bold()),
-        );
+        .block(Block::default().borders(Borders::ALL).title("Search [Ex: Pink Summer]".bold()));
     f.render_widget(search_input, chunks[0]);
+
+    // Suggestions list
+    let suggestions: Vec<ListItem> = app.suggestion_list.iter()
+        .map(|t| {
+            let count = app.skins.iter()
+                .filter(|s| 
+                    s.name.to_lowercase() == *t ||
+                    s.event.to_lowercase() == *t ||
+                    s.tags.contains(&t.to_lowercase())
+                )
+                .count();
+            
+            let mut spans = vec![Span::styled(t, Style::default().fg(Color::Yellow))];
+            spans.push(Span::styled(format!(" ({})", count), Style::default().fg(Color::DarkGray)));
+            
+            ListItem::new(Line::from(spans))
+        })
+        .collect();
+    
+    let mut list_state = ListState::default();
+    list_state.select(Some(app.suggestion_index));
+    let suggestion_list = List::new(suggestions)
+        .block(Block::default().title("Suggestions").borders(Borders::ALL))
+        .highlight_style(Style::default().bg(Color::DarkGray));
+    
+    f.render_stateful_widget(suggestion_list, chunks[1], &mut list_state);
 
     // Main content area
     let main_chunks = Layout::default()
         .direction(Direction::Horizontal)
         .constraints([Constraint::Percentage(60), Constraint::Percentage(40)])
-        .split(chunks[1]);
+        .split(chunks[2]);
 
     // Results table
     render_table_view(f, app, main_chunks[0]);
@@ -262,9 +314,9 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     render_detail_panel(f, app, main_chunks[1]);
 
     // Status bar
-    let status = Paragraph::new("Press ESC to exit | Tab to accept suggestion | Scroll to select")
+    let status = Paragraph::new("Press ESC to exit | Tab to cycle suggestions | → to accept | Scroll to select")
         .style(Style::default().fg(Color::LightBlue));
-    f.render_widget(status, chunks[2]);
+    f.render_widget(status, chunks[3]);
 }
 
 fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rect) {
