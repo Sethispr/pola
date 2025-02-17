@@ -38,8 +38,8 @@
 
 2. Build and run the application
    ```bash
-   cargo build
-   cargo run
+   cargo build --release
+   cargo run --release
    ```
    
 ---
