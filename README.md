@@ -12,7 +12,7 @@
 
 ## Installation
 
-Install the .exe from the Releases page
+Install the .exe from the Releases Page OR
 
 ### Steps
 
