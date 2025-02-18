@@ -294,7 +294,7 @@ fn main() -> io::Result<()> {
                     MouseEventKind::ScrollUp => app.previous(),
                     MouseEventKind::Down(_button) => {
                         let area = terminal.size()?;
-                        let table_start_row = 6;
+                        let table_start_row = 11;
                         if mouse_event.row >= table_start_row && mouse_event.row < area.height - 1 {
                             let idx = (mouse_event.row - table_start_row) as usize;
                             if idx < app.results.len() {
