@@ -12,9 +12,7 @@
 
 ## Installation
 
-Install the .exe from the Releases Page OR
-
-### Steps
+Install the .exe from the <a href="https://github.com/Sethispr/sadb/releases/tag/v0.12a">Release Page</a> OR
 
 1. Clone the repository:
    ```bash
