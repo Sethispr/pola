@@ -342,6 +342,8 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
             let help_text = vec![
                 Line::from("[CTRL+L] : Clear search bar"),
                 Line::from("[CTRL+H] : Show this help page"),
+                Line::from("[CTRL+Z] : Undo input in search bar"),
+                Line::from("[CTRL+Y] : Redo input in search bar"),
                 Line::from("[UP/DOWN ▲▼] Or Mouse Scroll: Navigate results"),
                 Line::from("[TAB]: Cycle suggestions"),
                 Line::from("[HOME/END] : Jump to first/last result"),
