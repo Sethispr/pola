@@ -29,6 +29,8 @@ Install the .exe from the <a href="https://github.com/Sethispr/sadb/releases/tag
 > [!IMPORTANT]  
 > You need to first download the latest stable version of Rust, downloading Cargo and Git.
 
+---
+
 ### Example Usage of Tags
 
 ```bash
