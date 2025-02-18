@@ -3,9 +3,11 @@
 </p>
 
 <p align="center">
-    <h2><a href="https://sethispr.github.io/sadb/">Online Demo (Incomplete Skins)</a>
-    <br><br>
-    Rust TUI for searching all known skins in SA faster.</h2>
+    <h3>
+      <a href="https://sethispr.github.io/sadb/">Online Demo (Incomplete Skins)</a>
+      <br><br>
+      Rust TUI for searching all known skins in SA faster.
+    </h3>
 </p>
 
 ---
