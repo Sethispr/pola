@@ -21,4 +21,13 @@ features to-do's:
 - add description to detailed view
 - add placeholder images to all skins and start adding skins to assets folder
 - improve auto suggestions (ex: if you type valentine then type sth it should auto suggest a skin in a valentine case)
-- 
+
+website to-do's:
+- make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
+- optimize suggestions speed
+- add all images for the little amount of skins we currently have in website
+- add all skins, images into assets
+- fix tags and help modal and add rarity, value, owner and year tags
+- get owner list thrugh trade-sa or ask people or promote site
+- remove name and rarity from detailed view since its redudant if we have a skin image already showing it
+
