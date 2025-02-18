@@ -52,6 +52,7 @@ struct AppState {
     name_map: HashMap<String, usize>,
     input_history: Vec<String>,
     history_index: usize,
+    scroll_offset: usize,
 }
 
 impl AppState {
@@ -77,6 +78,7 @@ impl AppState {
             name_map,
             input_history: vec![String::new()],
             history_index: 0,
+            scroll_offset: 0,
         }
     }
 
@@ -289,21 +291,55 @@ fn main() -> io::Result<()> {
                         _ => {}
                     }
                 }
-                Event::Mouse(mouse_event) => match mouse_event.kind {
-                    MouseEventKind::ScrollDown => app.next(),
-                    MouseEventKind::ScrollUp => app.previous(),
-                    MouseEventKind::Down(_button) => {
-                        let area = terminal.size()?;
-                        let table_start_row = 11;
-                        if mouse_event.row >= table_start_row && mouse_event.row < area.height - 1 {
-                            let idx = (mouse_event.row - table_start_row) as usize;
-                            if idx < app.results.len() {
-                                app.table_state.select(Some(idx));
+                Event::Mouse(mouse_event) => {
+                    match mouse_event.kind {
+                        MouseEventKind::ScrollDown => {
+                            // Increase the scroll offset and update selection if needed
+                            app.scroll_offset = app.scroll_offset.saturating_add(1);
+                            app.next();
+                        }
+                        MouseEventKind::ScrollUp => {
+                            // Decrease the scroll offset
+                            app.scroll_offset = app.scroll_offset.saturating_sub(1);
+                            app.previous();
+                        }
+                        MouseEventKind::Down(_button) => {
+                            // Recalculate layout to determine the table area
+                            let term_area = terminal.size()?;
+                            let outer_chunks = Layout::default()
+                                .direction(Direction::Vertical)
+                                .margin(1)
+                                .constraints([
+                                    Constraint::Length(3),
+                                    Constraint::Length(5),
+                                    Constraint::Min(3),
+                                    Constraint::Length(1),
+                                ])
+                                .split(term_area);
+                            let main_chunks = Layout::default()
+                                .direction(Direction::Horizontal)
+                                .constraints([
+                                    Constraint::Percentage(60),
+                                    Constraint::Percentage(40),
+                                ])
+                                .split(outer_chunks[2]);
+                            let table_area = main_chunks[0];
+
+                            // Adjust for the block borders and header row
+                            let inner_y = table_area.y + 1; // skip top border
+                            let header_height = 1; // header row height
+                            let results_start_y = inner_y + header_height;
+
+                            // Compute the visible index and then add scroll_offset to get the absolute index
+                            let visible_index = (mouse_event.row - results_start_y) as usize;
+                            let absolute_index = app.scroll_offset + visible_index;
+                            if absolute_index < app.results.len() {
+                                app.table_state.select(Some(absolute_index));
                             }
                         }
+                        _ => {}
                     }
-                    _ => {}
-                },
+                }
                 _ => {}
             }
         }
