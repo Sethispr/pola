@@ -12,7 +12,7 @@
 
 ## Installation
 
-Install the .exe from the [Release Page](https://github.com/Sethispr/sadb/releases/tag/v0.12a) **or** follow these steps:
+Install the .exe from the [Release Page](https://github.com/Sethispr/sadb/releases/tag/v0.12a) or follow these steps:
 
 > [!IMPORTANT]  
 > Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo](https://doc.rust-lang.org/cargo/), and [Git](https://git-scm.com/) first.
