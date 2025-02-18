@@ -85,7 +85,7 @@ const SKIN_COLLECTION = [
     event: "Valentine Bundle",
     year: 2025,
     tags: ["bundle"],
-    img: null
+    img: "https://i.ibb.co/ynPprrzM/IMG-0069.png"
   },
   {
     name: "Midsummer",
