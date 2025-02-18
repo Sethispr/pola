@@ -417,17 +417,40 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         .suggestion_list
         .iter()
         .map(|t| {
+            let lower_t = t.to_lowercase();
+            let style = if let Some(term_info) = app.all_terms.get(&lower_t) {
+                if term_info.is_rarity {
+                    match lower_t.as_str() {
+                        "pink" => Style::default().fg(Color::Magenta),
+                        "red" => Style::default().fg(Color::Red),
+                        "teal" => Style::default().fg(Color::Cyan),
+                        _ => Style::default().fg(Color::White),
+                    }
+                } else if term_info.is_event {
+                    Style::default().fg(Color::Magenta)
+                } else if term_info.is_year {
+                    Style::default().fg(Color::Blue)
+                } else if term_info.is_tag {
+                    Style::default().fg(Color::Green)
+                } else {
+                    Style::default().fg(Color::White)
+                }
+            } else {
+                // Fallback style if the term isn't found
+                Style::default().fg(Color::Yellow)
+            };
+
             let count = app
                 .skins
                 .iter()
                 .filter(|s| {
-                    s.name_lower == *t
-                        || s.event_lower == *t
-                        || s.tags_lower.contains(&t.to_string())
+                    s.name_lower == lower_t
+                        || s.event_lower == lower_t
+                        || s.tags_lower.contains(&lower_t)
                 })
                 .count();
 
-            let mut spans = vec![Span::styled(t, Style::default().fg(Color::Yellow))];
+            let mut spans = vec![Span::styled(t, style)];
             spans.push(Span::styled(
                 format!(" ({})", count),
                 Style::default().fg(Color::DarkGray),
