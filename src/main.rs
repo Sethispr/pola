@@ -326,6 +326,15 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
     Ok(())
 }
 
+fn get_rarity_color(skin: &Skin) -> Color {
+    match skin.rarity_lower.as_str() {
+        "pink" => Color::Magenta,
+        "red" => Color::Red,
+        "teal" => Color::Cyan,
+        _ => Color::White,
+    }
+}
+
 fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
@@ -459,13 +468,13 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
                     Line::from(Span::styled(&skin.name, Style::default().fg(Color::Cyan))),
                     Line::from(Span::styled(
                         &skin.rarity,
-                        Style::default().fg(Color::White),
+                        Style::default().fg(get_rarity_color(skin)),
                     )),
                     Line::from(Span::styled(
                         &skin.event,
                         Style::default().fg(Color::Magenta),
                     )),
-                    Line::from(Span::styled(year, Style::default().fg(Color::Blue))),
+                    Line::from(Span::styled(year, Style::default().fg(Color::Green))),
                     Line::from(Span::styled(
                         skin.tags.join(", "),
                         Style::default().fg(Color::White),
@@ -516,7 +525,7 @@ fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect)
                 ]),
                 Line::from(vec![
                     Span::styled("Rarity: ", Style::default().fg(Color::Yellow)),
-                    Span::styled(&skin.rarity, Style::default().fg(Color::White)),
+                    Span::styled(&skin.rarity, Style::default().fg(get_rarity_color(skin))),
                 ]),
                 Line::from(vec![
                     Span::styled("Event: ", Style::default().fg(Color::Magenta)),
