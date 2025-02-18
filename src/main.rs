@@ -302,6 +302,7 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
                 Line::from("[CTRL+H] : Show this help page"),
                 Line::from("[UP/DOWN ▲▼] Or Mouse Scroll: Navigate results"),
                 Line::from("[TAB]: Cycle suggestions"),
+                Line::from("[HOME/END] : Jump to first/last result"),
                 Line::from("[RIGHT ►] : Accept suggestion and auto-fills"),
                 Line::from("[ESC]: Exit help or exit application"),
             ];
@@ -314,7 +315,7 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
             f.render_widget(paragraph, modal_area);
         })?;
 
-        // Poll for events in help mode; exit help on ESC.
+        // Poll for events in help mode, exit help on ESC.
         if event::poll(Duration::from_millis(50))? {
             if let Event::Key(key) = event::read()? {
                 if key.code == KeyCode::Esc {
@@ -358,18 +359,39 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     } else {
         let mut line = Line::default();
         let parts: Vec<&str> = app.input.split_whitespace().collect();
-        let last_part = parts.last().cloned().unwrap_or("");
-        let last_part_lower = last_part.to_lowercase();
 
         for (i, part) in parts.iter().enumerate() {
             if i > 0 {
                 line.spans.push(Span::raw(" "));
             }
-            line.spans.push(Span::raw(*part));
+            let lower_part = part.to_lowercase();
+            // Determine the style based on term classification
+            let style = if let Some(term_info) = app.all_terms.get(&lower_part) {
+                if term_info.is_rarity {
+                    match lower_part.as_str() {
+                        "pink" => Style::default().fg(Color::Magenta),
+                        "red" => Style::default().fg(Color::Red),
+                        "teal" => Style::default().fg(Color::Cyan),
+                        _ => Style::default().fg(Color::White),
+                    }
+                } else if term_info.is_event {
+                    Style::default().fg(Color::Magenta)
+                } else if term_info.is_year {
+                    Style::default().fg(Color::Blue)
+                } else if term_info.is_tag {
+                    Style::default().fg(Color::Green)
+                } else {
+                    Style::default().fg(Color::White)
+                }
+            } else {
+                Style::default().fg(Color::White)
+            };
+            line.spans.push(Span::styled(*part, style));
         }
 
         if let Some(suggestion) = &app.suggestion {
-            if suggestion.starts_with(&last_part_lower) {
+            let last_part = parts.last().unwrap_or(&"").to_lowercase();
+            if suggestion.starts_with(&last_part) {
                 let suffix = &suggestion[last_part.len()..];
                 line.spans.push(Span::styled(
                     suffix,
