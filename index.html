@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Skin Search</title>
   <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/fuzzysort@2.0.4/fuzzysort.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
@@ -12,7 +12,6 @@
   <div class="app-container">
     <div class="search-container">
       <div class="input-wrapper">
-        <div class="suggestion-background"></div>
         <div class="search-icon">
           <i class="ri-search-line"></i>
         </div>
@@ -22,29 +21,101 @@
           <i class="ri-close-line"></i>
         </div>
       </div>
-      <div id="search-stats"></div>
     </div>
-    
+    <div class="toggle-favorites-container">
+      <button id="toggle-favorites" class="qol-btn" title="Toggle Favorites">
+        <i class="ri-star-line"></i> <span>Favorites</span>
+      </button>
+      <button id="filter-btn" class="qol-btn" title="Filters">
+        <i class="ri-filter-2-line"></i>
+      </button>
+      <button id="help-btn" class="qol-btn" title="Help">
+        <i class="ri-information-line"></i>
+      </button>
+      <button id="random-skin" class="qol-btn" title="Random Skin (Alt+R)">
+        <i class="ri-shuffle-line"></i>
+      </button>
+      <button id="copy-table" class="qol-btn" title="Copy Table (Alt+C)">
+        <i class="ri-clipboard-line"></i>
+      </button>
+      <button id="toggle-details" class="qol-btn" title="Toggle Details Panel (Alt+T)">
+        <i class="ri-eye-line"></i>
+      </button>
+    </div>
+    <!-- Active filters will appear here -->
+    <div id="active-filters" class="active-filters"></div>
+    <div id="search-stats"></div>
+
     <div class="main-content">
       <div class="results-container">
+        <!-- Top pagination and stats will appear here -->
         <div class="table-header"></div>
-        <div class="table-wrapper">
-          <table id="results-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Rarity</th>
-                <th>Event</th>
-                <th>Year</th>
-                <th>Tags</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
+        <table id="results-table">
+          <thead>
+            <tr>
+              <th class="fav-header"><i class="ri-star-line"></i></th>
+              <th data-sort="name">Name</th>
+              <th data-sort="rarity">Rarity</th>
+              <th data-sort="event">Event</th>
+              <th data-sort="year">Year</th>
+              <th data-sort="tags">Tags</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
-      
+
       <div class="details-panel" id="skin-details">
+      </div>
+    </div>
+
+    <!-- Bottom Pagination Controls - REMOVED -->
+    <div id="pagination-controls" class="pagination-controls" style="display:none;"></div>
+
+  </div>
+
+  <!-- Back-To-Top Button - REMOVED -->
+  <!-- <button id="back-to-top" class="back-to-top" title="Back to top">
+    <i class="ri-arrow-up-line"></i>
+  </button> -->
+
+  <div id="help-modal" class="help-modal">
+    <div class="help-modal-content">
+      <button id="help-modal-close" class="help-modal-close">
+        <i class="ri-close-line"></i>
+      </button>
+      <h2>Keyboard Shortcuts</h2>
+      <ul>
+        <li><strong>/</strong>: Focus the search input</li>
+        <li><strong>Arrow Up/Down</strong>: Navigate search results</li>
+        <li><strong>Tab</strong>: Accept first suggestion</li>
+        <li><strong>Esc</strong>: Clear search input</li>
+        <li><strong>Alt+R</strong>: Select a random skin</li>
+        <li><strong>Alt+C</strong>: Copy table contents</li>
+        <li><strong>Alt+T</strong>: Toggle details panel</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Filter Modal -->
+  <div id="filter-modal" class="filter-modal">
+    <div class="filter-modal-content">
+      <button id="filter-modal-close" class="filter-modal-close">
+        <i class="ri-close-line"></i>
+      </button>
+      <h2>Filter Skins</h2>
+      <p>Click tags to cycle through: neutral, include, exclude.</p>
+      <h3>Tag Filters</h3>
+      <div id="filter-tags-container" class="filter-tags-container"></div>
+      <h3>Case Filters</h3>
+      <div id="filter-cases-container" class="filter-tags-container"></div>
+      <div class="filter-modal-actions">
+        <button id="apply-filters" class="qol-btn">
+          <i class="ri-check-line"></i> <span>Apply Filters</span>
+        </button>
+        <button id="cancel-filters" class="qol-btn">
+          <i class="ri-close-line"></i> <span>Cancel</span>
+        </button>
       </div>
     </div>
   </div>
