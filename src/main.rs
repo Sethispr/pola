@@ -295,6 +295,7 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
             let block = Block::default()
                 .title("Help")
                 .borders(Borders::ALL)
+                .border_type(BorderType::Rounded)
                 .border_style(Style::default().fg(Color::LightCyan));
 
             let help_text = vec![
@@ -408,6 +409,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     let search_input = Paragraph::new(input_text).block(
         Block::default()
             .borders(Borders::ALL)
+            .border_type(BorderType::Rounded)
             .border_style(Style::default().fg(Color::Cyan))
             .title("Search [Ex: Pink Summer]".bold()),
     );
@@ -468,6 +470,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
             Block::default()
                 .title("Suggestions")
                 .borders(Borders::ALL)
+                .border_type(BorderType::Rounded)
                 .border_style(Style::default().fg(Color::Cyan)),
         )
         .highlight_style(Style::default().bg(Color::DarkGray));
@@ -486,7 +489,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     render_detail_panel(f, app, main_chunks[1]);
 
     // Status bar
-    let status = Paragraph::new("Press ESC to exit | Tab to cycle suggestions | ► to accept | Scroll or ▲▼ to select | Ctrl + H for Help")
+    let status = Paragraph::new("Press ESC to exit | Ctrl + H for Help | Tab to cycle suggestions | ► to accept | Scroll or ▲▼ to select")
         .style(Style::default().fg(Color::LightBlue));
     f.render_widget(status, chunks[3]);
 }
@@ -539,6 +542,7 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
             .block(
                 Block::default()
                     .borders(Borders::ALL)
+                    .border_type(BorderType::Rounded)
                     .border_style(Style::default().fg(Color::Cyan))
                     .title(format!(
                         "Results: {} | Selected: {}",
@@ -566,6 +570,7 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
 fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect) {
     let block = Block::default()
         .borders(Borders::ALL)
+        .border_type(BorderType::Rounded)
         .border_style(Style::default().fg(Color::Cyan))
         .title("Details")
         .style(Style::default());
