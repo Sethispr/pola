@@ -12,10 +12,13 @@
 
 ## Installation
 
-Install the .exe from the [Release Page](https://github.com/Sethispr/sadb/releases/tag/v0.12a) or follow these steps:
+Install the .exe (not the zip) from the [Release Page](https://github.com/Sethispr/sadb/releases/tag/v0.12a) or follow these steps:
 
-> [!IMPORTANT]  
-> Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo](https://doc.rust-lang.org/cargo/), and [Git](https://git-scm.com/) first.
+> [!NOTE]
+> Windows Defender may flag the .exe as a potential threat since it's not signed. This is a false positive (and signing costs around $200).  
+> To proceed, click **"More info"** and then **"Run anyway"** to install.
+
+Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo](https://doc.rust-lang.org/cargo/), and [Git](https://git-scm.com/) first.
 
 1. Clone the repository:
    ```bash
