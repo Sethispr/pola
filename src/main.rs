@@ -50,6 +50,8 @@ struct AppState {
     suggestion_list: Vec<String>,
     suggestion_index: usize,
     name_map: HashMap<String, usize>,
+    input_history: Vec<String>,
+    history_index: usize,
 }
 
 impl AppState {
@@ -73,6 +75,8 @@ impl AppState {
             suggestion_list: Vec::new(),
             suggestion_index: 0,
             name_map,
+            input_history: vec![String::new()],
+            history_index: 0,
         }
     }
 
@@ -81,7 +85,6 @@ impl AppState {
             self.results = self.skins.clone();
             self.results.sort_by(|a, b| a.name_lower.cmp(&b.name_lower));
             self.table_state.select(Some(0));
-            // Clear any suggestions and reset the index so nothing is shown.
             self.suggestion_list.clear();
             self.suggestion_index = 0;
             self.suggestion = None;
@@ -164,6 +167,7 @@ impl AppState {
             self.update_search();
             self.suggestion_list.clear();
             self.suggestion_index = 0;
+            self.record_input();
         }
     }
 
@@ -184,6 +188,32 @@ impl AppState {
             .selected()
             .map_or(0, |i| if i > 0 { i - 1 } else { 0 });
         self.table_state.select(Some(i));
+    }
+
+    fn record_input(&mut self) {
+        if self.history_index < self.input_history.len() - 1 {
+            self.input_history.truncate(self.history_index + 1);
+        }
+        if self.input_history.last() != Some(&self.input) {
+            self.input_history.push(self.input.clone());
+            self.history_index = self.input_history.len() - 1;
+        }
+    }
+
+    fn undo(&mut self) {
+        if self.history_index > 0 {
+            self.history_index -= 1;
+            self.input = self.input_history[self.history_index].clone();
+            self.update_search();
+        }
+    }
+
+    fn redo(&mut self) {
+        if self.history_index + 1 < self.input_history.len() {
+            self.history_index += 1;
+            self.input = self.input_history[self.history_index].clone();
+            self.update_search();
+        }
     }
 }
 
@@ -213,22 +243,34 @@ fn main() -> io::Result<()> {
                     }
                     match key.code {
                         KeyCode::Esc => break,
+
                         // Ctrl+L: clear the search bar
                         KeyCode::Char('l') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             app.input.clear();
                             app.update_search();
+                            app.record_input();
                         }
                         // Ctrl+H: show help page
                         KeyCode::Char('h') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             show_help(&mut terminal)?;
                         }
+                        // Ctrl+Z: undo input
+                        KeyCode::Char('z') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+                            app.undo();
+                        }
+                        // Ctrl+Y: redo input
+                        KeyCode::Char('y') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+                            app.redo();
+                        }
                         KeyCode::Char(c) => {
                             app.input.push(c);
                             app.update_search();
+                            app.record_input();
                         }
                         KeyCode::Backspace => {
                             app.input.pop();
                             app.update_search();
+                            app.record_input();
                         }
                         KeyCode::Down => app.next(),
                         KeyCode::Up => app.previous(),
@@ -266,7 +308,6 @@ fn main() -> io::Result<()> {
             }
         }
     }
-
     disable_raw_mode()?;
     execute!(
         io::stdout(),
