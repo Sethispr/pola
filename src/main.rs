@@ -408,6 +408,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     let search_input = Paragraph::new(input_text).block(
         Block::default()
             .borders(Borders::ALL)
+            .border_style(Style::default().fg(Color::Cyan))
             .title("Search [Ex: Pink Summer]".bold()),
     );
     f.render_widget(search_input, chunks[0]);
@@ -463,7 +464,12 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     let mut list_state = ListState::default();
     list_state.select(Some(app.suggestion_index));
     let suggestion_list = List::new(suggestions)
-        .block(Block::default().title("Suggestions").borders(Borders::ALL))
+        .block(
+            Block::default()
+                .title("Suggestions")
+                .borders(Borders::ALL)
+                .border_style(Style::default().fg(Color::Cyan)),
+        )
         .highlight_style(Style::default().bg(Color::DarkGray));
 
     f.render_stateful_widget(suggestion_list, chunks[1], &mut list_state);
@@ -530,11 +536,16 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
 
         let table = Table::new(rows)
             .header(header)
-            .block(Block::default().borders(Borders::ALL).title(format!(
-                "Results: {} | Selected: {}",
-                app.results.len(),
-                app.table_state.selected().map(|i| i + 1).unwrap_or(0)
-            )))
+            .block(
+                Block::default()
+                    .borders(Borders::ALL)
+                    .border_style(Style::default().fg(Color::Cyan))
+                    .title(format!(
+                        "Results: {} | Selected: {}",
+                        app.results.len(),
+                        app.table_state.selected().map(|i| i + 1).unwrap_or(0)
+                    )),
+            )
             .widths(&[
                 Constraint::Percentage(30),
                 Constraint::Percentage(10),
@@ -555,8 +566,9 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
 fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect) {
     let block = Block::default()
         .borders(Borders::ALL)
+        .border_style(Style::default().fg(Color::Cyan))
         .title("Details")
-        .style(Style::default().bg(Color::Rgb(30, 30, 30)));
+        .style(Style::default());
 
     let inner_area = block.inner(area);
     f.render_widget(block, area);
