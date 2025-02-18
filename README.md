@@ -14,6 +14,9 @@
 
 Install the .exe from the <a href="https://github.com/Sethispr/sadb/releases/tag/v0.12a">Release Page</a> OR
 
+> [!IMPORTANT]  
+> You need to first install the latest stable version of Rust, Cargo and Git.
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/sethispr/sadb
@@ -26,9 +29,6 @@ Install the .exe from the <a href="https://github.com/Sethispr/sadb/releases/tag
    cargo run --release
    ```
 
-> [!IMPORTANT]  
-> You need to first download the latest stable version of Rust, downloading Cargo and Git.
-
 ---
 
 ### Example Usage of Tags
@@ -40,6 +40,6 @@ Result: Void Lord
 ```
 
 > [!TIP]
-> Tags such as bundle, code, year, event, popular or names are also accepted.
+> Tags such as bundle, code, year, event, rare or popular are also accepted.
 
 ---
