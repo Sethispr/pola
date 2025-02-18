@@ -40,6 +40,6 @@ Result: Void Lord
 ```
 
 > [!TIP]
-> Tags such as bundle, code, year, event, rare or popular are also accepted.
+> Tags such as bundle, code, year, event, periastron, energy, duped, rare or popular are also accepted.
 
 ---
