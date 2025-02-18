@@ -51,7 +51,7 @@ body {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  max-width: 450px;
+  max-width: 380px;
 }
 .input-wrapper {
   position: relative;
