@@ -26,10 +26,18 @@ Install the .exe from the <a href="https://github.com/Sethispr/sadb/releases/tag
    cargo run --release
    ```
 
+> [!IMPORTANT]  
+> You need to first download the latest stable version of Rust, downloading Cargo and Git.
+
 ### Example Usage of Tags
 
 ```bash
-# Search for skins with the case tag "summer" and the rarity tag "pink"
-Type: pink summer
+# Search for skins with the case tag "summer", rarity tag "pink" and a skin containg the word "void"
+Type: pink summer void
+Result: Void Lord
 ```
+
+> [!TIP]
+> Tags such as bundle, code, year, event, popular or names are also accepted.
+
 ---
