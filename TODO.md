@@ -2,11 +2,13 @@ optimizing to-do's:
 
 - reduce allocations
 - more cache-friendly data structures
+- make tags capitalized at first letter?
 - more efficient index-based operations
 - reuse fuzzy matcher instance
 - change fuzzy matching to using nucleo (x8 times faster)
 - use indices instead of cloning entire skin objects
 - compressing term metadata with bitflags in TermInfo reducing memory usage
+- improve tags especially long ones such as valentines case (exquisite) and just separate tags using exquisite and valentines as tags
 
 features to-do's:
 - add value and owner tags
@@ -30,4 +32,6 @@ website to-do's:
 - fix tags and help modal and add rarity, value, owner and year tags
 - get owner list thrugh trade-sa or ask people or promote site
 - remove name and rarity from detailed view since its redudant if we have a skin image already showing it
+- add max-width for images
+- make tags capitalized at first letter
 
