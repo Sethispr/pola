@@ -7,24 +7,24 @@
 
 ### Pinks
 | Event              | Skins                                      |
-|-------------------|------------------------------------------|
-| **Valentine Case** | Cupid, Rainbow Periastron (Exquisite)    |
-| **Birthday Case**  | Ghostly, Hellfire, Surge (Exquisite)     |
-| **April Fool's**   | 33% of Reds (No Dagger)                  |
-| **Easter Case**    | Spring Growth                            |
-| **Summer Case**    | Midsummer, Mystic, Void Lord, Warlord    |
-| **Halloween Case** | All Hallow's, Anansi, Dusekkkar          |
-| **Christmas Case** | Evergreen, Icycle, Santa                 |
+|-----------------------------|------------------------------------------|
+| <kbd>Valentine Case</kbd>    | Cupid, Rainbow Periastron (Exquisite)    |
+| <kbd>Birthday Case</kbd>     | Ghostly, Hellfire, Surge (Exquisite)     |
+| <kbd>April Fool's</kbd>      | 33% of Reds (No Dagger)                  |
+| <kbd>Easter Case</kbd>       | Spring Growth                            |
+| <kbd>Summer Case</kbd>       | Midsummer, Mystic, Void Lord, Warlord    |
+| <kbd>Halloween Case</kbd>    | All Hallow's, Anansi, Dusekkkar          |
+| <kbd>Christmas Case</kbd>    | Evergreen, Icycle, Santa                 |
 
 ### Reds
 | Event              | Skins                                      |
-|-------------------|------------------------------------------|
-| **Valentine Case** | Crimson Periastron, Heartsong, Ivory Periastron (Exquisite), Diamond (Exquisite), Epicredness (Exquisite)            |
-| **Birthday Case**  | Epicblueness (Exquisite), Golden (Exquisite), Grimgold Periastron                      |
-| **Easter Case**    | Amethyst Periastron, Bunny, Guitar, Joyful Periastron, Noir Periastron |
-| **Summer Case**    | Cythrex, Dog, Fire Wyvern, Ghostfire, Inscription, Mummy, Retrowave, Shikai |
-| **Halloween Case** | Count, Dracula, Hallowing, Orange Energy, Pumpkin |
-| **Christmas Case** | Candy Energy, Festive Periastron, Snowflake, Snowman |
+|-----------------------------|------------------------------------------|
+| <kbd>Valentine Case</kbd>    | Crimson Periastron, Heartsong, Ivory Periastron (Exquisite), Diamond (Exquisite), Epicredness (Exquisite)            |
+| <kbd>Birthday Case</kbd>     | Epicblueness (Exquisite), Golden (Exquisite), Grimgold Periastron                      |
+| <kbd>Easter Case</kbd>       | Amethyst Periastron, Bunny, Guitar, Joyful Periastron, Noir Periastron |
+| <kbd>Summer Case</kbd>       | Cythrex, Dog, Fire Wyvern, Ghostfire, Inscription, Mummy, Retrowave, Shikai |
+| <kbd>Halloween Case</kbd>    | Count, Dracula, Hallowing, Orange Energy, Pumpkin |
+| <kbd>Christmas Case</kbd>    | Candy Energy, Festive Periastron, Snowflake, Snowman |
 
 ---
 
@@ -35,27 +35,27 @@
 > Event seasonal skins are obtained through event tasks or winning the leaderboard.
 
 ### Christmas Event
-| Rarity  | Skins                                      |
-|--------|------------------------------------------|
-| **Red**  | Redmaster, Yellowflame (2022)                |
-| **Pink** | Golden Rod, Whisper (2022)                   |
-| **Teal**  | Gingerblade (2022), Candy Cane (2023), Iceblade (2024) |
+| Rarity     | Skins                                      |
+|-------------------|------------------------------------------|
+| <kbd>Red</kbd>     | Redmaster, Yellowflame (2022)                |
+| <kbd>Pink</kbd>    | Golden Rod, Whisper (2022)                   |
+| <kbd>Teal</kbd>    | Gingerblade (2022), Candy Cane (2023), Iceblade (2024) |
 
 ### Easter Event
-| Rarity  | Skins                                      |
-|--------|------------------------------------------|
-| **Pink** | Azurite (2022), Corrupted (2023), Sun Slayer (2024) |
+| <kbd>Rarity</kbd>  | Skins                                      |
+|-------------------|------------------------------------------|
+| <kbd>Pink</kbd>    | Azurite (2022), Corrupted (2023), Sun Slayer (2024) |
 
 ### Summer Bundle
 | Year  | Rarity  | Skins                                      |
-|-------|-------|------------------------------------------|
-| **2023**  | **Teal** | Cartoony Rainbow, Cyberlight, Frostburn, Inferno Angel |
-| **2024**  | **Teal** | Azure Dragon, Darkness, Vilethorn, Winged |
+|------------------|--------------------|------------------------------------------|
+| <kbd>2023</kbd>  | <kbd>Teal</kbd>     | Cartoony Rainbow, Cyberlight, Frostburn, Inferno Angel |
+| <kbd>2024</kbd>  | <kbd>Teal</kbd>     | Azure Dragon, Darkness, Vilethorn, Winged |
 
 ### Valentine Bundle
-| Year  | Rarity  | Skins                                      |
-|-------|-------|------------------------------------------|
-| **2025**  | **Teal** | Cupid's Revenge, Love Scepter, Wicked Rose |
+| Year   | Rarity  | Skins                                      |
+|------------------|--------------------|------------------------------------------|
+| <kbd>2025</kbd>  | <kbd>Teal</kbd>     | Cupid's Revenge, Love Scepter, Wicked Rose |
 
 ---
 
@@ -64,19 +64,19 @@
 > [!NOTE]  
 > These skins are not available to all guns.
 
-### Code Redeened Skins (Teal)
-| Skin       | Guns                                        |
-|-----------|------------------------------------------|
-| **Bubbles**   | SMG, Shotgun, Revolver only              |
-| **Butter**    | Dagger                                    |
-| **Fireworks** | All (including dagger) except SMG, AR, Raygun |
-| **Pearl**     | AR, Shotgun, Raygun only                 |
-| **Tin**       | Atomic, Shotgun only                     |
+### Code Redeemed Skins (Teal)
+| Skin  | Guns                                      |
+|------------------|----------------------------------------------------|
+| <kbd>Bubbles</kbd>    | SMG, Shotgun, Revolver only              |
+| <kbd>Butter</kbd>     | Dagger                                    |
+| <kbd>Fireworks</kbd>  | All (including dagger) except SMG, AR, Raygun |
+| <kbd>Pearl</kbd>      | AR, Shotgun, Raygun only                 |
+| <kbd>Tin</kbd>        | Atomic, Shotgun only                     |
 
 ### Launch Skins (Teal)
 | Skin     | Guns                |
-|---------|--------------------|
-| **Blastoff** | Pistol only        |
+|-------------------|-----------------------------|
+| <kbd>Blastoff</kbd> | Pistol only        |
 
 ---
 
@@ -87,23 +87,23 @@
 
 ### Exquisite Case (Pinks & Reds)
 | Rarity  | Skins                                      |
-|-------|------------------------------------------|
-| **Pink** | Behemoth, Blizzard, Crescendo, Demon, Overseer, Rainbow Periastron (Valentine), Redcliff, Skeletal, Telamonster, Unseen |
-| **Red**  | Bombastic, Crimsonwrath, Sanctum, Surge (Birthday) |
+|-------------------|------------------------------------------|
+| <kbd>Pink</kbd>    | Behemoth, Blizzard, Crescendo, Demon, Overseer, Rainbow Periastron (Valentine), Redcliff, Skeletal, Telamonster, Unseen |
+| <kbd>Red</kbd>     | Bombastic, Crimsonwrath, Sanctum, Surge (Birthday) |
 
 ### Other Crates
 
 > [!NOTE]  
-> Skins in the Refined case is also found in the Exquisite case.
+> Skins in the Refined case are also found in the Exquisite case.
 
-| Case       | Pink                                       | Red                                       |
-|------------|------------------------------------------|------------------------------------------|
-| **Animal**  | Spider, Unicorn                         | Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither |
-| **Camouflage** | Dragon's Forge, Glacial             | Chartreuse Periastron, Fallen, Prehistoric, Shadow, Violet Energy |
-| **Future**  | Laser, Orinthan                         | Azure Periastron, Celestial, Galactic, Green Energy, Motherboard, Omega |
-| **Material**| Crystal                                 | Adurite, Bluesteel, Diamond (Valentine), Golden (Birthday), Wooden |
-| **Nature**  | Crystallised, Elven, Molten             | Autumnal, Beach, Breeze, Earth, Ocean   |
-| **Pattern** | Monochrome                              | Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus |
-| **Refined** (in Exquisite) | -                                      | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
+| Case    | Pink<                                   | <kbd>Red</kbd>                                      |
+|-------------------|-------------------------------------------------|--------------------------------------------------|
+| <kbd>Animal</kbd>  | Spider, Unicorn                                 | Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither |
+| <kbd>Camouflage</kbd>| Dragon's Forge, Glacial                       | Chartreuse Periastron, Fallen, Prehistoric, Shadow, Violet Energy |
+| <kbd>Future</kbd>  | Laser, Orinthan                                 | Azure Periastron, Celestial, Galactic, Green Energy, Motherboard, Omega |
+| <kbd>Material</kbd> | Crystal                                       | Adurite, Bluesteel, Diamond (Valentine), Golden (Birthday), Wooden |
+| <kbd>Nature</kbd>   | Crystallised, Elven, Molten                   | Autumnal, Beach, Breeze, Earth, Ocean   |
+| <kbd>Pattern</kbd>  | Monochrome                                    | Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus |
+| <kbd>Refined</kbd> (in Exquisite) | -                                    | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
 
 ---
