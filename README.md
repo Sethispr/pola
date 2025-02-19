@@ -46,5 +46,6 @@ Result: Void Lord
 
 > [!TIP]
 > Tags such as bundle, code, year, event, periastron, energy, duped, rare or popular are also accepted.
+> If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/sadb) or [Skin List](https://github.com/Sethispr/sadb/blob/main/skins.md)
 
 ---
