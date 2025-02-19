@@ -38,12 +38,12 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
 <summary>Tags List</summary>
 <img src="https://github.com/user-attachments/assets/4d6d2147-6013-4fd7-9c6a-99f8f5074e3a" alt="demo" width="700">
 
-| Tag              | Description                         | Tag              | Description                         |
-|-----------------|-------------------------------------|-----------------|-------------------------------------|
-| <kbd>Event</kbd>       | Event skins                         | <kbd>Bundle</kbd>      | Bundle skins                        |
-| <kbd>Code</kbd>        | Code-redeemed skins                 | <kbd>Launch</kbd>      | Skins obtained from game launch     |
-| <kbd>Case</kbd>        | Case skins                          | <kbd>Red</kbd>         | Red skin rarity                     |
-| <kbd>Pink</kbd>        | Pink skin rarity                    | <kbd>Teal</kbd>        | Teal skin rarity                    |
+| Tag                   | Description                         | Tag                   | Description                         |
+|-----------------------|-------------------------------------|-----------------------|-------------------------------------|
+| <kbd>Event</kbd>      | Event skins                         | <kbd>Bundle</kbd>     | Bundle skins                        |
+| <kbd>Code</kbd>       | Code-redeemed skins                 | <kbd>Launch</kbd>     | Skins obtained from game launch     |
+| <kbd>Case</kbd>       | Case skins                          | <kbd>Red</kbd>        | Red skin rarity                     |
+| <kbd>Pink</kbd>       | Pink skin rarity                    | <kbd>Teal</kbd>       | Teal skin rarity                    |
 | <kbd>2022</kbd>       | 2022 skins                          | <kbd>2023</kbd>       | 2023 skins                          |
 | <kbd>2024</kbd>       | 2024 skins                          | <kbd>2025</kbd>       | 2025 skins                          |
 | <kbd>Valentine</kbd>  | Valentine case skins                | <kbd>Birthday</kbd>   | Birthday case skins                 |
@@ -58,13 +58,13 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
 <details>
 <summary>Keybinds</summary>
 
-| Bind                | Description                      | Bind                | Description                      |
-|---------------------|--------------------------------|---------------------|--------------------------------|
-| <kbd>ctrl+h</kbd>  | Show help                      | <kbd>▲</kbd> <kbd>▼</kbd>  | Navigate results              |
-| <kbd>►</kbd>       | Accept suggestion              | <kbd>tab</kbd>      | Cycle suggestions              |
-| <kbd>home</kbd>    | Go to first                    | <kbd>end</kbd>      | Go to last                     |
-| <kbd>ctrl+l</kbd>  | Clear search input             | <kbd>esc</kbd>      | Close TUI/Help                 |
-| <kbd>ctrl+y</kbd>  | Redo                           | <kbd>ctrl+z</kbd>   | Undo                            |
+| Bind                | Description                    | Bind                       | Description                     |
+|---------------------|--------------------------------|----------------------------|---------------------------------|
+| <kbd>ctrl+h</kbd>   | Show help                      | <kbd>▲</kbd> <kbd>▼</kbd>  | Navigate results                |
+| <kbd>►</kbd>        | Accept suggestion              | <kbd>tab</kbd>             | Cycle suggestions               |
+| <kbd>home</kbd>     | Go to first                    | <kbd>end</kbd>             | Go to last                      |
+| <kbd>ctrl+l</kbd>   | Clear search input             | <kbd>esc</kbd>             | Close TUI/Help                  |
+| <kbd>ctrl+y</kbd>   | Redo                           | <kbd>ctrl+z</kbd>          | Undo                            |
 
 </details>
 
@@ -73,5 +73,3 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
 </table>
 
 </div>
-
----
