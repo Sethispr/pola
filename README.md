@@ -14,12 +14,8 @@
 
 <details>
 <summary>Tags List</summary>
+<img src="https://github.com/user-attachments/assets/4d6d2147-6013-4fd7-9c6a-99f8f5074e3a" alt="demo" width="700">
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/4d6d2147-6013-4fd7-9c6a-99f8f5074e3a" alt="demo" width="700">
-</p>
-
-<div align="center">
 | Tag              | Description                         | Tag              | Description                         |
 |-----------------|-------------------------------------|-----------------|-------------------------------------|
 | <kbd>Event</kbd>       | Event skins                         | <kbd>Bundle</kbd>      | Bundle skins                        |
@@ -35,8 +31,6 @@
 | <kbd>Camouflage</kbd> | Skins from the Camouflage case      | <kbd>Future</kbd>     | Skins from the Future case          |
 | <kbd>Material</kbd>   | Skins from the Material case        | <kbd>Nature</kbd>     | Skins from the Nature case          |
 | <kbd>Pattern</kbd>    | Skins from the Pattern case         | <kbd>Refined</kbd>    | Skins from the Refined case         |
-</div>
-
 </details>
 
 <details>
