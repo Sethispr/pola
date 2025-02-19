@@ -42,18 +42,13 @@ Result: Void Lord
 <details>
 <summary>Keybinds</summary>
 
-| Bind                                                        | Description                          |
-|-------------------------------------------------------------|--------------------------------------|
-| <kbd>ctrl+h</kbd>                                           | Show help                            |
-| <kbd>▲</kbd> <kbd>▼</kbd>                                   | Navigate Results                     |
-| <kbd>►</kbd>                                                | Accept suggestion                    |
-| <kbd>tab</kbd>                                              | Cycle Suggestions                    |
-| <kbd>home</kbd>                                              | Go to first                          |
-| <kbd>end</kbd>                                              | Go to last                           |
-| <kbd>ctrl+l</kbd>                                           | Clear search input                   |
-| <kbd>esc</kbd>                                              | Close TUI/Help                       |
-| <kbd>ctrl+y</kbd>                                           | Redo                                 |
-| <kbd>ctrl+z</kbd>                                           | Undo                                 |
+| Bind                | Description                      | Bind                | Description                      |
+|---------------------|--------------------------------|---------------------|--------------------------------|
+| <kbd>ctrl+h</kbd>  | Show help                      | <kbd>▲</kbd> <kbd>▼</kbd>  | Navigate results              |
+| <kbd>►</kbd>       | Accept suggestion              | <kbd>tab</kbd>      | Cycle suggestions              |
+| <kbd>home</kbd>    | Go to first                    | <kbd>end</kbd>      | Go to last                     |
+| <kbd>ctrl+l</kbd>  | Clear search input             | <kbd>esc</kbd>      | Close TUI/Help                 |
+| <kbd>ctrl+y</kbd>  | Redo                           | <kbd>ctrl+z</kbd>   | Undo                            |
 
 </details>
 
