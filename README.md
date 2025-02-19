@@ -27,7 +27,7 @@ Result: Void Lord
 | <kbd>▲</kbd> <kbd>▼</kbd>                                   | Navigate Results                     |
 | <kbd>►</kbd>                                                | Accept suggestion                    |
 | <kbd>tab</kbd>                                              | Cycle Suggestions                    |
-| <kbd>home/kbd>                                              | Go to first                          |
+| <kbd>home</kbd>                                              | Go to first                          |
 | <kbd>end</kbd>                                              | Go to last                           |
 | <kbd>ctrl+l</kbd>                                           | Clear search input                   |
 | <kbd>esc</kbd>                                              | Close TUI/Help                       |
