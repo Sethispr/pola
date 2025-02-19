@@ -8,6 +8,8 @@
 
 ---
 
+<p align="center">
+
 <table>
 <tr>
 <td>
@@ -71,6 +73,8 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
 </td>
 </tr>
 </table>
+
+</p>
 
 ---
 
