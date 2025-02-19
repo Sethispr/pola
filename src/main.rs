@@ -497,7 +497,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         ])
         .split(f.size());
 
-    // Search input
+    // Build the input text with preserved whitespace and styled terms
     let input_text = if app.input.is_empty() {
         Text::from(Line::from(Span::styled(
             "Type to search skins...",
@@ -507,38 +507,49 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         )))
     } else {
         let mut line = Line::default();
-        let parts: Vec<&str> = app.input.split_whitespace().collect();
+        let mut current_token = String::new();
+        let mut current_is_whitespace = false;
 
-        for (i, part) in parts.iter().enumerate() {
-            if i > 0 {
-                line.spans.push(Span::raw(" "));
-            }
-            let lower_part = part.to_lowercase();
-            let style = if let Some(term_info) = app.all_terms.get(&lower_part) {
-                if term_info.is_rarity {
-                    match lower_part.as_str() {
-                        "pink" => Style::default().fg(Color::Magenta),
-                        "red" => Style::default().fg(Color::Red),
-                        "teal" => Style::default().fg(Color::Cyan),
-                        _ => Style::default().fg(Color::White),
-                    }
-                } else if term_info.is_event {
-                    Style::default().fg(Color::Magenta)
-                } else if term_info.is_year {
-                    Style::default().fg(Color::Blue)
-                } else if term_info.is_tag {
-                    Style::default().fg(Color::Green)
-                } else {
-                    Style::default().fg(Color::White)
+        // Split input into whitespace and term tokens
+        for c in app.input.chars() {
+            if c.is_whitespace() {
+                if !current_is_whitespace && !current_token.is_empty() {
+                    let lower_token = current_token.to_lowercase();
+                    let style = get_term_style(&lower_token, &app.all_terms);
+                    line.spans.push(Span::styled(current_token.clone(), style));
+                    current_token.clear();
                 }
+                current_is_whitespace = true;
+                current_token.push(c);
             } else {
-                Style::default().fg(Color::White)
-            };
-            line.spans.push(Span::styled(*part, style));
+                if current_is_whitespace && !current_token.is_empty() {
+                    line.spans.push(Span::raw(current_token.clone()));
+                    current_token.clear();
+                }
+                current_is_whitespace = false;
+                current_token.push(c);
+            }
         }
 
+        // Add remaining token
+        if !current_token.is_empty() {
+            if current_is_whitespace {
+                line.spans.push(Span::raw(current_token));
+            } else {
+                let lower_token = current_token.to_lowercase();
+                let style = get_term_style(&lower_token, &app.all_terms);
+                line.spans.push(Span::styled(current_token, style));
+            }
+        }
+
+        // Add suggestion suffix if applicable
         if let Some(suggestion) = &app.suggestion {
-            let last_part = parts.last().unwrap_or(&"").to_lowercase();
+            let last_part = app
+                .input
+                .split_whitespace()
+                .last()
+                .unwrap_or("")
+                .to_lowercase();
             if suggestion.starts_with(&last_part) {
                 let suffix = &suggestion[last_part.len()..];
                 line.spans.push(Span::styled(
@@ -560,7 +571,17 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
             .border_style(Style::default().fg(Color::Cyan))
             .title("Search [Ex: Pink Summer]".bold()),
     );
+
     f.render_widget(search_input, chunks[0]);
+
+    // Set the cursor position at the end of the input
+    let inner_area = chunks[0].inner(&Margin {
+        horizontal: 1,
+        vertical: 1,
+    });
+    let cursor_x = inner_area.x + app.input.len() as u16;
+    let cursor_y = inner_area.y;
+    f.set_cursor(cursor_x, cursor_y);
 
     // Suggestions list
     let suggestions: Vec<ListItem> = app
@@ -638,6 +659,29 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     let status = Paragraph::new("Press ESC to exit | Ctrl + H for Help | Tab to cycle suggestions | ► to accept | Scroll or ▲▼ to select")
         .style(Style::default().fg(Color::LightBlue));
     f.render_widget(status, chunks[3]);
+}
+
+fn get_term_style(term: &str, all_terms: &HashMap<String, TermInfo>) -> Style {
+    if let Some(term_info) = all_terms.get(term) {
+        if term_info.is_rarity {
+            match term {
+                "pink" => Style::default().fg(Color::Magenta),
+                "red" => Style::default().fg(Color::Red),
+                "teal" => Style::default().fg(Color::Cyan),
+                _ => Style::default().fg(Color::White),
+            }
+        } else if term_info.is_event {
+            Style::default().fg(Color::Magenta)
+        } else if term_info.is_year {
+            Style::default().fg(Color::Blue)
+        } else if term_info.is_tag {
+            Style::default().fg(Color::Green)
+        } else {
+            Style::default().fg(Color::White)
+        }
+    } else {
+        Style::default().fg(Color::White)
+    }
 }
 
 fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rect) {
