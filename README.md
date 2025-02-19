@@ -1,5 +1,5 @@
 <p align="center">
-https://github.com/user-attachments/assets/1d55332a-fcb1-4c9d-bb39-2898ca704e4d
+  <img src="https://github.com/user-attachments/assets/21f442fd-3ba3-4995-8c04-780c50630012" alt="demo" width="700">
 </p>
 
 <p align="center">
@@ -14,6 +14,10 @@ https://github.com/user-attachments/assets/1d55332a-fcb1-4c9d-bb39-2898ca704e4d
 
 <details>
 <summary>Tags List</summary>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4d6d2147-6013-4fd7-9c6a-99f8f5074e3a" alt="demo" width="700">
+</p>
 
 | Tag              | Description                         | Tag              | Description                         |
 |-----------------|-------------------------------------|-----------------|-------------------------------------|
