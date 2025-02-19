@@ -17,6 +17,13 @@ use std::collections::{HashMap, HashSet};
 use std::io;
 use std::time::Duration;
 
+#[derive(PartialEq, Eq)]
+enum SortField {
+    Name,
+    Rarity,
+    Event,
+}
+
 #[derive(Debug, Clone)]
 struct Skin {
     name: String,
@@ -53,6 +60,8 @@ struct AppState {
     input_history: Vec<String>,
     history_index: usize,
     scroll_offset: usize,
+    sort_field: SortField,
+    sort_descending: bool,
 }
 
 impl AppState {
@@ -65,6 +74,7 @@ impl AppState {
             .collect();
         let all_terms = load_all_terms(&skins);
         let mut results = skins.clone();
+        // Default sort: Name ascending.
         results.sort_by(|a, b| a.name_lower.cmp(&b.name_lower));
         AppState {
             input: String::new(),
@@ -79,13 +89,18 @@ impl AppState {
             input_history: vec![String::new()],
             history_index: 0,
             scroll_offset: 0,
+            sort_field: SortField::Name,
+            sort_descending: false,
         }
     }
 
     fn update_search(&mut self) {
         if self.input.trim().is_empty() {
             self.results = self.skins.clone();
-            self.results.sort_by(|a, b| a.name_lower.cmp(&b.name_lower));
+            // When the search is cleared, default sort is by name ascending.
+            self.sort_field = SortField::Name;
+            self.sort_descending = false;
+            self.sort_results();
             self.table_state.select(Some(0));
             self.suggestion_list.clear();
             self.suggestion_index = 0;
@@ -96,8 +111,50 @@ impl AppState {
         let binding = self.input.to_lowercase();
         let tags: HashSet<&str> = binding.split_whitespace().collect();
         self.results = search_skins(&self.skins, &self.name_map, &tags);
+        // After filtering, sort using current sort settings.
+        self.sort_results();
         self.table_state.select(Some(0));
         self.update_suggestion();
+    }
+
+    fn sort_results(&mut self) {
+        match self.sort_field {
+            SortField::Name => {
+                if self.sort_descending {
+                    self.results.sort_by(|a, b| b.name_lower.cmp(&a.name_lower));
+                } else {
+                    self.results.sort_by(|a, b| a.name_lower.cmp(&b.name_lower));
+                }
+            }
+            SortField::Rarity => {
+                if self.sort_descending {
+                    self.results
+                        .sort_by(|a, b| b.rarity_lower.cmp(&a.rarity_lower));
+                } else {
+                    self.results
+                        .sort_by(|a, b| a.rarity_lower.cmp(&b.rarity_lower));
+                }
+            }
+            SortField::Event => {
+                if self.sort_descending {
+                    self.results
+                        .sort_by(|a, b| b.event_lower.cmp(&a.event_lower));
+                } else {
+                    self.results
+                        .sort_by(|a, b| a.event_lower.cmp(&b.event_lower));
+                }
+            }
+        }
+    }
+
+    fn toggle_sort(&mut self, field: SortField) {
+        if self.sort_field == field {
+            self.sort_descending = !self.sort_descending;
+        } else {
+            self.sort_field = field;
+            self.sort_descending = true;
+        }
+        self.sort_results();
     }
 
     fn update_suggestion(&mut self) {
@@ -294,12 +351,10 @@ fn main() -> io::Result<()> {
                 Event::Mouse(mouse_event) => {
                     match mouse_event.kind {
                         MouseEventKind::ScrollDown => {
-                            // Increase the scroll offset and update selection if needed
                             app.scroll_offset = app.scroll_offset.saturating_add(1);
                             app.next();
                         }
                         MouseEventKind::ScrollUp => {
-                            // Decrease the scroll offset
                             app.scroll_offset = app.scroll_offset.saturating_sub(1);
                             app.previous();
                         }
@@ -328,13 +383,31 @@ fn main() -> io::Result<()> {
                             // Adjust for the block borders and header row
                             let inner_y = table_area.y + 1; // skip top border
                             let header_height = 1; // header row height
-                            let results_start_y = inner_y + header_height;
 
-                            // Compute the visible index and then add scroll_offset to get the absolute index
-                            let visible_index = (mouse_event.row - results_start_y) as usize;
-                            let absolute_index = app.scroll_offset + visible_index;
-                            if absolute_index < app.results.len() {
-                                app.table_state.select(Some(absolute_index));
+                            // Check if the click is within the header row.
+                            if mouse_event.row == inner_y {
+                                // Calculate the relative x position in the table.
+                                let relative_x = mouse_event.column.saturating_sub(table_area.x);
+                                let table_width = table_area.width;
+                                // Based on the header column widths (30%, 10%, 25%, 10%, 25%)
+                                let name_width = (table_width as f32 * 0.30).round() as u16;
+                                let rarity_width = (table_width as f32 * 0.10).round() as u16;
+                                let event_width = (table_width as f32 * 0.25).round() as u16;
+                                if relative_x < name_width {
+                                    app.toggle_sort(SortField::Name);
+                                } else if relative_x < name_width + rarity_width {
+                                    app.toggle_sort(SortField::Rarity);
+                                } else if relative_x < name_width + rarity_width + event_width {
+                                    app.toggle_sort(SortField::Event);
+                                }
+                            } else {
+                                // Otherwise, treat as row selection.
+                                let results_start_y = inner_y + header_height;
+                                let visible_index = (mouse_event.row - results_start_y) as usize;
+                                let absolute_index = app.scroll_offset + visible_index;
+                                if absolute_index < app.results.len() {
+                                    app.table_state.select(Some(absolute_index));
+                                }
                             }
                         }
                         _ => {}
@@ -355,14 +428,11 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-/// This function draws a full-screen help page overlay. It loops until the user presses ESC.
+/// This function draws a full-screen help page overlay.
 fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
     loop {
         terminal.draw(|f| {
-            // Use the full terminal area
             let size = f.size();
-
-            // Create a centered area for the help modal
             let modal_area = Layout::default()
                 .direction(Direction::Vertical)
                 .margin(5)
@@ -395,7 +465,6 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
             f.render_widget(paragraph, modal_area);
         })?;
 
-        // Poll for events in help mode, exit help on ESC.
         if event::poll(Duration::from_millis(50))? {
             if let Event::Key(key) = event::read()? {
                 if key.code == KeyCode::Esc {
@@ -445,7 +514,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                 line.spans.push(Span::raw(" "));
             }
             let lower_part = part.to_lowercase();
-            // Determine the style based on term classification
             let style = if let Some(term_info) = app.all_terms.get(&lower_part) {
                 if term_info.is_rarity {
                     match lower_part.as_str() {
@@ -518,7 +586,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                     Style::default().fg(Color::White)
                 }
             } else {
-                // Fallback style if the term isn't found
                 Style::default().fg(Color::Yellow)
             };
 
@@ -586,7 +653,31 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
             .style(Style::default().fg(Color::Red).add_modifier(Modifier::BOLD));
         f.render_widget(message, area);
     } else {
-        let header = Row::new(vec!["Name", "Rarity", "Event", "Year", "Tags"]).style(
+        // Build header titles
+        let name_header = if app.sort_field == SortField::Name && app.sort_descending {
+            "Name ↓"
+        } else {
+            "Name"
+        };
+        let rarity_header = if app.sort_field == SortField::Rarity && app.sort_descending {
+            "Rarity ↓"
+        } else {
+            "Rarity"
+        };
+        let event_header = if app.sort_field == SortField::Event && app.sort_descending {
+            "Event ↓"
+        } else {
+            "Event"
+        };
+
+        let header = Row::new(vec![
+            name_header,
+            rarity_header,
+            event_header,
+            "Year",
+            "Tags",
+        ])
+        .style(
             Style::default()
                 .fg(Color::Yellow)
                 .add_modifier(Modifier::BOLD),
@@ -2746,7 +2837,6 @@ fn search_skins(
     name_map: &HashMap<String, usize>,
     tags: &HashSet<&str>,
 ) -> Vec<Skin> {
-    // Check for exact name matches first
     let exact_matches: Vec<Skin> = tags
         .iter()
         .filter_map(|tag| name_map.get(*tag))
@@ -2756,12 +2846,10 @@ fn search_skins(
         return exact_matches;
     }
 
-    // AND logic for all tags with scoring
     let matcher = fuzzy_matcher::skim::SkimMatcherV2::default();
     let mut scored_skins: Vec<(i64, &Skin)> = skins
         .iter()
         .filter_map(|skin| {
-            // Check if all tags are present in any field
             let all_tags_matched = tags.iter().all(|&tag| {
                 skin.name_lower.contains(tag)
                     || skin.rarity_lower == tag
@@ -2773,7 +2861,6 @@ fn search_skins(
                 return None;
             }
 
-            // Calculate relevance score
             let mut score = 0;
             for tag in tags {
                 if skin.name_lower.contains(tag) {
