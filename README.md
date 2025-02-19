@@ -1,19 +1,20 @@
 <p align="center">
   <img src="https://github.com/user-attachments/assets/21f442fd-3ba3-4995-8c04-780c50630012" alt="demo" width="700">
-</p>
-
-<p align="center">
-  Rust TUI for searching all known skins in SA faster!
+  <strong>Rust TUI for searching all known skins in SA faster!</strong>
 </p>
 
 ---
+
+<table>
+<tr>
+<td>
 
 > [!TIP]
 > If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/sadb) or [Skin List](https://github.com/Sethispr/sadb/blob/main/skins.md)
 
 ## Installation
 
-Install the .exe (not the zip) from the [Release Page](https://github.com/Sethispr/sadb/releases/tag/v0.12a) or follow these steps:
+[Install - sadb.exe](https://github.com/Sethispr/sadb/releases/tag/v0.12a) or follow these steps:
 
 Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo](https://doc.rust-lang.org/cargo/), and [Git](https://git-scm.com/) first.
 
@@ -28,8 +29,7 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
    cargo build --release
    cargo run --release
    ```
-
----
+### Extras
 
 <details>
 <summary>Tags List</summary>
@@ -64,3 +64,10 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
 | <kbd>ctrl+y</kbd>  | Redo                           | <kbd>ctrl+z</kbd>   | Undo                            |
 
 </details>
+
+</td>
+</tr>
+</table>
+
+---
+
