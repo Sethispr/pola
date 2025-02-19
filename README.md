@@ -25,17 +25,17 @@ Result: Void Lord
 |-----------------|-------------------------------------|-----------------|-------------------------------------|
 | <kbd>Event</kbd>       | Event skins                         | <kbd>Bundle</kbd>      | Bundle skins                        |
 | <kbd>Code</kbd>        | Code-redeemed skins                 | <kbd>Launch</kbd>      | Skins obtained from game launch     |
-| <kbd>Red</kbd>         | Red skin rarity                     | <kbd>Pink</kbd>        | Pink skin rarity                    |
-| <kbd>Teal</kbd>        | Teal skin rarity                    | <kbd>2022</kbd>       | 2022 skins                          |
-| <kbd>2023</kbd>       | 2023 skins                          | <kbd>2024</kbd>       | 2024 skins                          |
-| <kbd>2025</kbd>       | 2025 skins                          | <kbd>Valentine</kbd>  | Valentine case skins                |
-| <kbd>Birthday</kbd>   | Birthday case skins                 | <kbd>Easter</kbd>     | Easter case skins                   |
-| <kbd>Summer</kbd>     | Summer case skins                   | <kbd>Halloween</kbd>  | Halloween case skins                |
-| <kbd>Christmas</kbd>  | Christmas case skins                | <kbd>Exquisite</kbd>  | Exquisite case skins                |
-| <kbd>Animal</kbd>     | Skins from the Animal case          | <kbd>Camouflage</kbd> | Skins from the Camouflage case      |
-| <kbd>Future</kbd>     | Skins from the Future case          | <kbd>Material</kbd>   | Skins from the Material case        |
-| <kbd>Nature</kbd>     | Skins from the Nature case          | <kbd>Pattern</kbd>    | Skins from the Pattern case         |
-| <kbd>Refined</kbd>    | Skins from the Refined case         |                     |                                     |
+| <kbd>Case</kbd>        | Case skins                          | <kbd>Red</kbd>         | Red skin rarity                     |
+| <kbd>Pink</kbd>        | Pink skin rarity                    | <kbd>Teal</kbd>        | Teal skin rarity                    |
+| <kbd>2022</kbd>       | 2022 skins                          | <kbd>2023</kbd>       | 2023 skins                          |
+| <kbd>2024</kbd>       | 2024 skins                          | <kbd>2025</kbd>       | 2025 skins                          |
+| <kbd>Valentine</kbd>  | Valentine case skins                | <kbd>Birthday</kbd>   | Birthday case skins                 |
+| <kbd>Easter</kbd>     | Easter case skins                   | <kbd>Summer</kbd>     | Summer case skins                   |
+| <kbd>Halloween</kbd>  | Halloween case skins                | <kbd>Christmas</kbd>  | Christmas case skins                |
+| <kbd>Exquisite</kbd>  | Exquisite case skins                | <kbd>Animal</kbd>     | Skins from the Animal case          |
+| <kbd>Camouflage</kbd> | Skins from the Camouflage case      | <kbd>Future</kbd>     | Skins from the Future case          |
+| <kbd>Material</kbd>   | Skins from the Material case        | <kbd>Nature</kbd>     | Skins from the Nature case          |
+| <kbd>Pattern</kbd>    | Skins from the Pattern case         | <kbd>Refined</kbd>    | Skins from the Refined case         |
 
 </details>
 
