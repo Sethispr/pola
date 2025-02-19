@@ -46,9 +46,12 @@ website to-do's:
 - add max-width for images
 - make tags capitalized at first letter
 
+github to-do's:
+- neaten out tables in skin.md
+- put all github related md files into a .github folder
+
 tui bugs to fix:
 - suggestion isnt too smart (not contextual), also doesnt clear input after accpeting suggestion
 - after turning off detailed view rarity descending sort feature activates the event descending sort instead
 - ctrl+y redo feature not working
 - click feature doesnt work after 12 results, it offsets
-  
