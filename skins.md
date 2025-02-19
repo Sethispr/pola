@@ -111,6 +111,6 @@
 | <kbd>Material Case</kbd> | Crystal                                       | Adurite, Bluesteel, Diamond (Valentine), Golden (Birthday), Wooden |
 | <kbd>Nature Case</kbd>   | Crystallised, Elven, Molten                   | Autumnal, Beach, Breeze, Earth, Ocean   |
 | <kbd>Pattern Case</kbd>  | Monochrome                                    | Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus |
-| <kbd>Refined Case</kbd> (in Exquisite) | -                                    | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
+| <kbd>Refined Case</kbd>  | -                                    | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
 
 ---
