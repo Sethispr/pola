@@ -26,6 +26,9 @@ features to-do's:
 - fix auto suggestions where if u input sth like "omg" and accept the suggestion omega, omg will still be in search bar which looks not so clean. or when cycling suggestions it happens too
 - add highlight feature like the website where if you type in anything it also shows what you input highlighted in the suggested skins
 - ten results per table page? then cycle through next pages using keybind or arrow button, can also customize amount of results shown per page
+- logging and advanced error handling
+- performance monitoring view and binds for it
+- add scrollbar
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
