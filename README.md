@@ -36,7 +36,9 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
 
 <details>
 <summary>Tags List</summary>
-<img src="https://github.com/user-attachments/assets/4d6d2147-6013-4fd7-9c6a-99f8f5074e3a" alt="demo" width="700">
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4d6d2147-6013-4fd7-9c6a-99f8f5074e3a" alt="demo" width="700">
+</p>
 
 | Tag                   | Description                         | Tag                   | Description                         |
 |-----------------------|-------------------------------------|-----------------------|-------------------------------------|
