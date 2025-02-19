@@ -2767,7 +2767,7 @@ fn search_skins(
                     || skin.rarity_lower == tag
                     || skin.event_lower.contains(tag)
                     || skin.year_str == tag
-                    || skin.tags_lower.contains(&tag.to_string())
+                    || skin.tags_lower.contains(tag)
             });
             if !all_tags_matched {
                 return None;
