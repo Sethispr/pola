@@ -6,8 +6,6 @@
   <strong>Rust TUI for searching all known skins in SA faster!</strong>
 </p>
 
----
-
 <div align="center">
 
 <table>
