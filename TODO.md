@@ -23,6 +23,7 @@ features to-do's:
 - add description to detailed view
 - add placeholder images to all skins and start adding skins to assets folder
 - improve auto suggestions (ex: if you type valentine then type sth it should auto suggest a skin in a valentine case)
+- fix auto suggestions where if u input sth like "omg" and accept the suggestion omega, omg will still be in search bar which looks not so clean. or when cycling suggestions it happens too
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
