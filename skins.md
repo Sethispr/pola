@@ -37,25 +37,25 @@
 ### Christmas Event
 | Rarity  | Skins                                      |
 |--------|------------------------------------------|
-| Red  | Redmaster, Yellowflame (2022)                |
-| Pink | Golden Rod, Whisper (2022)                   |
-| Teal  | Gingerblade (2022), Candy Cane (2023), Iceblade (2024) |
+| **Red**  | Redmaster, Yellowflame (2022)                |
+| **Pink** | Golden Rod, Whisper (2022)                   |
+| **Teal**  | Gingerblade (2022), Candy Cane (2023), Iceblade (2024) |
 
 ### Easter Event
 | Rarity  | Skins                                      |
 |--------|------------------------------------------|
-| Pink | Azurite (2022), Corrupted (2023), Sun Slayer (2024) |
+| **Pink** | Azurite (2022), Corrupted (2023), Sun Slayer (2024) |
 
 ### Summer Bundle
 | Year  | Rarity  | Skins                                      |
 |-------|-------|------------------------------------------|
-| 2023  | **Teal** | Cartoony Rainbow, Cyberlight, Frostburn, Inferno Angel |
-| 2024  | **Teal** | Azure Dragon, Darkness, Vilethorn, Winged |
+| **2023**  | **Teal** | Cartoony Rainbow, Cyberlight, Frostburn, Inferno Angel |
+| **2024**  | **Teal** | Azure Dragon, Darkness, Vilethorn, Winged |
 
 ### Valentine Bundle
 | Year  | Rarity  | Skins                                      |
 |-------|-------|------------------------------------------|
-| 2025  | **Teal** | Cupid's Revenge, Love Scepter, Wicked Rose |
+| **2025**  | **Teal** | Cupid's Revenge, Love Scepter, Wicked Rose |
 
 ---
 
@@ -67,16 +67,16 @@
 ### Code Redeened Skins (Teal)
 | Skin       | Guns                                        |
 |-----------|------------------------------------------|
-| Bubbles   | SMG, Shotgun, Revolver only              |
-| Butter    | Dagger                                    |
-| Fireworks | All (including dagger) except SMG, AR, Raygun |
-| Pearl     | AR, Shotgun, Raygun only                 |
-| Tin       | Atomic, Shotgun only                     |
+| **Bubbles**   | SMG, Shotgun, Revolver only              |
+| **Butter**    | Dagger                                    |
+| **Fireworks** | All (including dagger) except SMG, AR, Raygun |
+| **Pearl**     | AR, Shotgun, Raygun only                 |
+| **Tin**       | Atomic, Shotgun only                     |
 
 ### Launch Skins (Teal)
 | Skin     | Guns                |
 |---------|--------------------|
-| Blastoff | Pistol only        |
+| **Blastoff** | Pistol only        |
 
 ---
 
@@ -88,8 +88,8 @@
 ### Exquisite Case (Pinks & Reds)
 | Rarity  | Skins                                      |
 |-------|------------------------------------------|
-| Pink | Behemoth, Blizzard, Crescendo, Demon, Overseer, Rainbow Periastron (Valentine), Redcliff, Skeletal, Telamonster, Unseen |
-| Red  | Bombastic, Crimsonwrath, Sanctum, Surge (Birthday) |
+| **Pink** | Behemoth, Blizzard, Crescendo, Demon, Overseer, Rainbow Periastron (Valentine), Redcliff, Skeletal, Telamonster, Unseen |
+| **Red**  | Bombastic, Crimsonwrath, Sanctum, Surge (Birthday) |
 
 ### Other Crates
 
