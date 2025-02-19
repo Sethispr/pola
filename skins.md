@@ -10,7 +10,6 @@
 |-----------------------------|------------------------------------------|
 | <kbd>Valentine Case</kbd>    | Cupid, Rainbow Periastron (Exquisite)    |
 | <kbd>Birthday Case</kbd>     | Ghostly, Hellfire, Surge (Exquisite)     |
-| <kbd>April Fool's</kbd>      | 33% of Reds (No Dagger)                  |
 | <kbd>Easter Case</kbd>       | Spring Growth                            |
 | <kbd>Summer Case</kbd>       | Midsummer, Mystic, Void Lord, Warlord    |
 | <kbd>Halloween Case</kbd>    | All Hallow's, Anansi, Dusekkkar          |
@@ -21,6 +20,7 @@
 |-----------------------------|------------------------------------------|
 | <kbd>Valentine Case</kbd>    | Crimson Periastron, Heartsong, Ivory Periastron (Exquisite), Diamond (Exquisite), Epicredness (Exquisite)            |
 | <kbd>Birthday Case</kbd>     | Epicblueness (Exquisite), Golden (Exquisite), Grimgold Periastron                      |
+| <kbd>April Fool's</kbd>      | 33% of Reds (No Dagger)                  |
 | <kbd>Easter Case</kbd>       | Amethyst Periastron, Bunny, Guitar, Joyful Periastron, Noir Periastron |
 | <kbd>Summer Case</kbd>       | Cythrex, Dog, Fire Wyvern, Ghostfire, Inscription, Mummy, Retrowave, Shikai |
 | <kbd>Halloween Case</kbd>    | Count, Dracula, Hallowing, Orange Energy, Pumpkin |
@@ -28,11 +28,11 @@
 
 ---
 
-## Global Event Skins and Event Bundle Skins
+## Event Skins and Event Bundle Skins
 
 > [!NOTE]  
-> Each bundle costs 249 RBX, usually 1 teal is worth 2-3 pinks (?)
-> Event seasonal skins are obtained through event tasks or winning the leaderboard.
+> Each bundle costs 249 RBX, usually 1 teal is worth 2-3 pinks Newer ones are worth 2-3 reds.
+> Event seasonal skins are obtained through event tasks or finishing top 100 in leaderboard.
 
 ### Christmas Event
 | Rarity     | Skins                                      |
