@@ -59,7 +59,7 @@
 
 ---
 
-### Code Redeemed Skins (Teal)
+## Code Redeemed Skins (Teal)
 
 > [!NOTE]  
 > These skins are not available to all guns.
@@ -74,7 +74,7 @@
 
 ---
 
-### Launch Skins (Teal)
+## Launch Skins (Teal)
 
 > [!NOTE]
 > The only current known user with all guns of Blastoff skin is iceman_dashe.
