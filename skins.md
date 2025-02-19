@@ -73,13 +73,14 @@
 | Pearl    | AR, Shotgun, Raygun only                 |
 | Tin        | Atomic, Shotgun only                     |
 
+
+> [!NOTE]
+> The only current known user with all guns of Blastoff skin is iceman_dashe.
+
 ### Launch Skins (Teal)
 | Skin     | Guns                |
 |-------------------|-----------------------------|
 | Blastoff | Pistol only        |
-
-> [!NOTE]
-> The only current known user with all guns of Blastoff skin is iceman_dashe.
 
 ---
 
