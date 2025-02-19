@@ -67,16 +67,16 @@
 ### Code Redeemed Skins (Teal)
 | Skin  | Guns                                      |
 |------------------|----------------------------------------------------|
-| <kbd>Bubbles</kbd>    | SMG, Shotgun, Revolver only              |
-| <kbd>Butter</kbd>     | Dagger                                    |
-| <kbd>Fireworks</kbd>  | All (including dagger) except SMG, AR, Raygun |
-| <kbd>Pearl</kbd>      | AR, Shotgun, Raygun only                 |
-| <kbd>Tin</kbd>        | Atomic, Shotgun only                     |
+| Bubbles    | SMG, Shotgun, Revolver only              |
+| Butter     | Dagger                                    |
+| Fireworks  | All (including dagger) except SMG, AR, Raygun |
+| Pearl    | AR, Shotgun, Raygun only                 |
+| Tin        | Atomic, Shotgun only                     |
 
 ### Launch Skins (Teal)
 | Skin     | Guns                |
 |-------------------|-----------------------------|
-| <kbd>Blastoff</kbd> | Pistol only        |
+| Blastoff | Pistol only        |
 
 ---
 
@@ -98,12 +98,12 @@
 
 | Case    | Pink                                   | Red                                      |
 |-------------------|-------------------------------------------------|--------------------------------------------------|
-| <kbd>Animal</kbd>  | Spider, Unicorn                                 | Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither |
-| <kbd>Camouflage</kbd>| Dragon's Forge, Glacial                       | Chartreuse Periastron, Fallen, Prehistoric, Shadow, Violet Energy |
-| <kbd>Future</kbd>  | Laser, Orinthan                                 | Azure Periastron, Celestial, Galactic, Green Energy, Motherboard, Omega |
-| <kbd>Material</kbd> | Crystal                                       | Adurite, Bluesteel, Diamond (Valentine), Golden (Birthday), Wooden |
-| <kbd>Nature</kbd>   | Crystallised, Elven, Molten                   | Autumnal, Beach, Breeze, Earth, Ocean   |
-| <kbd>Pattern</kbd>  | Monochrome                                    | Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus |
-| <kbd>Refined</kbd> (in Exquisite) | -                                    | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
+| <kbd>Animal Case</kbd>  | Spider, Unicorn                                 | Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither |
+| <kbd>Camouflage Case</kbd>| Dragon's Forge, Glacial                       | Chartreuse Periastron, Fallen, Prehistoric, Shadow, Violet Energy |
+| <kbd>Future Case</kbd>  | Laser, Orinthan                                 | Azure Periastron, Celestial, Galactic, Green Energy, Motherboard, Omega |
+| <kbd>Material Case</kbd> | Crystal                                       | Adurite, Bluesteel, Diamond (Valentine), Golden (Birthday), Wooden |
+| <kbd>Nature Case</kbd>   | Crystallised, Elven, Molten                   | Autumnal, Beach, Breeze, Earth, Ocean   |
+| <kbd>Pattern Case</kbd>  | Monochrome                                    | Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus |
+| <kbd>Refined Case</kbd> (in Exquisite) | -                                    | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
 
 ---
