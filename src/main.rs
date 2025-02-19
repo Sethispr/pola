@@ -671,7 +671,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
 
     // Status bar
     let status = Paragraph::new("Press ESC to exit | Ctrl + H for Help | Tab to cycle suggestions | ► to accept | Scroll or ▲▼ to select")
-        .style(Style::default().fg(Color::LightBlue));
+        .style(Style::default().fg(Color::Cyan));
     f.render_widget(status, chunks[3]);
 }
 
