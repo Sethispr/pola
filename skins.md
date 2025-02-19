@@ -59,8 +59,6 @@
 
 ---
 
-## Code & Launch Skins
-
 ### Code Redeemed Skins (Teal)
 
 > [!NOTE]  
