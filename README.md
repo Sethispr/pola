@@ -8,7 +8,7 @@
 
 ---
 
-<p align="center">
+<div align="center">
 
 <table>
 <tr>
@@ -74,7 +74,6 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
 </tr>
 </table>
 
-</p>
+</div>
 
 ---
-
