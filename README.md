@@ -3,8 +3,6 @@
 </p>
 
 <p align="center">
-  <a href="https://sethispr.github.io/sadb/"><strong>Online Demo (Incomplete Skins)</strong></a>
-  <br><br>
   Rust TUI for searching all known skins in SA faster!
 </p>
 
