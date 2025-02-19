@@ -32,7 +32,7 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
    cargo build --release
    cargo run --release
    ```
-### Extras
+## Extras
 
 <details>
 <summary>Tags List</summary>
