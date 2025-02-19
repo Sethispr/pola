@@ -15,9 +15,9 @@
 Install the .exe (not the zip) from the [Release Page](https://github.com/Sethispr/sadb/releases/tag/v0.12a) or follow these steps:
 
 > [!NOTE]
-> Windows Defender will flag the .exe as a potential threat since it's not signed. This is a false positive (and signing costs around $200).
+> Windows Defender will flag the .exe as a potential threat since it's not signed. 
 > 
-> To proceed, click "More info" and then "Run anyway" to install.
+> This is a false positive (and signing costs around $200). To proceed, click "More info" and then "Run anyway" to install.
 
 ---
 
@@ -47,6 +47,7 @@ Result: Void Lord
 
 > [!TIP]
 > Tags such as bundle, code, year, event, periastron, energy, duped, rare or popular are also accepted.
+> 
 > If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/sadb) or [Skin List](https://github.com/Sethispr/sadb/blob/main/skins.md)
 
 ---
