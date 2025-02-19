@@ -78,6 +78,9 @@
 |-------------------|-----------------------------|
 | Blastoff | Pistol only        |
 
+> [!NOTE]
+> The only current known user with all guns of Blastoff skin is iceman_dashe.
+
 ---
 
 ## Non-event Case Skins
