@@ -29,6 +29,8 @@ features to-do's:
 - logging and advanced error handling
 - performance monitoring view and binds for it
 - add scrollbar
+- make ui more modern and more flexible with other terminals
+- separate codes into different files not just 1 whole main.rs file
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
