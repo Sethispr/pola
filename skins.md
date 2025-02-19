@@ -73,6 +73,7 @@
 | Pearl    | AR, Shotgun, Raygun only                 |
 | Tin        | Atomic, Shotgun only                     |
 
+---
 
 > [!NOTE]
 > The only current known user with all guns of Blastoff skin is iceman_dashe.
@@ -89,13 +90,13 @@
 > [!NOTE]  
 > Some skins mentioned here are also obtainable through event cases, these are noted in brackets beside the name of the skin.
 
-
 ### Exquisite Case (Pinks & Reds)
 | Rarity  | Skins                                      |
 |-------------------|------------------------------------------|
 | <kbd>Pink</kbd>    | Behemoth, Blizzard, Crescendo, Demon, Overseer, Rainbow Periastron (Valentine), Redcliff, Skeletal, Telamonster, Unseen |
 | <kbd>Red</kbd>     | Bombastic, Crimsonwrath, Sanctum, Surge (Birthday) |
 
+---
 
 ### Other Crates
 
