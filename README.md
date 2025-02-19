@@ -8,6 +8,38 @@
 
 ---
 
+> [!TIP]
+> If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/sadb) or [Skin List](https://github.com/Sethispr/sadb/blob/main/skins.md)
+
+---
+
+## Installation
+
+Install the .exe (not the zip) from the [Release Page](https://github.com/Sethispr/sadb/releases/tag/v0.12a) or follow these steps:
+
+> [!NOTE]
+> Windows Defender will flag the .exe as a potential threat since it's not signed. 
+> 
+> This is a false positive (and signing costs around $200). To proceed, click "More info" and then "Run anyway" to install.
+
+---
+
+Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo](https://doc.rust-lang.org/cargo/), and [Git](https://git-scm.com/) first.
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/sethispr/sadb
+   cd sadb
+   ```
+
+2. Build and run the application
+   ```bash
+   cargo build --release
+   cargo run --release
+   ```
+
+---
+
 ### Tags and Keybinds
 
 <details>
@@ -44,35 +76,5 @@
 
 </details>
 
-
-> [!TIP]
-> If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/sadb) or [Skin List](https://github.com/Sethispr/sadb/blob/main/skins.md)
-
 ---
 
-## Installation
-
-Install the .exe (not the zip) from the [Release Page](https://github.com/Sethispr/sadb/releases/tag/v0.12a) or follow these steps:
-
-> [!NOTE]
-> Windows Defender will flag the .exe as a potential threat since it's not signed. 
-> 
-> This is a false positive (and signing costs around $200). To proceed, click "More info" and then "Run anyway" to install.
-
----
-
-Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo](https://doc.rust-lang.org/cargo/), and [Git](https://git-scm.com/) first.
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/sethispr/sadb
-   cd sadb
-   ```
-
-2. Build and run the application
-   ```bash
-   cargo build --release
-   cargo run --release
-   ```
-
----
