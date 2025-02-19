@@ -77,7 +77,7 @@
 ## Launch Skins (Teal)
 
 > [!NOTE]
-> The only current known player with all guns of Blastoff skin is Iceman_dashe.
+> The only current known player with all guns of Blastoff is Iceman_dashe.
 
 | Skin     | Guns                |
 |-------------------|-----------------------------|
