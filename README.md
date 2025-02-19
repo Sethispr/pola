@@ -10,13 +10,7 @@
 
 ---
 
-### Example Usage of Tags
-
-```bash
-# Search for skins with the case tag "summer", rarity tag "pink" and a skin containg the word "void"
-Type: pink summer void
-Result: Void Lord
-```
+### Tags and Keybinds
 
 <details>
 <summary>Tags List</summary>
