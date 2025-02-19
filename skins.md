@@ -88,11 +88,13 @@
 > [!NOTE]  
 > Some skins mentioned here are also obtainable through event cases, these are noted in brackets beside the name of the skin.
 
+
 ### Exquisite Case (Pinks & Reds)
 | Rarity  | Skins                                      |
 |-------------------|------------------------------------------|
 | <kbd>Pink</kbd>    | Behemoth, Blizzard, Crescendo, Demon, Overseer, Rainbow Periastron (Valentine), Redcliff, Skeletal, Telamonster, Unseen |
 | <kbd>Red</kbd>     | Bombastic, Crimsonwrath, Sanctum, Surge (Birthday) |
+
 
 ### Other Crates
 
