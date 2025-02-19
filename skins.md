@@ -42,7 +42,7 @@
 | <kbd>Teal</kbd>    | Gingerblade (2022), Candy Cane (2023), Iceblade (2024) |
 
 ### Easter Event
-| <kbd>Rarity</kbd>  | Skins                                      |
+| Rarity  | Skins                                      |
 |-------------------|------------------------------------------|
 | <kbd>Pink</kbd>    | Azurite (2022), Corrupted (2023), Sun Slayer (2024) |
 
@@ -96,7 +96,7 @@
 > [!NOTE]  
 > Skins in the Refined case are also found in the Exquisite case.
 
-| Case    | Pink<                                   | <kbd>Red</kbd>                                      |
+| Case    | Pink                                   | Red                                      |
 |-------------------|-------------------------------------------------|--------------------------------------------------|
 | <kbd>Animal</kbd>  | Spider, Unicorn                                 | Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither |
 | <kbd>Camouflage</kbd>| Dragon's Forge, Glacial                       | Chartreuse Periastron, Fallen, Prehistoric, Shadow, Violet Energy |
