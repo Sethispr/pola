@@ -11,8 +11,6 @@
 > [!TIP]
 > If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/sadb) or [Skin List](https://github.com/Sethispr/sadb/blob/main/skins.md)
 
----
-
 ## Installation
 
 Install the .exe (not the zip) from the [Release Page](https://github.com/Sethispr/sadb/releases/tag/v0.12a) or follow these steps:
