@@ -2818,6 +2818,21 @@ fn load_skins() -> Vec<Skin> {
                 .map(|t| t.to_lowercase())
                 .collect(),
         },
+        Skin {
+            name: "No Dagger".to_string(),
+            name_lower: "no dagger".to_string(),
+            rarity: "Red".to_string(),
+            rarity_lower: "red".to_string(),
+            event: "April Fools".to_string(),
+            event_lower: "April Fools".to_string(),
+            year: None,
+            year_str: "".to_string(),
+            tags: vec!["all case".to_string()],
+            tags_lower: vec!["all case".to_string()]
+                .into_iter()
+                .map(|t| t.to_lowercase())
+                .collect(),
+        },
     ];
 
     // Post-process to populate derived fields
