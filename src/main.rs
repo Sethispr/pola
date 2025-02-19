@@ -62,6 +62,7 @@ struct AppState {
     scroll_offset: usize,
     sort_field: SortField,
     sort_descending: bool,
+    show_detail: bool,
 }
 
 impl AppState {
@@ -91,6 +92,7 @@ impl AppState {
             scroll_offset: 0,
             sort_field: SortField::Name,
             sort_descending: false,
+            show_detail: true,
         }
     }
 
@@ -313,6 +315,10 @@ fn main() -> io::Result<()> {
                         KeyCode::Char('h') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             show_help(&mut terminal)?;
                         }
+                        // Ctrl+D toggle detailed view
+                        KeyCode::Char('d') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+                            app.show_detail = !app.show_detail;
+                        }
                         // Ctrl+Z: undo input
                         KeyCode::Char('z') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             app.undo();
@@ -448,6 +454,7 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
             let help_text = vec![
                 Line::from("[CTRL+L] : Clear search bar"),
                 Line::from("[CTRL+H] : Show this help page"),
+                Line::from("[CTRL+D] : Toggle detailed view"),
                 Line::from("[CTRL+Z] : Undo input in search bar"),
                 Line::from("[CTRL+Y] : Redo input in search bar"),
                 Line::from("[UP/DOWN ▲▼] Or Mouse Scroll: Navigate results"),
@@ -497,7 +504,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         ])
         .split(f.size());
 
-    // Build the input text with preserved whitespace and styled terms
     let input_text = if app.input.is_empty() {
         Text::from(Line::from(Span::styled(
             "Type to search skins...",
@@ -644,16 +650,24 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
 
     f.render_stateful_widget(suggestion_list, chunks[1], &mut list_state);
 
-    // Main content area
-    let main_chunks = Layout::default()
-        .direction(Direction::Horizontal)
-        .constraints([Constraint::Percentage(60), Constraint::Percentage(40)])
-        .split(chunks[2]);
+    let (table_area, detail_area) = if app.show_detail {
+        let chunks = Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints([Constraint::Percentage(60), Constraint::Percentage(40)])
+            .split(chunks[2]);
+        (chunks[0], Some(chunks[1]))
+    } else {
+        let chunks = Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints([Constraint::Percentage(100)])
+            .split(chunks[2]);
+        (chunks[0], None)
+    };
 
-    // Results table
-    render_table_view(f, app, main_chunks[0]);
-    // Detail panel
-    render_detail_panel(f, app, main_chunks[1]);
+    render_table_view(f, app, table_area);
+    if let Some(detail_area) = detail_area {
+        render_detail_panel(f, app, detail_area);
+    }
 
     // Status bar
     let status = Paragraph::new("Press ESC to exit | Ctrl + H for Help | Tab to cycle suggestions | ► to accept | Scroll or ▲▼ to select")
