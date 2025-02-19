@@ -15,7 +15,7 @@ Examples of unacceptable behavior:
 - Publishing private information without consent  
 
 ## Enforcement
-Violations of this Code of Conduct may result in warnings or bans at the maintainers’ discretion. If you experience or witness unacceptable behavior, please report it to **[yourcontact@email.com]**.
+Violations of this Code of Conduct may result in warnings or bans at the maintainers’ discretion. If you experience or witness unacceptable behavior, please report it to **@sethyl** on Discord.
 
 ## Attribution
 This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/).
