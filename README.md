@@ -17,9 +17,9 @@
 
 ## Installation
 
-[Install - sadb.exe](https://github.com/Sethispr/pola/releases/tag/v0.12a) or follow these steps:
+Option 1: [Install - sadb.exe](https://github.com/Sethispr/pola/releases/tag/v0.12a)
 
-Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo](https://doc.rust-lang.org/cargo/), and [Git](https://git-scm.com/) first.
+Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo](https://doc.rust-lang.org/cargo/), and [Git](https://git-scm.com/) first.
 
 1. Clone the repository:
    ```bash
@@ -27,16 +27,16 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
    cd sadb
    ```
 
-2. Build and run the application
+2. Run the application
    ```bash
-   cargo build --release
    cargo run --release
    ```
 
-If you're a Rust developer, you can install `pola` using Cargo:
+Option 3: You can also install the `pola` package directly using Cargo:
 
 ```sh
 cargo install pola
+pola
 ```
 
 ## Cheat Sheet
