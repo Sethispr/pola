@@ -1,5 +1,7 @@
 <p align="center">
   <strong>Rust TUI for searching all known skins in SA faster!</strong>
+  
+  ![Crates.io](https://img.shields.io/crates/d/pola)
 </p>
 
 <p align="center">
