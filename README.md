@@ -32,6 +32,9 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
    cargo build --release
    cargo run --release
    ```
+
+If you are a Rust developer, the cargo package will soon be avialable after version 0.22b
+
 ## Cheat Sheet
 
 <details>
