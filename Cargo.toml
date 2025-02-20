@@ -6,7 +6,7 @@ authors = ["sethispr"]
 description = "silent assassin tui for searching skins, checking values, and finding owners"
 repository = "https://github.com/sethispr/sadb"
 license = "MIT"
-keywords = ["ratatui", tui", "serde", "roblox", "fuzzy-matching", "crossterm", "rust"]
+keywords = ["ratatui", "tui", "serde", "roblox", "fuzzy-matching", "crossterm", "rust"]
 categories = ["command-line-utilities"]
 
 [dependencies]
