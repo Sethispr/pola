@@ -434,7 +434,6 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-/// This function draws a full-screen help page overlay.
 fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
     loop {
         terminal.draw(|f| {
@@ -481,6 +480,16 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
         }
     }
     Ok(())
+}
+
+fn render_key(text: &str, color: Color) -> Span<'static> {
+    Span::styled(
+        format!(" {} ", text),
+        Style::default()
+            .fg(Color::White)
+            .bg(color)
+            .add_modifier(Modifier::BOLD),
+    )
 }
 
 fn get_rarity_color(skin: &Skin) -> Color {
@@ -670,9 +679,34 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     }
 
     // Status bar
-    let status = Paragraph::new("Press ESC to exit | Ctrl + H for Help | Tab to cycle suggestions | ► to accept | Scroll or ▲▼ to select")
-        .style(Style::default().fg(Color::Cyan));
-    f.render_widget(status, chunks[3]);
+    let status = Line::from(vec![
+        Span::styled(
+            " ESC ",
+            Style::default().bg(Color::DarkGray).fg(Color::White),
+        ),
+        Span::raw(" Exit  "),
+        Span::styled(
+            " CTRL+H ",
+            Style::default().bg(Color::Blue).fg(Color::White),
+        ),
+        Span::raw(" Help  "),
+        Span::styled(
+            " TAB ",
+            Style::default().bg(Color::Magenta).fg(Color::White),
+        ),
+        Span::raw(" Cycle suggestions  "),
+        Span::styled(" ► ", Style::default().bg(Color::Green).fg(Color::Black)),
+        Span::raw(" Accept "),
+        Span::styled(
+            " ▲/▼ ",
+            Style::default().bg(Color::DarkGray).fg(Color::White),
+        ),
+        Span::raw(" Select"),
+    ]);
+    let status_bar = Paragraph::new(status)
+        .style(Style::default())
+        .alignment(Alignment::Center);
+    f.render_widget(status_bar, chunks[3]);
 }
 
 fn get_term_style(term: &str, all_terms: &HashMap<String, TermInfo>) -> Style {
@@ -829,10 +863,10 @@ fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect)
                     ),
                 ]),
                 Line::from(
-    std::iter::once(Span::styled("Tags: ", Style::default().fg(Color::Green)))
-        .chain(render_tags(&skin.tags))
-        .collect::<Vec<_>>()
-),
+                    std::iter::once(Span::styled("Tags: ", Style::default().fg(Color::Green)))
+                        .chain(render_tags(&skin.tags))
+                        .collect::<Vec<_>>(),
+                ),
             ];
 
             let details_paragraph = Paragraph::new(details)
@@ -850,11 +884,11 @@ fn render_tags(tags: &[String]) -> Vec<Span> {
         spans.push(Span::styled(
             format!(" {} ", tag),
             Style::default()
-                .bg(Color::DarkGray)  // Background color for the block
-                .fg(Color::White)     // Text color
+                .bg(Color::DarkGray) // Background color for the block
+                .fg(Color::White) // Text color
                 .add_modifier(Modifier::BOLD),
         ));
-        spans.push(Span::raw(" "));  // Space between tags
+        spans.push(Span::raw(" ")); // Space between tags
     }
     if !spans.is_empty() {
         spans.pop(); // Remove the trailing space
