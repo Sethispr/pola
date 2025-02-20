@@ -482,16 +482,6 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
     Ok(())
 }
 
-fn render_key(text: &str, color: Color) -> Span<'static> {
-    Span::styled(
-        format!(" {} ", text),
-        Style::default()
-            .fg(Color::White)
-            .bg(color)
-            .add_modifier(Modifier::BOLD),
-    )
-}
-
 fn get_rarity_color(skin: &Skin) -> Color {
     match skin.rarity_lower.as_str() {
         "pink" => Color::Magenta,
