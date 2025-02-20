@@ -13,11 +13,11 @@
 <td>
 
 > [!TIP]
-> If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/sadb) or [Skin List](https://github.com/Sethispr/sadb/blob/main/skins.md)
+> If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/pola) or [Skin List](https://github.com/Sethispr/pola/blob/main/skins.md)
 
 ## Installation
 
-[Install - sadb.exe](https://github.com/Sethispr/sadb/releases/tag/v0.12a) or follow these steps:
+[Install - sadb.exe](https://github.com/Sethispr/pola/releases/tag/v0.12a) or follow these steps:
 
 Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo](https://doc.rust-lang.org/cargo/), and [Git](https://git-scm.com/) first.
 
