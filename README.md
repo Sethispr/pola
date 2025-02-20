@@ -64,7 +64,7 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
 |---------------------|--------------------------------|----------------------------|---------------------------------|
 | <kbd>ctrl+h</kbd>   | Show help                      | <kbd>▲</kbd> <kbd>▼</kbd>  | Navigate results                |
 | <kbd>►</kbd>        | Accept suggestion              | <kbd>tab</kbd>             | Cycle suggestions               |
-| <kbd>home</kbd>     | Go to first                    | <kbd>end</kbd>             | Go to last                      |
+| <kbd>home/end</kbd> | Go to first last result        | <kbd>ctrl+d</kbd>          | Toggle detailed view            |
 | <kbd>ctrl+l</kbd>   | Clear search input             | <kbd>esc</kbd>             | Close TUI/Help                  |
 | <kbd>ctrl+y</kbd>   | Redo                           | <kbd>ctrl+z</kbd>          | Undo                            |
 
