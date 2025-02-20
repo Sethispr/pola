@@ -2,6 +2,12 @@
 name = "sadb"
 version = "0.1.0"
 edition = "2021"
+authors = ["sethispr"]
+description = "silent assassin tui for searching skins, checking values, and finding owners"
+repository = "https://github.com/sethispr/sadb"
+license = "MIT"
+keywords = ["ratatui", tui", "serde", "roblox", "fuzzy-matching", "crossterm", "rust"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 ratatui = "0.23.0"
