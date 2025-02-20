@@ -828,10 +828,11 @@ fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect)
                         Style::default().fg(Color::White),
                     ),
                 ]),
-                Line::from(vec![
-                    Span::styled("Tags: ", Style::default().fg(Color::Green)),
-                    Span::styled(skin.tags.join(", "), Style::default().fg(Color::White)),
-                ]),
+                Line::from(
+    std::iter::once(Span::styled("Tags: ", Style::default().fg(Color::Green)))
+        .chain(render_tags(&skin.tags))
+        .collect::<Vec<_>>()
+),
             ];
 
             let details_paragraph = Paragraph::new(details)
@@ -841,6 +842,24 @@ fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect)
             f.render_widget(details_paragraph, inner_area);
         }
     }
+}
+
+fn render_tags(tags: &[String]) -> Vec<Span> {
+    let mut spans = Vec::new();
+    for tag in tags {
+        spans.push(Span::styled(
+            format!(" {} ", tag),
+            Style::default()
+                .bg(Color::DarkGray)  // Background color for the block
+                .fg(Color::White)     // Text color
+                .add_modifier(Modifier::BOLD),
+        ));
+        spans.push(Span::raw(" "));  // Space between tags
+    }
+    if !spans.is_empty() {
+        spans.pop(); // Remove the trailing space
+    }
+    spans
 }
 
 fn load_all_terms(skins: &[Skin]) -> HashMap<String, TermInfo> {
