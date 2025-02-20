@@ -43,6 +43,8 @@ cargo install pola
 pola
 ```
 
+https://crates.io/crates/pola
+
 ## Cheat Sheet
 
 <details>
