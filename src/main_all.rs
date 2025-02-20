@@ -1440,11 +1440,11 @@ fn load_skins() -> Vec<Skin> {
             rarity: "Pink".to_string(),
             rarity_lower: "pink".to_string(),
             event: "Halloween Case".to_string(),
-            event_lower: "halloween case".to_string(),
+            event_lower: "halloween case".to_string(), "popular".to_string(),
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
+            tags_lower: vec!["case".to_string(), "popular".to_string()]
                 .into_iter()
                 .map(|t| t.to_lowercase())
                 .collect(),
@@ -1959,8 +1959,8 @@ fn load_skins() -> Vec<Skin> {
             event_lower: "code redeemed".to_string(),
             year: None,
             year_str: "".to_string(),
-            tags: vec!["code".to_string()],
-            tags_lower: vec!["code".to_string()]
+            tags: vec!["code".to_string(), "gamenight".to_string()],
+            tags_lower: vec!["code".to_string(), "gamenight".to_string()]
                 .into_iter()
                 .map(|t| t.to_lowercase())
                 .collect(),
@@ -2004,8 +2004,8 @@ fn load_skins() -> Vec<Skin> {
             event_lower: "code redeemed".to_string(),
             year: None,
             year_str: "".to_string(),
-            tags: vec!["code".to_string()],
-            tags_lower: vec!["code".to_string()]
+            tags: vec!["code".to_string(), "gamenight".to_string()],
+            tags_lower: vec!["code".to_string(), "gamenight".to_string()]
                 .into_iter()
                 .map(|t| t.to_lowercase())
                 .collect(),
@@ -2019,8 +2019,8 @@ fn load_skins() -> Vec<Skin> {
             event_lower: "code redeemed".to_string(),
             year: None,
             year_str: "".to_string(),
-            tags: vec!["code".to_string()],
-            tags_lower: vec!["code".to_string()]
+            tags: vec!["code".to_string(), "gamenight".to_string()],
+            tags_lower: vec!["code".to_string(), "gamenight".to_string()]
                 .into_iter()
                 .map(|t| t.to_lowercase())
                 .collect(),
@@ -2066,8 +2066,8 @@ fn load_skins() -> Vec<Skin> {
             event_lower: "exquisite case".to_string(),
             year: None,
             year_str: "".to_string(),
-            tags: vec!["case".to_string(), "exquisite".to_string()],
-            tags_lower: vec!["case".to_string(), "exquisite".to_string()]
+            tags: vec!["case".to_string(), "exquisite".to_string(), "popular".to_string()],
+            tags_lower: vec!["case".to_string(), "exquisite".to_string(), "popular".to_string()]
                 .into_iter()
                 .map(|t| t.to_lowercase())
                 .collect(),
@@ -2928,8 +2928,113 @@ fn load_skins() -> Vec<Skin> {
             event_lower: "April Fools".to_string(),
             year: None,
             year_str: "".to_string(),
-            tags: vec!["all case".to_string()],
-            tags_lower: vec!["all case".to_string()]
+            tags: vec!["all case".to_string(), "popular".to_string()],
+            tags_lower: vec!["all case".to_string(), "popular".to_string()]
+                .into_iter()
+                .map(|t| t.to_lowercase())
+                .collect(),
+        },
+		Skin {
+            name: "Whiteheart".to_string(),
+            name_lower: "whiteheart".to_string(),
+            rarity: "Teal".to_string(),
+            rarity_lower: "teal".to_string(),
+            event: "Worthy Individuals".to_string(),
+            event_lower: "worthy individuals".to_string(),
+            year: None,
+            year_str: "".to_string(),
+            tags: vec!["special".to_string(), "rare".to_string()],
+            tags_lower: vec!["special".to_string(), "rare".to_string()]
+                .into_iter()
+                .map(|t| t.to_lowercase())
+                .collect(),
+        },
+		Skin {
+            name: "Darkheart".to_string(),
+            name_lower: "Darkheart".to_string(),
+            rarity: "Teal".to_string(),
+            rarity_lower: "teal".to_string(),
+            event: "Worthy Individuals".to_string(),
+            event_lower: "worthy individuals".to_string(),
+            year: None,
+            year_str: "".to_string(),
+            tags: vec!["special".to_string()],
+            tags_lower: vec!["special".to_string()]
+                .into_iter()
+                .map(|t| t.to_lowercase())
+                .collect(),
+        },
+		Skin {
+            name: "Banana".to_string(),
+            name_lower: "banana".to_string(),
+            rarity: "Teal".to_string(),
+            rarity_lower: "teal".to_string(),
+            event: "Pre-release Tester".to_string(),
+            event_lower: "pre-release tester".to_string(),
+            year: None,
+            year_str: "2021".to_string(),
+            tags: vec!["special".to_string()],
+            tags_lower: vec!["special".to_string()]
+                .into_iter()
+                .map(|t| t.to_lowercase())
+                .collect(),
+        },
+		Skin {
+            name: "Hammer".to_string(),
+            name_lower: "hammer".to_string(),
+            rarity: "Teal".to_string(),
+            rarity_lower: "teal".to_string(),
+            event: "Map Builder".to_string(),
+            event_lower: "map builder".to_string(),
+            year: None,
+            year_str: "".to_string(),
+            tags: vec!["special".to_string()],
+            tags_lower: vec!["special".to_string()]
+                .into_iter()
+                .map(|t| t.to_lowercase())
+                .collect(),
+        },
+		Skin {
+            name: "Paintbrush".to_string(),
+            name_lower: "paintbrush".to_string(),
+            rarity: "Teal".to_string(),
+            rarity_lower: "teal".to_string(),
+            event: "Artist".to_string(),
+            event_lower: "artist".to_string(),
+            year: None,
+            year_str: "".to_string(),
+            tags: vec!["special".to_string()],
+            tags_lower: vec!["special".to_string()]
+                .into_iter()
+                .map(|t| t.to_lowercase())
+                .collect(),
+        },
+		Skin {
+            name: "Riddling".to_string(),
+            name_lower: "riddling".to_string(),
+            rarity: "Teal".to_string(),
+            rarity_lower: "teal".to_string(),
+            event: "Worthy Individuals".to_string(),
+            event_lower: "worthy individuals".to_string(),
+            year: None,
+            year_str: "".to_string(),
+            tags: vec!["special".to_string()],
+            tags_lower: vec!["special".to_string()]
+                .into_iter()
+                .map(|t| t.to_lowercase())
+                .collect(),
+        },
+		Skin {
+            name: "VIP".to_string(),
+            name_lower: "vip".to_string(),
+            rarity: "Teal".to_string(),
+            rarity_lower: "teal".to_string(),
+            event: "VIP Players".to_string(),
+            event_lower: "vip players".to_string(),
+            year: None,
+            year_str: "".to_string(),
+            tags: vec!["special".to_string(), "VIP".to_string()],
+            tags_lower: vec!["special".to_string(), "vip".to_string()]
                 .into_iter()
                 .map(|t| t.to_lowercase())
                 .collect(),
