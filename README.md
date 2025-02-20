@@ -33,7 +33,11 @@ Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo
    cargo run --release
    ```
 
-If you are a Rust developer, the cargo package will soon be available after version 0.22b
+If you're a Rust developer, you can install `pola` using Cargo:
+
+```sh
+cargo install pola
+```
 
 ## Cheat Sheet
 
