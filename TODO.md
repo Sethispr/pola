@@ -12,14 +12,14 @@ optimizing to-do's:
 
 features to-do's:
 - add value and owner tags
-- allow tags to be excluded
-- combining rarity tags such as pink and red can still show pink and red skins
-- fix number of suggestions features
+- allow tags to be excluded by using -- ? or -
+- combining rarity tags such as pink and red can still show pink and red skins or summer and pattern case can show both
+- fix number of suggestions features (fixed)
 - fix non tags being tagged
-- keyboard shortcut gamepad changer
+- keyboard shortcut changer
 - tui -> gui or standalone terminal
-- use 256 bit colors from ratatui
-- add mod-only skins
+- use 256 bit colors from ratatui (slightly added, only fg, border color and bg of binds etc not the whole bg yet)
+- add mod-only skins (added)
 - add description to detailed view
 - add placeholder images to all skins and start adding skins to assets folder
 - improve auto suggestions (ex: if you type valentine then type sth it should auto suggest a skin in a valentine case)
@@ -35,6 +35,7 @@ features to-do's:
 - keybind to,toggle detail view on/off default is on
 - ctrl + r to select random skin
 - contextual suggestion should get refined since case and event overlaps e.g. valentine case and bundle or christmas case and event
+- putting 2 in the search doesnt suggest 2022 etc year tags
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
@@ -57,3 +58,4 @@ tui bugs to fix:
 - ctrl+y redo feature not working
 - click feature doesnt work after 12 results, it offsets
 - number of suggestions feature doesnt actually show accurate number (fixed)
+- caret being shown near the block styled tags in detailed view when scrolling fast
