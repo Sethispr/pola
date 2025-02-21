@@ -17,6 +17,19 @@ use std::collections::{HashMap, HashSet};
 use std::io;
 use std::time::Duration;
 
+// Dracula Color Scheme
+const D_BACKGROUND: Color = Color::Rgb(0, 43, 54);
+const D_FOREGROUND: Color = Color::Rgb(131, 148, 150);
+const D_SELECTION: Color = Color::Rgb(7, 54, 66);
+const D_COMMENT: Color = Color::Rgb(88, 110, 117);
+const D_CYAN: Color = Color::Rgb(42, 161, 152);
+const D_GREEN: Color = Color::Rgb(133, 153, 0);
+const D_ORANGE: Color = Color::Rgb(203, 75, 22);
+const D_PINK: Color = Color::Rgb(211, 54, 130);
+const D_PURPLE: Color = Color::Rgb(108, 113, 196);
+const D_RED: Color = Color::Rgb(220, 50, 47);
+const D_YELLOW: Color = Color::Rgb(181, 137, 0);
+
 #[derive(PartialEq, Eq)]
 enum SortField {
     Name,
@@ -448,7 +461,7 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
                 .title("Help")
                 .borders(Borders::ALL)
                 .border_type(BorderType::Rounded)
-                .border_style(Style::default().fg(Color::LightCyan));
+                .border_style(Style::default().fg(D_CYAN));
 
             let help_text = vec![
                 Line::from("[CTRL+L] : Clear search bar"),
@@ -484,10 +497,10 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
 
 fn get_rarity_color(skin: &Skin) -> Color {
     match skin.rarity_lower.as_str() {
-        "pink" => Color::Magenta,
-        "red" => Color::Red,
-        "teal" => Color::Cyan,
-        _ => Color::White,
+        "pink" => D_PINK,
+        "red" => D_RED,
+        "teal" => D_CYAN,
+        _ => D_FOREGROUND,
     }
 }
 
@@ -573,7 +586,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         Block::default()
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded)
-            .border_style(Style::default().fg(Color::Cyan))
+            .border_style(Style::default().fg(D_CYAN))
             .title("Search [Ex: Pink Summer]".bold()),
     );
 
@@ -597,22 +610,22 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
             let style = if let Some(term_info) = app.all_terms.get(&lower_t) {
                 if term_info.is_rarity {
                     match lower_t.as_str() {
-                        "pink" => Style::default().fg(Color::Magenta),
-                        "red" => Style::default().fg(Color::Red),
-                        "teal" => Style::default().fg(Color::Cyan),
-                        _ => Style::default().fg(Color::White),
+                        "pink" => Style::default().fg(D_PINK),
+                        "red" => Style::default().fg(D_RED),
+                        "teal" => Style::default().fg(D_CYAN),
+                        _ => Style::default().fg(D_BACKGROUND),
                     }
                 } else if term_info.is_event {
-                    Style::default().fg(Color::Magenta)
+                    Style::default().fg(D_PINK)
                 } else if term_info.is_year {
-                    Style::default().fg(Color::Blue)
+                    Style::default().fg(D_GREEN)
                 } else if term_info.is_tag {
-                    Style::default().fg(Color::Green)
+                    Style::default().fg(D_GREEN)
                 } else {
-                    Style::default().fg(Color::White)
+                    Style::default().fg(D_FOREGROUND)
                 }
             } else {
-                Style::default().fg(Color::Yellow)
+                Style::default().fg(D_YELLOW)
             };
 
             let count = app
@@ -643,7 +656,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                 .title("Suggestions")
                 .borders(Borders::ALL)
                 .border_type(BorderType::Rounded)
-                .border_style(Style::default().fg(Color::Cyan)),
+                .border_style(Style::default().fg(D_CYAN)),
         )
         .highlight_style(Style::default().bg(Color::DarkGray));
 
@@ -672,24 +685,24 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     let status = Line::from(vec![
         Span::styled(
             " ESC ",
-            Style::default().bg(Color::DarkGray).fg(Color::White),
+            Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND),
         ),
         Span::raw(" Exit  "),
         Span::styled(
             " CTRL+H ",
-            Style::default().bg(Color::Blue).fg(Color::White),
+            Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND),
         ),
         Span::raw(" Help  "),
         Span::styled(
             " TAB ",
-            Style::default().bg(Color::Magenta).fg(Color::White),
+            Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND),
         ),
         Span::raw(" Cycle suggestions  "),
-        Span::styled(" ► ", Style::default().bg(Color::Green).fg(Color::Black)),
+        Span::styled(" ► ", Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND)),
         Span::raw(" Accept "),
         Span::styled(
             " ▲/▼ ",
-            Style::default().bg(Color::DarkGray).fg(Color::White),
+            Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND),
         ),
         Span::raw(" Select"),
     ]);
@@ -703,22 +716,22 @@ fn get_term_style(term: &str, all_terms: &HashMap<String, TermInfo>) -> Style {
     if let Some(term_info) = all_terms.get(term) {
         if term_info.is_rarity {
             match term {
-                "pink" => Style::default().fg(Color::Magenta),
-                "red" => Style::default().fg(Color::Red),
-                "teal" => Style::default().fg(Color::Cyan),
-                _ => Style::default().fg(Color::White),
+                "pink" => Style::default().fg(D_PINK),
+                "red" => Style::default().fg(D_RED),
+                "teal" => Style::default().fg(D_CYAN),
+                _ => Style::default().fg(D_FOREGROUND),
             }
         } else if term_info.is_event {
-            Style::default().fg(Color::Magenta)
+            Style::default().fg(D_PINK)
         } else if term_info.is_year {
-            Style::default().fg(Color::Blue)
+            Style::default().fg(D_GREEN)
         } else if term_info.is_tag {
-            Style::default().fg(Color::Green)
+            Style::default().fg(D_GREEN)
         } else {
-            Style::default().fg(Color::White)
+            Style::default().fg(D_FOREGROUND)
         }
     } else {
-        Style::default().fg(Color::White)
+        Style::default().fg(D_FOREGROUND)
     }
 }
 
@@ -759,11 +772,7 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
             "Year",
             "Tags",
         ])
-        .style(
-            Style::default()
-                .fg(Color::Yellow)
-                .add_modifier(Modifier::BOLD),
-        );
+        .style(Style::default().fg(D_YELLOW).add_modifier(Modifier::BOLD));
 
         let rows: Vec<Row> = app
             .results
@@ -771,19 +780,16 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
             .map(|skin| {
                 let year = skin.year.map_or(String::from("N/A"), |y| y.to_string());
                 Row::new(vec![
-                    Line::from(Span::styled(&skin.name, Style::default().fg(Color::Cyan))),
+                    Line::from(Span::styled(&skin.name, Style::default().fg(D_CYAN))),
                     Line::from(Span::styled(
                         &skin.rarity,
                         Style::default().fg(get_rarity_color(skin)),
                     )),
-                    Line::from(Span::styled(
-                        &skin.event,
-                        Style::default().fg(Color::Magenta),
-                    )),
-                    Line::from(Span::styled(year, Style::default().fg(Color::Green))),
+                    Line::from(Span::styled(&skin.event, Style::default().fg(D_ORANGE))),
+                    Line::from(Span::styled(year, Style::default().fg(D_GREEN))),
                     Line::from(Span::styled(
                         skin.tags.join(", "),
-                        Style::default().fg(Color::White),
+                        Style::default().fg(D_FOREGROUND),
                     )),
                 ])
             })
@@ -795,7 +801,7 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
                 Block::default()
                     .borders(Borders::ALL)
                     .border_type(BorderType::Rounded)
-                    .border_style(Style::default().fg(Color::Cyan))
+                    .border_style(Style::default().fg(D_CYAN))
                     .title(format!(
                         "Results: {} | Selected: {}",
                         app.results.len(),
@@ -823,7 +829,7 @@ fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect)
     let block = Block::default()
         .borders(Borders::ALL)
         .border_type(BorderType::Rounded)
-        .border_style(Style::default().fg(Color::Cyan))
+        .border_style(Style::default().fg(D_CYAN))
         .title("Details")
         .style(Style::default());
 
@@ -834,26 +840,26 @@ fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect)
         if let Some(skin) = app.results.get(selected) {
             let details = vec![
                 Line::from(vec![
-                    Span::styled("Name: ", Style::default().fg(Color::Cyan)),
-                    Span::styled(&skin.name, Style::default().fg(Color::White)),
+                    Span::styled("Name: ", Style::default().fg(D_CYAN)),
+                    Span::styled(&skin.name, Style::default().fg(D_FOREGROUND)),
                 ]),
                 Line::from(vec![
-                    Span::styled("Rarity: ", Style::default().fg(Color::Yellow)),
+                    Span::styled("Rarity: ", Style::default().fg(D_YELLOW)),
                     Span::styled(&skin.rarity, Style::default().fg(get_rarity_color(skin))),
                 ]),
                 Line::from(vec![
-                    Span::styled("Event: ", Style::default().fg(Color::Magenta)),
-                    Span::styled(&skin.event, Style::default().fg(Color::White)),
+                    Span::styled("Event: ", Style::default().fg(D_PINK)),
+                    Span::styled(&skin.event, Style::default().fg(D_FOREGROUND)),
                 ]),
                 Line::from(vec![
-                    Span::styled("Year: ", Style::default().fg(Color::Blue)),
+                    Span::styled("Year: ", Style::default().fg(D_GREEN)),
                     Span::styled(
                         skin.year.map_or(String::from("N/A"), |y| y.to_string()),
                         Style::default().fg(Color::White),
                     ),
                 ]),
                 Line::from(
-                    std::iter::once(Span::styled("Tags: ", Style::default().fg(Color::Green)))
+                    std::iter::once(Span::styled("Tags: ", Style::default().fg(D_GREEN)))
                         .chain(render_tags(&skin.tags))
                         .collect::<Vec<_>>(),
                 ),
@@ -874,8 +880,8 @@ fn render_tags(tags: &[String]) -> Vec<Span> {
         spans.push(Span::styled(
             format!(" {} ", tag),
             Style::default()
-                .bg(Color::DarkGray) // Background color for the block
-                .fg(Color::White) // Text color
+                .bg(D_BACKGROUND) // Background color for the block
+                .fg(D_FOREGROUND) // Text color
                 .add_modifier(Modifier::BOLD),
         ));
         spans.push(Span::raw(" ")); // Space between tags
@@ -1440,10 +1446,10 @@ fn load_skins() -> Vec<Skin> {
             rarity: "Pink".to_string(),
             rarity_lower: "pink".to_string(),
             event: "Halloween Case".to_string(),
-            event_lower: "halloween case".to_string(), "popular".to_string(),
+            event_lower: "halloween case".to_string(),
             year: None,
             year_str: "".to_string(),
-            tags: vec!["case".to_string()],
+            tags: vec!["case".to_string(), "popular".to_string()],
             tags_lower: vec!["case".to_string(), "popular".to_string()]
                 .into_iter()
                 .map(|t| t.to_lowercase())
@@ -2066,11 +2072,19 @@ fn load_skins() -> Vec<Skin> {
             event_lower: "exquisite case".to_string(),
             year: None,
             year_str: "".to_string(),
-            tags: vec!["case".to_string(), "exquisite".to_string(), "popular".to_string()],
-            tags_lower: vec!["case".to_string(), "exquisite".to_string(), "popular".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags: vec![
+                "case".to_string(),
+                "exquisite".to_string(),
+                "popular".to_string(),
+            ],
+            tags_lower: vec![
+                "case".to_string(),
+                "exquisite".to_string(),
+                "popular".to_string(),
+            ]
+            .into_iter()
+            .map(|t| t.to_lowercase())
+            .collect(),
         },
         Skin {
             name: "Crescendo".to_string(),
@@ -2934,7 +2948,7 @@ fn load_skins() -> Vec<Skin> {
                 .map(|t| t.to_lowercase())
                 .collect(),
         },
-		Skin {
+        Skin {
             name: "Whiteheart".to_string(),
             name_lower: "whiteheart".to_string(),
             rarity: "Teal".to_string(),
@@ -2949,7 +2963,7 @@ fn load_skins() -> Vec<Skin> {
                 .map(|t| t.to_lowercase())
                 .collect(),
         },
-		Skin {
+        Skin {
             name: "Darkheart".to_string(),
             name_lower: "Darkheart".to_string(),
             rarity: "Teal".to_string(),
@@ -2964,7 +2978,7 @@ fn load_skins() -> Vec<Skin> {
                 .map(|t| t.to_lowercase())
                 .collect(),
         },
-		Skin {
+        Skin {
             name: "Banana".to_string(),
             name_lower: "banana".to_string(),
             rarity: "Teal".to_string(),
@@ -2979,7 +2993,7 @@ fn load_skins() -> Vec<Skin> {
                 .map(|t| t.to_lowercase())
                 .collect(),
         },
-		Skin {
+        Skin {
             name: "Hammer".to_string(),
             name_lower: "hammer".to_string(),
             rarity: "Teal".to_string(),
@@ -2994,7 +3008,7 @@ fn load_skins() -> Vec<Skin> {
                 .map(|t| t.to_lowercase())
                 .collect(),
         },
-		Skin {
+        Skin {
             name: "Paintbrush".to_string(),
             name_lower: "paintbrush".to_string(),
             rarity: "Teal".to_string(),
@@ -3009,7 +3023,7 @@ fn load_skins() -> Vec<Skin> {
                 .map(|t| t.to_lowercase())
                 .collect(),
         },
-		Skin {
+        Skin {
             name: "Riddling".to_string(),
             name_lower: "riddling".to_string(),
             rarity: "Teal".to_string(),
@@ -3024,7 +3038,7 @@ fn load_skins() -> Vec<Skin> {
                 .map(|t| t.to_lowercase())
                 .collect(),
         },
-		Skin {
+        Skin {
             name: "VIP".to_string(),
             name_lower: "vip".to_string(),
             rarity: "Teal".to_string(),
