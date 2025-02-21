@@ -6,8 +6,6 @@
   <img src="https://github.com/user-attachments/assets/13dc0981-76e0-4dc9-8542-23554f34b2ff" alt="demo" width="596">
 </p>
 
-<div align="center">
-
 ## Installation
 
 Option 1: [Install - sadb.exe](https://github.com/Sethispr/pola/releases/tag/v0.12a)
@@ -86,5 +84,3 @@ https://crates.io/crates/pola
 </td>
 </tr>
 </table>
-
-</div>
