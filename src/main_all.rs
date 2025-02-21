@@ -17,18 +17,16 @@ use std::collections::{HashMap, HashSet};
 use std::io;
 use std::time::Duration;
 
-// Dracula Color Scheme
-const D_BACKGROUND: Color = Color::Rgb(0, 43, 54);
-const D_FOREGROUND: Color = Color::Rgb(131, 148, 150);
-const D_SELECTION: Color = Color::Rgb(7, 54, 66);
-const D_COMMENT: Color = Color::Rgb(88, 110, 117);
-const D_CYAN: Color = Color::Rgb(42, 161, 152);
-const D_GREEN: Color = Color::Rgb(133, 153, 0);
-const D_ORANGE: Color = Color::Rgb(203, 75, 22);
-const D_PINK: Color = Color::Rgb(211, 54, 130);
-const D_PURPLE: Color = Color::Rgb(108, 113, 196);
-const D_RED: Color = Color::Rgb(220, 50, 47);
-const D_YELLOW: Color = Color::Rgb(181, 137, 0);
+// Passion Fruit Colors (Main Colors from MonkeyType)
+const D_BACKGROUND: Color = Color::Rgb(131, 60, 94); //the highlight in the table view, tags and binds bg (dark rosewood)
+const D_FOREGROUND: Color = Color::Rgb(244, 163, 180); //for tags and binds fg (pastel rose)
+const D_CYAN: Color = Color::Rgb(244, 163, 180); // main pale red (pastel rose)
+const D_GREEN: Color = Color::Rgb(244, 163, 180); // main pale red
+const D_PINK: Color = Color::Rgb(255, 155, 155); // for pink skins (soft pinkish-red)
+const D_ORANGE: Color = Color::Rgb(244, 163, 180); // main pale red
+const D_RED: Color = Color::Rgb(224, 108, 117); // for red skins (muted warm red)
+const D_YELLOW: Color = Color::Rgb(244, 163, 180); // main pale red
+const D_TEAL: Color = Color::Rgb(58, 139, 132); // for teal skins (deep sea teal)
 
 #[derive(PartialEq, Eq)]
 enum SortField {
@@ -499,7 +497,7 @@ fn get_rarity_color(skin: &Skin) -> Color {
     match skin.rarity_lower.as_str() {
         "pink" => D_PINK,
         "red" => D_RED,
-        "teal" => D_CYAN,
+        "teal" => D_TEAL,
         _ => D_FOREGROUND,
     }
 }
@@ -519,9 +517,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     let input_text = if app.input.is_empty() {
         Text::from(Line::from(Span::styled(
             "Type to search skins...",
-            Style::default()
-                .fg(Color::DarkGray)
-                .add_modifier(Modifier::ITALIC),
+            Style::default().fg(D_CYAN).add_modifier(Modifier::ITALIC),
         )))
     } else {
         let mut line = Line::default();
@@ -612,7 +608,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                     match lower_t.as_str() {
                         "pink" => Style::default().fg(D_PINK),
                         "red" => Style::default().fg(D_RED),
-                        "teal" => Style::default().fg(D_CYAN),
+                        "teal" => Style::default().fg(D_TEAL),
                         _ => Style::default().fg(D_BACKGROUND),
                     }
                 } else if term_info.is_event {
@@ -641,7 +637,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
             let mut spans = vec![Span::styled(t, style)];
             spans.push(Span::styled(
                 format!(" ({})", count),
-                Style::default().fg(Color::DarkGray),
+                Style::default().fg(D_FOREGROUND),
             ));
 
             ListItem::new(Line::from(spans))
@@ -658,7 +654,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                 .border_type(BorderType::Rounded)
                 .border_style(Style::default().fg(D_CYAN)),
         )
-        .highlight_style(Style::default().bg(Color::DarkGray));
+        .highlight_style(Style::default().bg(D_BACKGROUND));
 
     f.render_stateful_widget(suggestion_list, chunks[1], &mut list_state);
 
@@ -683,28 +679,19 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
 
     // Status bar
     let status = Line::from(vec![
+        Span::styled(" esc ", Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND)),
+        Span::styled(" exit  ", Style::default().fg(D_FOREGROUND)),
         Span::styled(
-            " ESC ",
+            " ctrl+h ",
             Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND),
         ),
-        Span::raw(" Exit  "),
-        Span::styled(
-            " CTRL+H ",
-            Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND),
-        ),
-        Span::raw(" Help  "),
-        Span::styled(
-            " TAB ",
-            Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND),
-        ),
-        Span::raw(" Cycle suggestions  "),
+        Span::styled(" help  ", Style::default().fg(D_FOREGROUND)),
+        Span::styled(" tab ", Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND)),
+        Span::styled(" cycle suggestions  ", Style::default().fg(D_FOREGROUND)),
         Span::styled(" ► ", Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND)),
-        Span::raw(" Accept "),
-        Span::styled(
-            " ▲/▼ ",
-            Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND),
-        ),
-        Span::raw(" Select"),
+        Span::styled(" accept ", Style::default().fg(D_FOREGROUND)),
+        Span::styled(" ▲/▼ ", Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND)),
+        Span::styled(" select ", Style::default().fg(D_FOREGROUND)),
     ]);
     let status_bar = Paragraph::new(status)
         .style(Style::default())
@@ -718,7 +705,7 @@ fn get_term_style(term: &str, all_terms: &HashMap<String, TermInfo>) -> Style {
             match term {
                 "pink" => Style::default().fg(D_PINK),
                 "red" => Style::default().fg(D_RED),
-                "teal" => Style::default().fg(D_CYAN),
+                "teal" => Style::default().fg(D_TEAL),
                 _ => Style::default().fg(D_FOREGROUND),
             }
         } else if term_info.is_event {
@@ -817,7 +804,7 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
             ])
             .highlight_style(
                 Style::default()
-                    .bg(Color::DarkGray)
+                    .bg(D_BACKGROUND)
                     .add_modifier(Modifier::BOLD),
             );
 
@@ -840,26 +827,26 @@ fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect)
         if let Some(skin) = app.results.get(selected) {
             let details = vec![
                 Line::from(vec![
-                    Span::styled("Name: ", Style::default().fg(D_CYAN)),
-                    Span::styled(&skin.name, Style::default().fg(D_FOREGROUND)),
+                    Span::styled("Name: ", Style::default().fg(D_YELLOW)),
+                    Span::styled(&skin.name, Style::default().fg(D_YELLOW)),
                 ]),
                 Line::from(vec![
                     Span::styled("Rarity: ", Style::default().fg(D_YELLOW)),
                     Span::styled(&skin.rarity, Style::default().fg(get_rarity_color(skin))),
                 ]),
                 Line::from(vec![
-                    Span::styled("Event: ", Style::default().fg(D_PINK)),
-                    Span::styled(&skin.event, Style::default().fg(D_FOREGROUND)),
+                    Span::styled("Event: ", Style::default().fg(D_YELLOW)),
+                    Span::styled(&skin.event, Style::default().fg(D_YELLOW)),
                 ]),
                 Line::from(vec![
-                    Span::styled("Year: ", Style::default().fg(D_GREEN)),
+                    Span::styled("Year: ", Style::default().fg(D_YELLOW)),
                     Span::styled(
                         skin.year.map_or(String::from("N/A"), |y| y.to_string()),
-                        Style::default().fg(Color::White),
+                        Style::default().fg(D_YELLOW),
                     ),
                 ]),
                 Line::from(
-                    std::iter::once(Span::styled("Tags: ", Style::default().fg(D_GREEN)))
+                    std::iter::once(Span::styled("Tags: ", Style::default().fg(D_YELLOW)))
                         .chain(render_tags(&skin.tags))
                         .collect::<Vec<_>>(),
                 ),
@@ -880,8 +867,8 @@ fn render_tags(tags: &[String]) -> Vec<Span> {
         spans.push(Span::styled(
             format!(" {} ", tag),
             Style::default()
-                .bg(D_BACKGROUND) // Background color for the block
-                .fg(D_FOREGROUND) // Text color
+                .bg(D_BACKGROUND)
+                .fg(D_FOREGROUND)
                 .add_modifier(Modifier::BOLD),
         ));
         spans.push(Span::raw(" ")); // Space between tags
