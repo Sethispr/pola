@@ -8,10 +8,6 @@
 
 <div align="center">
 
-<table>
-<tr>
-<td>
-
 ## Installation
 
 Option 1: [Install - sadb.exe](https://github.com/Sethispr/pola/releases/tag/v0.12a)
@@ -44,6 +40,10 @@ https://crates.io/crates/pola
 > If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/pola) or [Skin List](https://github.com/Sethispr/pola/blob/main/skins.md)
 
 ## Cheat Sheet
+
+<table>
+<tr>
+<td>
 
 <details>
 <summary>Tags List</summary>
