@@ -91,6 +91,10 @@
 > Some skins mentioned here are also obtainable through event cases, these are noted in brackets beside the name of the skin.
 
 ### Exquisite Case (Pinks & Reds)
+
+> [!TIP]
+> Some people consider exquisite case skins more valuable than event cases.
+
 | Rarity  | Skins                                      |
 |-------------------|------------------------------------------|
 | <kbd>Pink</kbd>    | Behemoth, Blizzard, Crescendo, Demon, Overseer, Rainbow Periastron (Valentine), Redcliff, Skeletal, Telamonster, Unseen |
