@@ -3,10 +3,6 @@
 </p>
 
 <p align="center">
-    <img src="https://img.shields.io/crates/d/pola" alt="Crates.io Download Badge">
-</p>
-
-<p align="center">
   <img src="https://github.com/user-attachments/assets/0e56d5c6-2566-4e17-b405-0421a503a316" alt="demo" width="596">
 </p>
 
@@ -42,6 +38,8 @@ Option 3: You can also install the `pola` package directly using Cargo:
 cargo install pola
 pola
 ```
+
+<img src="https://img.shields.io/crates/d/pola" alt="Crates.io Download Badge">
 
 https://crates.io/crates/pola
 
