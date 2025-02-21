@@ -12,9 +12,6 @@
 <tr>
 <td>
 
-> [!TIP]
-> If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/pola) or [Skin List](https://github.com/Sethispr/pola/blob/main/skins.md)
-
 ## Installation
 
 Option 1: [Install - sadb.exe](https://github.com/Sethispr/pola/releases/tag/v0.12a)
@@ -42,6 +39,9 @@ pola
 <img src="https://img.shields.io/crates/d/pola" alt="Crates.io Download Badge">
 
 https://crates.io/crates/pola
+
+> [!TIP]
+> If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/pola) or [Skin List](https://github.com/Sethispr/pola/blob/main/skins.md)
 
 ## Cheat Sheet
 
