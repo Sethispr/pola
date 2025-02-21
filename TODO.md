@@ -34,6 +34,7 @@ features to-do's:
 - adding a caret in the search bar
 - keybind to,toggle detail view on/off default is on
 - ctrl + r to select random skin
+- contextual suggestion should get refined since case and event overlaps e.g. valentine case and bundle or christmas case and event
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
@@ -51,7 +52,8 @@ github to-do's:
 - put all github related md files into a .github folder
 
 tui bugs to fix:
-- suggestion isnt too smart (not contextual), also doesnt clear input after accpeting suggestion
-- after turning off detailed view rarity descending sort feature activates the event descending sort instead
+- suggestion isnt too smart (not contextual), also doesnt clear input after accpeting suggestion (fixed)
+- after turning off detailed view rarity descending sort feature activates the event descending sort instead (found reason: the state doesnt actually update where the mouse is suppposed to click so theres an offset)
 - ctrl+y redo feature not working
 - click feature doesnt work after 12 results, it offsets
+- number of suggestions feature doesnt actually show accurate number (fixed)
