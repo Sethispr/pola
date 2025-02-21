@@ -26,7 +26,7 @@ const D_PINK: Color = Color::Rgb(255, 155, 155); // for pink skins (soft pinkish
 const D_ORANGE: Color = Color::Rgb(244, 163, 180); // main pale red
 const D_RED: Color = Color::Rgb(224, 108, 117); // for red skins (muted warm red)
 const D_YELLOW: Color = Color::Rgb(244, 163, 180); // main pale red
-const D_TEAL: Color = Color::Rgb(58, 139, 132); // for teal skins (deep sea teal)
+const D_TEAL: Color = Color::Rgb(244, 163, 180); // for teal skins (deep sea teal) for now its red 58, 139, 132
 
 #[derive(PartialEq, Eq)]
 enum SortField {
@@ -74,6 +74,7 @@ struct AppState {
     sort_field: SortField,
     sort_descending: bool,
     show_detail: bool,
+	current_suggestion_terms: HashMap<String, TermInfo>,
 }
 
 impl AppState {
@@ -104,6 +105,7 @@ impl AppState {
             sort_field: SortField::Name,
             sort_descending: false,
             show_detail: true,
+			current_suggestion_terms: HashMap::new(),
         }
     }
 
@@ -171,48 +173,77 @@ impl AppState {
     }
 
     fn update_suggestion(&mut self) {
-        let input_parts: Vec<&str> = self.input.split_whitespace().collect();
-        let last_part = input_parts.last().cloned().unwrap_or("");
-        let last_part_lower = last_part.to_lowercase();
-        self.suggestion_list.clear();
-        self.suggestion_index = 0;
+    let input_parts: Vec<&str> = self.input.split_whitespace().collect();
+    let last_part = input_parts.last().cloned().unwrap_or("");
+    let last_part_lower = last_part.to_lowercase();
+    self.suggestion_list.clear();
+    self.suggestion_index = 0;
 
-        if !last_part_lower.is_empty() {
-            let matcher = fuzzy_matcher::skim::SkimMatcherV2::default();
-            let mut suggestions = Vec::new();
+    if !last_part_lower.is_empty() {
+        let matcher = fuzzy_matcher::skim::SkimMatcherV2::default();
+        let mut current_terms = HashMap::new();
 
-            for (term, term_info) in &self.all_terms {
-                let score = matcher
-                    .fuzzy_match(term, &last_part_lower)
-                    .unwrap_or(i64::MIN);
-                let prefix_boost = if term.starts_with(&last_part_lower) {
-                    1000
-                } else {
-                    0
-                };
-                let field_boost = if term_info.is_name || term_info.is_event {
-                    500
-                } else {
-                    0
-                };
+        // Collect terms from current results
+        for skin in &self.results {
+            // Name words
+            for word in skin.name_lower.split_whitespace() {
+                let entry = current_terms.entry(word.to_string()).or_insert(TermInfo::default());
+                entry.is_name = true;
+            }
+            // Event words
+            for word in skin.event_lower.split_whitespace() {
+                let entry = current_terms.entry(word.to_string()).or_insert(TermInfo::default());
+                entry.is_event = true;
+            }
+            // Rarity
+            let entry = current_terms.entry(skin.rarity_lower.clone()).or_insert(TermInfo::default());
+            entry.is_rarity = true;
+            // Tags
+            for tag in &skin.tags_lower {
+                let entry = current_terms.entry(tag.clone()).or_insert(TermInfo::default());
+                entry.is_tag = true;
+            }
+            // Year
+            if !skin.year_str.is_empty() {
+                let entry = current_terms.entry(skin.year_str.clone()).or_insert(TermInfo::default());
+                entry.is_year = true;
+            }
+        }
 
-                if score + prefix_boost + field_boost > 50 {
-                    suggestions.push((score + prefix_boost + field_boost, term.clone()));
-                }
+        // Existing terms (excluding the last part being typed)
+        let existing_terms: HashSet<String> = input_parts[..input_parts.len().saturating_sub(1)]
+            .iter()
+            .map(|s| s.to_lowercase())
+            .collect();
+
+        let mut suggestions = Vec::new();
+
+        for (term, term_info) in &current_terms {
+            // Skip terms already present in the search (excluding current part)
+            if existing_terms.contains(term) {
+                continue;
             }
 
-            suggestions.sort_by(|a, b| b.0.cmp(&a.0).then_with(|| a.1.cmp(&b.1)));
-            self.suggestion_list = suggestions
-                .into_iter()
-                .map(|(_, term)| term)
-                .take(5)
-                .collect();
+            let score = matcher.fuzzy_match(term, &last_part_lower).unwrap_or(i64::MIN);
+            let prefix_boost = if term.starts_with(&last_part_lower) { 1000 } else { 0 };
+            let field_boost = if term_info.is_name || term_info.is_event { 500 } else { 0 };
 
-            self.suggestion = self.suggestion_list.first().cloned();
-        } else {
-            self.suggestion = None;
+            if score + prefix_boost + field_boost > 50 {
+                suggestions.push((score + prefix_boost + field_boost, term.clone()));
+            }
         }
+
+        suggestions.sort_by(|a, b| b.0.cmp(&a.0).then_with(|| a.1.cmp(&b.1)));
+        self.suggestion_list = suggestions.into_iter().map(|(_, term)| term).take(5).collect();
+
+        // Update current suggestion terms for styling
+        self.current_suggestion_terms = current_terms;
+        self.suggestion = self.suggestion_list.first().cloned();
+    } else {
+        self.suggestion = None;
+        self.current_suggestion_terms.clear();
     }
+}
 
     fn cycle_suggestion(&mut self, direction: i32) {
         if !self.suggestion_list.is_empty() {
@@ -583,7 +614,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
             .borders(Borders::ALL)
             .border_type(BorderType::Rounded)
             .border_style(Style::default().fg(D_CYAN))
-            .title("Search [Ex: Pink Summer]".bold()),
+            .title("Search".bold()),
     );
 
     f.render_widget(search_input, chunks[0]);
@@ -599,50 +630,51 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
 
     // Suggestions list
     let suggestions: Vec<ListItem> = app
-        .suggestion_list
-        .iter()
-        .map(|t| {
-            let lower_t = t.to_lowercase();
-            let style = if let Some(term_info) = app.all_terms.get(&lower_t) {
-                if term_info.is_rarity {
-                    match lower_t.as_str() {
-                        "pink" => Style::default().fg(D_PINK),
-                        "red" => Style::default().fg(D_RED),
-                        "teal" => Style::default().fg(D_TEAL),
-                        _ => Style::default().fg(D_BACKGROUND),
-                    }
-                } else if term_info.is_event {
-                    Style::default().fg(D_PINK)
-                } else if term_info.is_year {
-                    Style::default().fg(D_GREEN)
-                } else if term_info.is_tag {
-                    Style::default().fg(D_GREEN)
-                } else {
-                    Style::default().fg(D_FOREGROUND)
-                }
-            } else {
-                Style::default().fg(D_YELLOW)
-            };
+    .suggestion_list
+    .iter()
+    .map(|t| {
+        let default_term_info = TermInfo::default(); // Create a longer-lived value
+        let term_info = app.current_suggestion_terms.get(t).unwrap_or(&default_term_info);
+        let style = if term_info.is_rarity {
+            match t.as_str() {
+                "pink" => Style::default().fg(D_PINK),
+                "red" => Style::default().fg(D_RED),
+                "teal" => Style::default().fg(D_TEAL),
+                _ => Style::default().fg(D_FOREGROUND),
+            }
+        } else if term_info.is_event {
+            Style::default().fg(D_PINK)
+        } else if term_info.is_year {
+            Style::default().fg(D_GREEN)
+        } else if term_info.is_tag {
+            Style::default().fg(D_GREEN)
+        } else {
+            Style::default().fg(D_FOREGROUND)
+        };
 
-            let count = app
-                .skins
-                .iter()
-                .filter(|s| {
-                    s.name_lower == lower_t
-                        || s.event_lower == lower_t
-                        || s.tags_lower.contains(&lower_t)
-                })
-                .count();
+        // Count occurrences of the term in the current results
+        let count = app
+            .results
+            .iter()
+            .filter(|s| {
+                s.name_lower.contains(t)
+                    || s.rarity_lower == *t
+                    || s.event_lower.contains(t)
+                    || s.tags_lower.contains(t)
+                    || s.year_str == *t
+            })
+            .count();
 
-            let mut spans = vec![Span::styled(t, style)];
-            spans.push(Span::styled(
-                format!(" ({})", count),
-                Style::default().fg(D_FOREGROUND),
-            ));
+        // Create the suggestion text with styling and count
+        let mut spans = vec![Span::styled(t, style)];
+        spans.push(Span::styled(
+            format!(" ({})", count),
+            Style::default().fg(D_FOREGROUND),
+        ));
 
-            ListItem::new(Line::from(spans))
-        })
-        .collect();
+        ListItem::new(Line::from(spans))
+    })
+    .collect();
 
     let mut list_state = ListState::default();
     list_state.select(Some(app.suggestion_index));
@@ -3101,7 +3133,7 @@ fn search_skins(
                     score += 40;
                 }
                 if skin.year_str == *tag {
-                    score += 20;
+                    score += 100;
                 }
             }
             Some((score, skin))
@@ -3111,3 +3143,4 @@ fn search_skins(
     scored_skins.sort_by(|a, b| b.0.cmp(&a.0));
     scored_skins.into_iter().map(|(_, s)| s.clone()).collect()
 }
+
