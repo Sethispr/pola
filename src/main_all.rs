@@ -74,7 +74,7 @@ struct AppState {
     sort_field: SortField,
     sort_descending: bool,
     show_detail: bool,
-	current_suggestion_terms: HashMap<String, TermInfo>,
+    current_suggestion_terms: HashMap<String, TermInfo>,
 }
 
 impl AppState {
@@ -105,7 +105,7 @@ impl AppState {
             sort_field: SortField::Name,
             sort_descending: false,
             show_detail: true,
-			current_suggestion_terms: HashMap::new(),
+            current_suggestion_terms: HashMap::new(),
         }
     }
 
@@ -173,77 +173,137 @@ impl AppState {
     }
 
     fn update_suggestion(&mut self) {
-    let input_parts: Vec<&str> = self.input.split_whitespace().collect();
-    let last_part = input_parts.last().cloned().unwrap_or("");
-    let last_part_lower = last_part.to_lowercase();
-    self.suggestion_list.clear();
-    self.suggestion_index = 0;
+        let input_parts: Vec<&str> = self.input.split_whitespace().collect();
+        let last_part = input_parts.last().cloned().unwrap_or("");
+        let last_part_lower = last_part.to_lowercase();
+        self.suggestion_list.clear();
+        self.suggestion_index = 0;
 
-    if !last_part_lower.is_empty() {
-        let matcher = fuzzy_matcher::skim::SkimMatcherV2::default();
-        let mut current_terms = HashMap::new();
+        if !last_part_lower.is_empty() {
+            let matcher = fuzzy_matcher::skim::SkimMatcherV2::default();
+            let mut current_terms = HashMap::new();
 
-        // Collect terms from current results
-        for skin in &self.results {
-            // Name words
-            for word in skin.name_lower.split_whitespace() {
-                let entry = current_terms.entry(word.to_string()).or_insert(TermInfo::default());
-                entry.is_name = true;
+            // Collect terms from current results AND all possible tags/years
+            for skin in &self.skins {
+                // Always include tags and years from all skins
+                if !skin.year_str.is_empty() && skin.year_str.contains(&last_part_lower) {
+                    let entry = current_terms
+                        .entry(skin.year_str.clone())
+                        .or_insert_with(|| TermInfo {
+                            is_year: true,
+                            ..TermInfo::default()
+                        });
+                    entry.is_year = true;
+                }
+
+                for tag in &skin.tags_lower {
+                    if tag.contains(&last_part_lower) {
+                        let entry = current_terms
+                            .entry(tag.clone())
+                            .or_insert_with(|| TermInfo {
+                                is_tag: true,
+                                ..TermInfo::default()
+                            });
+                        entry.is_tag = true;
+                    }
+                }
             }
-            // Event words
-            for word in skin.event_lower.split_whitespace() {
-                let entry = current_terms.entry(word.to_string()).or_insert(TermInfo::default());
-                entry.is_event = true;
+
+            for skin in &self.results {
+                // Rarity terms
+                if skin.rarity_lower.contains(&last_part_lower) {
+                    let entry = current_terms
+                        .entry(skin.rarity_lower.clone())
+                        .or_insert_with(|| TermInfo {
+                            is_rarity: true,
+                            ..TermInfo::default()
+                        });
+                    entry.is_rarity = true;
+                }
+
+                // Skin name words
+                for word in skin.name_lower.split_whitespace() {
+                    if word.contains(&last_part_lower) {
+                        let entry =
+                            current_terms
+                                .entry(word.to_string())
+                                .or_insert_with(|| TermInfo {
+                                    is_name: true,
+                                    ..TermInfo::default()
+                                });
+                        entry.is_name = true;
+                    }
+                }
+
+                // Event names
+                if skin.event_lower.contains(&last_part_lower) {
+                    let entry = current_terms
+                        .entry(skin.event_lower.clone())
+                        .or_insert_with(|| TermInfo {
+                            is_event: true,
+                            ..TermInfo::default()
+                        });
+                    entry.is_event = true;
+                }
             }
-            // Rarity
-            let entry = current_terms.entry(skin.rarity_lower.clone()).or_insert(TermInfo::default());
-            entry.is_rarity = true;
-            // Tags
-            for tag in &skin.tags_lower {
-                let entry = current_terms.entry(tag.clone()).or_insert(TermInfo::default());
-                entry.is_tag = true;
+
+            // Filter out used terms (except current partial)
+            let used_terms: HashSet<_> = input_parts[..input_parts.len().saturating_sub(1)]
+                .iter()
+                .map(|s| s.to_lowercase())
+                .collect();
+
+            let mut suggestions = Vec::new();
+
+            for (term, term_info) in &current_terms {
+                if used_terms.contains(term) {
+                    continue;
+                }
+
+                let score = matcher
+                    .fuzzy_match(term, &last_part_lower)
+                    .unwrap_or(i64::MIN);
+
+                // Priority system
+                let mut boost = match true {
+                    _ if term == &last_part_lower => 10000, // Exact match
+                    _ if term_info.is_rarity => 5000,
+                    _ if term_info.is_name => 4000,
+                    _ if term_info.is_event => 3000,
+                    _ if term_info.is_year => 2500,
+                    _ if term_info.is_tag => 2000,
+                    _ => 0,
+                };
+
+                // Prefix boost
+                if term.starts_with(&last_part_lower) {
+                    boost += 1500;
+                }
+
+                // Length normalization
+                let length_penalty = (term.len() as i64).saturating_sub(4) * 100;
+
+                let total_score = score + boost - length_penalty;
+
+                if total_score > 0 {
+                    suggestions.push((total_score, term.clone()));
+                }
             }
-            // Year
-            if !skin.year_str.is_empty() {
-                let entry = current_terms.entry(skin.year_str.clone()).or_insert(TermInfo::default());
-                entry.is_year = true;
-            }
+
+            // Sort and deduplicate
+            suggestions.sort_by(|a, b| b.0.cmp(&a.0).then_with(|| a.1.cmp(&b.1)));
+            let mut seen = HashSet::new();
+            self.suggestion_list = suggestions
+                .into_iter()
+                .filter_map(|(score, term)| seen.insert(term.clone()).then(|| (score, term)))
+                .take(5)
+                .map(|(_, term)| term)
+                .collect();
+
+            self.current_suggestion_terms = current_terms;
+            self.suggestion = self.suggestion_list.first().cloned();
         }
-
-        // Existing terms (excluding the last part being typed)
-        let existing_terms: HashSet<String> = input_parts[..input_parts.len().saturating_sub(1)]
-            .iter()
-            .map(|s| s.to_lowercase())
-            .collect();
-
-        let mut suggestions = Vec::new();
-
-        for (term, term_info) in &current_terms {
-            // Skip terms already present in the search (excluding current part)
-            if existing_terms.contains(term) {
-                continue;
-            }
-
-            let score = matcher.fuzzy_match(term, &last_part_lower).unwrap_or(i64::MIN);
-            let prefix_boost = if term.starts_with(&last_part_lower) { 1000 } else { 0 };
-            let field_boost = if term_info.is_name || term_info.is_event { 500 } else { 0 };
-
-            if score + prefix_boost + field_boost > 50 {
-                suggestions.push((score + prefix_boost + field_boost, term.clone()));
-            }
-        }
-
-        suggestions.sort_by(|a, b| b.0.cmp(&a.0).then_with(|| a.1.cmp(&b.1)));
-        self.suggestion_list = suggestions.into_iter().map(|(_, term)| term).take(5).collect();
-
-        // Update current suggestion terms for styling
-        self.current_suggestion_terms = current_terms;
-        self.suggestion = self.suggestion_list.first().cloned();
-    } else {
-        self.suggestion = None;
-        self.current_suggestion_terms.clear();
     }
-}
 
     fn cycle_suggestion(&mut self, direction: i32) {
         if !self.suggestion_list.is_empty() {
@@ -256,24 +316,30 @@ impl AppState {
 
     fn accept_suggestion(&mut self) {
         if let Some(suggestion) = &self.suggestion {
-            let mut parts: Vec<&str> = self.input.split_whitespace().collect();
+            let input = self.input.trim_end();
+            let mut parts: Vec<&str> = input.split_whitespace().collect();
+
             if parts.is_empty() {
                 self.input = format!("{} ", suggestion);
             } else {
-                let last_part = parts.last().unwrap().to_lowercase();
-                if suggestion.starts_with(&last_part) {
-                    parts.pop();
-                }
+                // Replace last partial term with full suggestion
+                parts.pop();
                 parts.push(suggestion);
-                self.input = parts.join(" ") + " ";
+
+                let joined = parts.join(" ");
+                self.input = if joined.is_empty() {
+                    String::new()
+                } else {
+                    format!("{} ", joined)
+                };
             }
+
             self.update_search();
             self.suggestion_list.clear();
             self.suggestion_index = 0;
             self.record_input();
         }
     }
-
     fn next(&mut self) {
         let i = self.table_state.selected().map_or(0, |i| {
             if i + 1 < self.results.len() {
@@ -630,51 +696,54 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
 
     // Suggestions list
     let suggestions: Vec<ListItem> = app
-    .suggestion_list
-    .iter()
-    .map(|t| {
-        let default_term_info = TermInfo::default(); // Create a longer-lived value
-        let term_info = app.current_suggestion_terms.get(t).unwrap_or(&default_term_info);
-        let style = if term_info.is_rarity {
-            match t.as_str() {
-                "pink" => Style::default().fg(D_PINK),
-                "red" => Style::default().fg(D_RED),
-                "teal" => Style::default().fg(D_TEAL),
-                _ => Style::default().fg(D_FOREGROUND),
-            }
-        } else if term_info.is_event {
-            Style::default().fg(D_PINK)
-        } else if term_info.is_year {
-            Style::default().fg(D_GREEN)
-        } else if term_info.is_tag {
-            Style::default().fg(D_GREEN)
-        } else {
-            Style::default().fg(D_FOREGROUND)
-        };
+        .suggestion_list
+        .iter()
+        .map(|t| {
+            let default_term_info = TermInfo::default(); // Create a longer-lived value
+            let term_info = app
+                .current_suggestion_terms
+                .get(t)
+                .unwrap_or(&default_term_info);
+            let style = if term_info.is_rarity {
+                match t.as_str() {
+                    "pink" => Style::default().fg(D_PINK),
+                    "red" => Style::default().fg(D_RED),
+                    "teal" => Style::default().fg(D_TEAL),
+                    _ => Style::default().fg(D_FOREGROUND),
+                }
+            } else if term_info.is_event {
+                Style::default().fg(D_PINK)
+            } else if term_info.is_year {
+                Style::default().fg(D_GREEN)
+            } else if term_info.is_tag {
+                Style::default().fg(D_GREEN)
+            } else {
+                Style::default().fg(D_FOREGROUND)
+            };
 
-        // Count occurrences of the term in the current results
-        let count = app
-            .results
-            .iter()
-            .filter(|s| {
-                s.name_lower.contains(t)
-                    || s.rarity_lower == *t
-                    || s.event_lower.contains(t)
-                    || s.tags_lower.contains(t)
-                    || s.year_str == *t
-            })
-            .count();
+            // Count occurrences of the term in the current results
+            let count = app
+                .results
+                .iter()
+                .filter(|s| {
+                    s.name_lower.contains(t)
+                        || s.rarity_lower == *t
+                        || s.event_lower.contains(t)
+                        || s.tags_lower.contains(t)
+                        || s.year_str == *t
+                })
+                .count();
 
-        // Create the suggestion text with styling and count
-        let mut spans = vec![Span::styled(t, style)];
-        spans.push(Span::styled(
-            format!(" ({})", count),
-            Style::default().fg(D_FOREGROUND),
-        ));
+            // Create the suggestion text with styling and count
+            let mut spans = vec![Span::styled(t, style)];
+            spans.push(Span::styled(
+                format!(" ({})", count),
+                Style::default().fg(D_FOREGROUND),
+            ));
 
-        ListItem::new(Line::from(spans))
-    })
-    .collect();
+            ListItem::new(Line::from(spans))
+        })
+        .collect();
 
     let mut list_state = ListState::default();
     list_state.select(Some(app.suggestion_index));
@@ -1980,8 +2049,8 @@ fn load_skins() -> Vec<Skin> {
             name_lower: "bubbles".to_string(),
             rarity: "Teal".to_string(),
             rarity_lower: "teal".to_string(),
-            event: "Code Redeemed".to_string(),
-            event_lower: "code redeemed".to_string(),
+            event: "Code".to_string(),
+            event_lower: "code".to_string(),
             year: None,
             year_str: "".to_string(),
             tags: vec!["code".to_string(), "gamenight".to_string()],
@@ -1995,8 +2064,8 @@ fn load_skins() -> Vec<Skin> {
             name_lower: "butter".to_string(),
             rarity: "Teal".to_string(),
             rarity_lower: "teal".to_string(),
-            event: "Code Redeemed".to_string(),
-            event_lower: "code redeemed".to_string(),
+            event: "Code".to_string(),
+            event_lower: "code".to_string(),
             year: None,
             year_str: "".to_string(),
             tags: vec!["code".to_string(), "duped".to_string()],
@@ -2010,8 +2079,8 @@ fn load_skins() -> Vec<Skin> {
             name_lower: "fireworks".to_string(),
             rarity: "Teal".to_string(),
             rarity_lower: "teal".to_string(),
-            event: "Code Redeemed".to_string(),
-            event_lower: "code redeemed".to_string(),
+            event: "Code".to_string(),
+            event_lower: "code".to_string(),
             year: None,
             year_str: "".to_string(),
             tags: vec!["code".to_string()],
@@ -2025,8 +2094,8 @@ fn load_skins() -> Vec<Skin> {
             name_lower: "pearl".to_string(),
             rarity: "Teal".to_string(),
             rarity_lower: "teal".to_string(),
-            event: "Code Redeemed".to_string(),
-            event_lower: "code redeemed".to_string(),
+            event: "Code".to_string(),
+            event_lower: "code".to_string(),
             year: None,
             year_str: "".to_string(),
             tags: vec!["code".to_string(), "gamenight".to_string()],
@@ -2040,8 +2109,8 @@ fn load_skins() -> Vec<Skin> {
             name_lower: "tin".to_string(),
             rarity: "Teal".to_string(),
             rarity_lower: "teal".to_string(),
-            event: "Code Redeemed".to_string(),
-            event_lower: "code redeemed".to_string(),
+            event: "Code".to_string(),
+            event_lower: "code".to_string(),
             year: None,
             year_str: "".to_string(),
             tags: vec!["code".to_string(), "gamenight".to_string()],
@@ -2469,8 +2538,8 @@ fn load_skins() -> Vec<Skin> {
                 .collect(),
         },
         Skin {
-            name: "Orinthan".to_string(),
-            name_lower: "orinthan".to_string(),
+            name: "Orinthian".to_string(),
+            name_lower: "orinthian".to_string(),
             rarity: "Pink".to_string(),
             rarity_lower: "pink".to_string(),
             event: "Future Case".to_string(),
@@ -3017,8 +3086,8 @@ fn load_skins() -> Vec<Skin> {
             name_lower: "hammer".to_string(),
             rarity: "Teal".to_string(),
             rarity_lower: "teal".to_string(),
-            event: "Map Builder".to_string(),
-            event_lower: "map builder".to_string(),
+            event: "Builder".to_string(),
+            event_lower: "builder".to_string(),
             year: None,
             year_str: "".to_string(),
             tags: vec!["special".to_string()],
@@ -3096,6 +3165,7 @@ fn search_skins(
         .filter_map(|tag| name_map.get(*tag))
         .map(|&i| skins[i].clone())
         .collect();
+
     if !exact_matches.is_empty() {
         return exact_matches;
     }
@@ -3104,36 +3174,38 @@ fn search_skins(
     let mut scored_skins: Vec<(i64, &Skin)> = skins
         .iter()
         .filter_map(|skin| {
+            // Enhanced partial matching logic
             let all_tags_matched = tags.iter().all(|&tag| {
-                skin.name_lower.contains(tag)
-                    || skin.rarity_lower == tag
-                    || skin.event_lower.contains(tag)
-                    || skin.year_str == tag
-                    || skin.tags_lower.contains(tag)
+                skin.name_lower.contains(tag) ||
+                skin.rarity_lower == tag || // Exact match for rarity
+                skin.event_lower.contains(tag) ||
+                skin.year_str.contains(tag) || // Partial year matching
+                skin.tags_lower.iter().any(|t| t.contains(tag)) // Partial tag matching
             });
+
             if !all_tags_matched {
                 return None;
             }
 
             let mut score = 0;
             for tag in tags {
-                if skin.name_lower.contains(tag) {
-                    score += 100;
-                }
+                // Boost exact matches in special fields
                 if skin.rarity_lower == *tag {
-                    score += 80;
+                    score += 1000;
                 }
-                if skin.event_lower.contains(tag) {
-                    score += 60;
+                if skin.year_str == *tag {
+                    score += 800;
                 }
+                if skin.tags_lower.contains(*tag) {
+                    score += 600;
+                }
+
+                // Fuzzy match scoring
                 if let Some(s) = matcher.fuzzy_match(&skin.name_lower, tag) {
                     score += s;
                 }
-                if skin.tags_lower.contains(&tag.to_string()) {
-                    score += 40;
-                }
-                if skin.year_str == *tag {
-                    score += 100;
+                if let Some(s) = matcher.fuzzy_match(&skin.event_lower, tag) {
+                    score += s;
                 }
             }
             Some((score, skin))
@@ -3143,4 +3215,3 @@ fn search_skins(
     scored_skins.sort_by(|a, b| b.0.cmp(&a.0));
     scored_skins.into_iter().map(|(_, s)| s.clone()).collect()
 }
-
