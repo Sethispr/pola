@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/624b113e-36c2-4661-96ed-c760e66283dc" alt="demo" width="596">
+  <img src="https://github.com/user-attachments/assets/93d71846-c5ca-4e0a-993a-01d5190ee5ea" alt="demo" width="596">
 </p>
 
 ## Installation
@@ -45,11 +45,6 @@ https://crates.io/crates/pola
 
 <details>
 <summary>Tags List</summary>
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/4d6d2147-6013-4fd7-9c6a-99f8f5074e3a" alt="demo" width="706">
-
-  Old Demo
-</p>
 
 | Tag                   | Description                         | Tag                   | Description                         |
 |-----------------------|-------------------------------------|-----------------------|-------------------------------------|
