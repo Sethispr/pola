@@ -48,6 +48,9 @@ features to-do's:
 - x icon in search bar at the right to clear search
 - introduce operators like and or not similar to include exclude etc skins
 - year range search e.g. 2022-2025
+- show current shop, needs live backend
+- search history clear history
+- fix block styling when theres 3 tags particularly the valentine/birthday exquisite case skins
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
