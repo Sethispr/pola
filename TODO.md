@@ -37,6 +37,7 @@ features to-do's:
 - contextual suggestion should get refined since case and event overlaps e.g. valentine case and bundle or christmas case and event
 - putting 2 in the search doesnt suggest 2022 etc year tags
 - skins with popular tag should be suggested first for any prompt trying for a name
+- when typing red and then s it should be showing skins with names that start with s like salmon or sanctum
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
