@@ -60,6 +60,19 @@ website to-do's:
 - add max-width for images
 - make tags capitalized at first letter
 
+pola-cli to-do's:
+- animated ASCII intro?
+- featured skin of the day
+- random skin feature
+- export results
+- favorite skins
+- introduce operators AND OR NOT similar to include/exclude etc skins
+- ANSI colors?
+- history and clear history
+- numbered results and quick selection
+- compact view
+- value converter pink = 4 reds = ... 256 blues
+
 github to-do's:
 - neaten out tables in skin.md
 - put all github related md files into a .github folder
