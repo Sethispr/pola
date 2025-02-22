@@ -38,6 +38,16 @@ features to-do's:
 - putting 2 in the search doesnt suggest 2022 etc year tags
 - skins with popular tag should be suggested first for any prompt trying for a name
 - when typing red and then s it should be showing skins with names that start with s like salmon or sanctum
+- skin translation in diff lang spanish russian, config for lang
+- favorite or star system OR add/edit tags like add favorite / for trade tags
+- persistent bg color so can make light mode theme and hc
+- support importing skin data from csv or json
+- select multiple skins using shift up down, can export or add to favs or compare
+- search results stats and overall stats of skins in sa
+- export list of skin to csv/json/txt format
+- x icon in search bar at the right to clear search
+- introduce operators like and or not similar to include exclude etc skins
+- year range search e.g. 2022-2025
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
