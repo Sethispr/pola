@@ -46,6 +46,10 @@ https://crates.io/crates/pola
 <details>
 <summary>Tags List</summary>
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/2e8b5a87-2ce7-4f41-b6f0-03c8d08c161f" alt="demo" width="596">
+</p>
+
 | Tag                   | Description                         | Tag                   | Description                         |
 |-----------------------|-------------------------------------|-----------------------|-------------------------------------|
 | <kbd>Event</kbd>      | Event skins                         | <kbd>Bundle</kbd>     | Bundle skins                        |
