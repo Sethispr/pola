@@ -51,6 +51,7 @@ features to-do's:
 - show current shop, needs live backend
 - search history clear history
 - fix block styling when theres 3 tags particularly the valentine/birthday exquisite case skins
+- paginated results so show 10 skins per page to "fix" click offset
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
@@ -75,6 +76,8 @@ pola-cli to-do's:
 - numbered results and quick selection
 - compact view
 - value converter pink = 4 reds = ... 256 blues
+- paginated results
+- instead of back to go back from husotry maybe it shouldalso act as search but if you type in 1-1999 then like yeah it shows history results
 
 github to-do's:
 - neaten out tables in skin.md
