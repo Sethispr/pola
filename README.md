@@ -10,7 +10,7 @@
 
 Option 1: [Install - pola.exe](https://github.com/Sethispr/pola/releases/tag/v0.1.1-beta)
 
-Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo](https://doc.rust-lang.org/cargo/), and [Git](https://git-scm.com/downloads/win) first.
+Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org/tools/install) and [Git](https://git-scm.com/downloads/win) first.
 
 1. Clone the repository:
    ```bash
