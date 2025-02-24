@@ -1,7 +1,10 @@
+use dirs;
 use fuzzy_matcher::skim::SkimMatcherV2;
 use fuzzy_matcher::FuzzyMatcher;
 use std::collections::{HashMap, HashSet};
+use std::fs::OpenOptions;
 use std::io::{self, Write};
+use std::path::PathBuf;
 use std::process::Command;
 
 const POLA_ASCII: &str = r#"
@@ -13,6 +16,9 @@ const POLA_ASCII: &str = r#"
    \ \__\    \ \_______\ \_______\ \__\ \__\
     \|__|     \|_______|\|_______|\|__|\|__|
 "#;
+
+const FAV_INDICATOR: &str = "★";
+const UNFAV_INDICATOR: &str = "☆";
 
 #[derive(Debug, Clone)]
 struct Skin {
@@ -28,24 +34,118 @@ struct Skin {
     tags_lower: HashSet<String>,
 }
 
+struct History {
+    entries: Vec<String>,
+    file_path: PathBuf,
+}
+
+impl History {
+    fn new() -> Self {
+        let path = dirs::home_dir()
+            .expect("Failed to get home directory")
+            .join(".pola_history");
+        let entries = if let Ok(content) = std::fs::read_to_string(&path) {
+            content.lines().map(|s| s.to_string()).collect()
+        } else {
+            Vec::new()
+        };
+        Self {
+            entries,
+            file_path: path,
+        }
+    }
+
+    fn add(&mut self, query: String) {
+        self.entries.push(query.clone());
+        if let Ok(mut file) = OpenOptions::new()
+            .append(true)
+            .create(true)
+            .open(&self.file_path)
+        {
+            let _ = writeln!(file, "{}", query);
+        }
+    }
+
+    fn clear(&mut self) {
+        self.entries.clear();
+        let _ = std::fs::write(&self.file_path, "");
+    }
+
+    fn get_entries(&self) -> &[String] {
+        &self.entries
+    }
+}
+
+#[derive(Debug)]
+struct Favorites {
+    skins: HashSet<String>,
+    file_path: PathBuf,
+}
+
+impl Favorites {
+    fn new() -> Self {
+        let path = dirs::home_dir()
+            .expect("Failed to get home directory")
+            .join(".pola_favorites");
+        let content = std::fs::read_to_string(&path).unwrap_or_default();
+        let skins = content.lines().map(|s| s.trim().to_lowercase()).collect();
+
+        Self {
+            skins,
+            file_path: path,
+        }
+    }
+
+    fn add(&mut self, skin_name: &str) {
+        let name = skin_name.to_lowercase();
+        if self.skins.insert(name.clone()) {
+            self.save();
+        }
+    }
+
+    fn remove(&mut self, skin_name: &str) {
+        let name = skin_name.to_lowercase();
+        if self.skins.remove(&name) {
+            self.save();
+        }
+    }
+
+    fn clear(&mut self) {
+        self.skins.clear();
+        self.save();
+    }
+
+    fn contains(&self, skin_name: &str) -> bool {
+        self.skins.contains(&skin_name.to_lowercase())
+    }
+
+    fn save(&self) {
+        let _ = std::fs::write(
+            &self.file_path,
+            self.skins.iter().cloned().collect::<Vec<_>>().join("\n"),
+        );
+    }
+}
+
 fn main() {
-    // Load skins and create name map at startup
     let skins = load_skins();
     let name_map: HashMap<String, usize> = skins
         .iter()
         .enumerate()
         .map(|(i, s)| (s.name_lower.clone(), i))
         .collect();
+    let mut history = History::new();
+    let mut favorites = Favorites::new();
 
-    // Print ASCII art header and welcome message
     println!("{}", POLA_ASCII);
     println!("Welcome to Pola CLI!");
-    println!("Enter search terms separated by spaces to find matching skins. (ex: pink summer void)");
+    println!(
+        "Enter search terms separated by spaces to find matching skins. (ex: pink summer void)"
+    );
     println!("- Leave blank to see all skins.");
     println!("- Type 'exit' to quit.");
     println!("- Type 'help' for commands, 'clear' to clear the screen, and 'about' for more info.");
-    
-    // Main input loop
+
     loop {
         print!("> ");
         io::stdout().flush().expect("Failed to flush stdout");
@@ -53,61 +153,288 @@ fn main() {
         io::stdin()
             .read_line(&mut input)
             .expect("Failed to read input");
-        let trimmed = input.trim().to_lowercase();
+        let trimmed_input = input.trim();
+        let trimmed_lower = trimmed_input.to_lowercase();
 
-        // Handle commands
-        if trimmed == "exit" {
-            println!("Goodbye!");
-            break;
-        } else if trimmed == "help" {
-            print_help();
-            continue;
-        } else if trimmed == "clear" {
-            clear_screen();
-            continue;
-        } else if trimmed == "about" {
-            print_about();
-            continue;
-        }
-
-        // Determine search results
-        let results = if trimmed.is_empty() {
-            // If input is empty, show all skins
-            skins.clone()
-        } else {
-            // Split input into terms and search
-            let input_terms: Vec<String> = trimmed
-                .split_whitespace()
-                .map(|s| s.to_string())
-                .collect();
-            let tags: HashSet<&str> = input_terms.iter().map(|s| s.as_str()).collect();
-            search_skins(&skins, &name_map, &tags)
-        };
-
-        // Display results
-        if results.is_empty() {
-            println!("No skins found matching your search.");
-        } else {
-            let mut sorted_results = results;
-            sorted_results.sort_by(|a, b| a.name_lower.cmp(&b.name_lower));
-            println!("\nFound {} skins:\n", sorted_results.len());
-            for skin in sorted_results {
-                println!("Name: {}", skin.name);
-                println!("Rarity: {}", skin.rarity);
-                println!("Event: {}", skin.event);
-                println!(
-                    "Year: {}",
-                    skin.year.map_or("N/A".to_string(), |y| y.to_string())
-                );
-                println!("Tags: {}", skin.tags.join(", "));
-                println!("------------------------------");
+        match trimmed_lower.as_str() {
+            "exit" => {
+                println!("Goodbye!");
+                break;
+            }
+            "help" => {
+                print_help();
+                continue;
+            }
+            "clear" => {
+                clear_screen();
+                continue;
+            }
+            "about" => {
+                print_about();
+                continue;
+            }
+            "history" => {
+                display_history(&mut history, &skins, &name_map, &favorites);
+                continue;
+            }
+            "clearhistory" => {
+                history.clear();
+                println!("History cleared.");
+                continue;
+            }
+            "favorites" => {
+                display_favorites(&favorites, &skins);
+                continue;
+            }
+            "clearfavorites" => {
+                favorites.clear();
+                println!("Favorites cleared.");
+                continue;
+            }
+            "stats" => {
+                println!("Total skins loaded: {}", skins.len());
+                println!("Favorites count: {}", favorites.skins.len());
+                println!("History count: {}", history.entries.len());
+                continue;
+            }
+            _ => {
+                if trimmed_lower.starts_with("fav ") {
+                    handle_favorite_command(&trimmed_input, &skins, &mut favorites);
+                } else if trimmed_lower.starts_with("unfav ") {
+                    handle_unfavorite_command(&trimmed_input, &mut favorites);
+                } else if let Some(query) = check_rerun_command(&trimmed_lower, &history) {
+                    process_query(query, &skins, &name_map, &favorites);
+                    history.add(trimmed_input.to_string());
+                } else {
+                    process_query(trimmed_input.to_string(), &skins, &name_map, &favorites);
+                    if !trimmed_input.is_empty() {
+                        history.add(trimmed_input.to_string());
+                    }
+                }
             }
         }
     }
 }
 
+fn handle_favorite_command(input: &str, skins: &[Skin], favorites: &mut Favorites) {
+    let parts: Vec<&str> = input.split_whitespace().collect();
+    if parts.len() < 2 {
+        println!("Usage: fav <skin-name>");
+        return;
+    }
+
+    let skin_name = parts[1..].join(" ");
+    if let Some(_) = skins
+        .iter()
+        .find(|s| s.name.eq_ignore_ascii_case(&skin_name))
+    {
+        favorites.add(&skin_name);
+        println!("Added '{}' to favorites {}", skin_name, FAV_INDICATOR);
+    } else {
+        println!("Skin '{}' not found", skin_name);
+    }
+}
+
+fn handle_unfavorite_command(input: &str, favorites: &mut Favorites) {
+    let parts: Vec<&str> = input.split_whitespace().collect();
+    if parts.len() < 2 {
+        println!("Usage: unfav <skin-name>");
+        return;
+    }
+
+    let skin_name = parts[1..].join(" ");
+    favorites.remove(&skin_name);
+    println!("Removed '{}' from favorites {}", skin_name, UNFAV_INDICATOR);
+}
+
+fn display_favorites(favorites: &Favorites, skins: &[Skin]) {
+    let fav_skins: Vec<&Skin> = skins
+        .iter()
+        .filter(|s| favorites.contains(&s.name))
+        .collect();
+
+    if fav_skins.is_empty() {
+        println!("No favorited skins.");
+        return;
+    }
+
+    println!("\nFavorited Skins ({}):", fav_skins.len());
+    display_results(fav_skins.into_iter().cloned().collect(), favorites);
+}
+
+fn display_results(results: Vec<Skin>, favorites: &Favorites) {
+    if results.is_empty() {
+        println!("No skins found matching your search.");
+        return;
+    }
+
+    let page_size = 10; // Number of results per page
+    let mut page = 0;
+
+    loop {
+        let start = page * page_size;
+        let end = (page + 1) * page_size;
+        let page_results = results
+            .get(start..std::cmp::min(end, results.len()))
+            .unwrap_or(&[]);
+
+        println!("\nFound {} skins (Page {}):\n", results.len(), page + 1);
+        for skin in page_results {
+            let fav_status = if favorites.contains(&skin.name) {
+                FAV_INDICATOR
+            } else {
+                UNFAV_INDICATOR
+            };
+            println!("{} Name: {}", fav_status, skin.name);
+            println!("Rarity: {}", skin.rarity);
+            println!("Event: {}", skin.event);
+            println!(
+                "Year: {}",
+                skin.year.map_or("N/A".to_string(), |y| y.to_string())
+            );
+            println!("Tags: {}", skin.tags.join(", "));
+            println!("------------------------------");
+        }
+
+        // Check if there are more results to display
+        if end >= results.len() {
+            break;
+        }
+
+        // Prompt for next page or quit
+        println!("\nPress Enter to see the next page, or 'q' to quit.");
+        let mut input = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read input");
+
+        if input.trim().eq_ignore_ascii_case("q") {
+            break;
+        }
+
+        page += 1;
+    }
+}
+
+fn check_rerun_command(input: &str, history: &History) -> Option<String> {
+    if input.starts_with('!') {
+        let id_str = &input[1..];
+        if let Ok(id) = id_str.parse::<usize>() {
+            if id > 0 && id <= history.get_entries().len() {
+                return Some(history.get_entries()[id - 1].clone());
+            }
+        }
+    }
+    None
+}
+
+fn process_query(
+    query: String,
+    skins: &[Skin],
+    name_map: &HashMap<String, usize>,
+    favorites: &Favorites,
+) {
+    let query_lower = query.to_lowercase();
+    let tags: HashSet<&str> = query_lower.split_whitespace().collect();
+    let results = if tags.is_empty() {
+        skins.to_vec()
+    } else {
+        search_skins(skins, name_map, &tags)
+    };
+    display_results(results, favorites);
+}
+
+fn search_skins(
+    skins: &[Skin],
+    name_map: &HashMap<String, usize>,
+    tags: &HashSet<&str>,
+) -> Vec<Skin> {
+    let exact_matches: Vec<Skin> = tags
+        .iter()
+        .filter_map(|tag| name_map.get(*tag))
+        .map(|&i| skins[i].clone())
+        .collect();
+
+    if !exact_matches.is_empty() {
+        return exact_matches;
+    }
+
+    let matcher = SkimMatcherV2::default();
+    let mut scored_skins: Vec<(i64, &Skin)> = skins
+        .iter()
+        .filter_map(|skin| {
+            let all_tags_matched = tags.iter().all(|&tag| {
+                skin.name_lower.contains(tag)
+                    || skin.rarity_lower == tag
+                    || skin.event_lower.contains(tag)
+                    || skin.year_str.contains(tag)
+                    || skin.tags_lower.iter().any(|t| t.contains(tag))
+            });
+
+            if !all_tags_matched {
+                return None;
+            }
+
+            let mut score = 0;
+            for tag in tags {
+                if skin.rarity_lower == *tag {
+                    score += 1000;
+                }
+                if skin.year_str == *tag {
+                    score += 800;
+                }
+                if skin.tags_lower.contains(*tag) {
+                    score += 600;
+                }
+                if let Some(s) = matcher.fuzzy_match(&skin.name_lower, tag) {
+                    score += s;
+                }
+                if let Some(s) = matcher.fuzzy_match(&skin.event_lower, tag) {
+                    score += s;
+                }
+            }
+            Some((score, skin))
+        })
+        .collect();
+
+    scored_skins.sort_by(|a, b| b.0.cmp(&a.0));
+    scored_skins.into_iter().map(|(_, s)| s.clone()).collect()
+}
+
+fn print_help() {
+    println!("\nAvailable Commands:");
+    println!("  help          - Show this help message");
+    println!("  clear         - Clear the screen");
+    println!("  about         - Display information about Pola CLI");
+    println!("  exit          - Quit the application");
+    println!("  history       - View search history");
+    println!("  clearhistory  - Clear search history");
+    println!("  fav <skin>    - Add skin to favorites");
+    println!("  unfav <skin>  - Remove skin from favorites");
+    println!("  favorites     - List favorited skins");
+    println!("  clearfavorites - Clear all favorites");
+    println!("  [text]        - Any other text is treated as search terms/tags\n");
+}
+
+fn print_about() {
+    println!("{}", POLA_ASCII);
+    println!("\nPola CLI – Fast SA Skin Search");
+    println!("Version: 0.1.0-alpha");
+    println!("For traders, made by a fellow trader! ");
+    println!("Enjoy easily searching skins you need information about\n");
+}
+
+fn clear_screen() {
+    if cfg!(target_os = "windows") {
+        let _ = Command::new("cmd").args(&["/C", "cls"]).status();
+    } else {
+        let _ = Command::new("clear").status();
+    }
+}
+
 fn load_skins() -> Vec<Skin> {
     let mut skins = vec![
+        // Valentine Case
         Skin {
             name: "Cupid".to_string(),
             name_lower: "cupid".to_string(),
@@ -2238,7 +2565,7 @@ fn load_skins() -> Vec<Skin> {
         },
     ];
 
-    // Post-process skins as in the original
+    // Post-process skins
     for skin in &mut skins {
         skin.name_lower = skin.name.to_lowercase();
         skin.rarity_lower = skin.rarity.to_lowercase();
@@ -2250,85 +2577,47 @@ fn load_skins() -> Vec<Skin> {
     skins
 }
 
-fn search_skins(
+fn display_history(
+    history: &mut History,
     skins: &[Skin],
     name_map: &HashMap<String, usize>,
-    tags: &HashSet<&str>,
-) -> Vec<Skin> {
-    let exact_matches: Vec<Skin> = tags
-        .iter()
-        .filter_map(|tag| name_map.get(*tag))
-        .map(|&i| skins[i].clone())
-        .collect();
-
-    if !exact_matches.is_empty() {
-        return exact_matches;
+    favorites: &Favorites,
+) {
+    println!("\nSearch History:");
+    for (i, entry) in history.get_entries().iter().enumerate() {
+        println!("{:>4}: {}", i + 1, entry);
     }
+    println!();
 
-    let matcher = SkimMatcherV2::default();
-    let mut scored_skins: Vec<(i64, &Skin)> = skins
-        .iter()
-        .filter_map(|skin| {
-            let all_tags_matched = tags.iter().all(|&tag| {
-                skin.name_lower.contains(tag)
-                    || skin.rarity_lower == tag
-                    || skin.event_lower.contains(tag)
-                    || skin.year_str.contains(tag)
-                    || skin.tags_lower.iter().any(|t| t.contains(tag))
-            });
+    println!("Enter a number to re-run a search, 'clearhistory' to clear the history, 'back' to return to the main prompt, or type a new search query.");
+    loop {
+        print!("history> ");
+        io::stdout().flush().expect("Failed to flush stdout");
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).expect("Failed to read input");
+        let trimmed = input.trim();
 
-            if !all_tags_matched {
-                return None;
+        if trimmed.eq_ignore_ascii_case("back") {
+            break;
+        } else if trimmed.eq_ignore_ascii_case("clearhistory") {
+            history.clear();
+            println!("History cleared.");
+            break;
+        } else if let Ok(index) = trimmed.parse::<usize>() {
+            if index > 0 && index <= history.get_entries().len() {
+                let query = history.get_entries()[index - 1].clone();
+                println!("Re-running search: {}", query);
+                process_query(query, skins, name_map, favorites);
+                break;
+            } else {
+                println!("Invalid history number. Please try again.");
             }
-
-            let mut score = 0;
-            for tag in tags {
-                if skin.rarity_lower == *tag {
-                    score += 1000;
-                }
-                if skin.year_str == *tag {
-                    score += 800;
-                }
-                if skin.tags_lower.contains(*tag) {
-                    score += 600;
-                }
-                if let Some(s) = matcher.fuzzy_match(&skin.name_lower, tag) {
-                    score += s;
-                }
-                if let Some(s) = matcher.fuzzy_match(&skin.event_lower, tag) {
-                    score += s;
-                }
-            }
-            Some((score, skin))
-        })
-        .collect();
-
-    scored_skins.sort_by(|a, b| b.0.cmp(&a.0));
-    scored_skins.into_iter().map(|(_, s)| s.clone()).collect()
-}
-
-fn print_help() {
-    println!("\nAvailable Commands:");
-    println!("  help   - Show this help message");
-    println!("  clear  - Clear the screen");
-    println!("  about  - Display information about Pola CLI");
-    println!("  exit   - Quit the application");
-    println!("  [text] - Any other text is treated as search terms/tags\n");
-}
-
-fn print_about() {
-	 println!("{}", POLA_ASCII);
-    println!("\nPola CLI – Fast SA Skin Search");
-    println!("Version: 0.1.0-alpha");
-    println!("For traders, made by a fellow trader! ");
-    println!("Enjoy easily searching skins you need information about\n");
-}
-
-fn clear_screen() {
-    // Cross-platform screen clear
-    if cfg!(target_os = "windows") {
-        let _ = Command::new("cmd").args(&["/C", "cls"]).status();
-    } else {
-        let _ = Command::new("clear").status();
+        } else {
+            // Treat any other input as a new search query
+            println!("Running search for: {}", trimmed);
+            process_query(trimmed.to_string(), skins, name_map, favorites);
+            history.add(trimmed.to_string());
+            break;
+        }
     }
 }
