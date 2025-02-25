@@ -2,7 +2,7 @@ optimizing to-do's:
 
 - reduce allocations
 - more cache-friendly data structures
-- make tags capitalized at first letter?
+- swap fuzzymatcher to nucleo (x8 times faster)
 - more efficient index-based operations
 - reuse fuzzy matcher instance
 - change fuzzy matching to using nucleo (x8 times faster)
