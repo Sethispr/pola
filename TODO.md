@@ -51,7 +51,9 @@ features to-do's:
 - show current shop, needs live backend
 - search history clear history
 - fix block styling when theres 3 tags particularly the valentine/birthday exquisite case skins
-- paginated results so show 10 skins per page to "fix" click offset
+- paginated results so show 10 skins per page to "fix" click offset (implemented though it didnt fix click offset)
+- suggestions should prioritize the suggestion that has more possible outcomes like energy instead of enforcer
+- suggestions should prioritize suggestions that actually has the string like "er" so it doesnt show azurite first so fix alphabet sorting being default all the time
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
