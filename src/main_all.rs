@@ -28,6 +28,16 @@ const D_RED: Color = Color::Rgb(224, 108, 117); // for red skins (muted warm red
 const D_YELLOW: Color = Color::Rgb(244, 163, 180); // main pale red
 const D_TEAL: Color = Color::Rgb(244, 163, 180); // for teal skins (deep sea teal) for now its red 58, 139, 132
 
+const POLA_ASCII: &str = r#"
+ ________  ________  ___       ________ 
+|\   __  \|\   __  \|\  \     |\   __  \    
+\ \  \|\  \ \  \|\  \ \  \    \ \  \|\  \   
+ \ \   ____\ \  \\\  \ \  \    \ \   __  \  
+  \ \  \___|\ \  \\\  \ \  \____\ \  \ \  \ 
+   \ \__\    \ \_______\ \_______\ \__\ \__\
+    \|__|     \|_______|\|_______|\|__|\|__|
+"#;
+
 #[derive(PartialEq, Eq)]
 enum SortField {
     Name,
@@ -75,6 +85,8 @@ struct AppState {
     sort_descending: bool,
     show_detail: bool,
     current_suggestion_terms: HashMap<String, TermInfo>,
+    current_page: usize,
+    items_per_page: usize,
 }
 
 impl AppState {
@@ -106,6 +118,8 @@ impl AppState {
             sort_descending: false,
             show_detail: true,
             current_suggestion_terms: HashMap::new(),
+            current_page: 0,
+            items_per_page: 10,
         }
     }
 
@@ -183,7 +197,6 @@ impl AppState {
             let matcher = fuzzy_matcher::skim::SkimMatcherV2::default();
             let mut current_terms = HashMap::new();
 
-            // Collect terms from current results AND all possible tags/years
             for skin in &self.skins {
                 // Always include tags and years from all skins
                 if !skin.year_str.is_empty() && skin.year_str.contains(&last_part_lower) {
@@ -261,12 +274,12 @@ impl AppState {
                 }
 
                 let score = matcher
-                    .fuzzy_match(term, &last_part_lower)
+                    .fuzzy_match(&term, &last_part_lower)
                     .unwrap_or(i64::MIN);
 
                 // Priority system
                 let mut boost = match true {
-                    _ if term == &last_part_lower => 10000, // Exact match
+                    _ if *term == last_part_lower => 10000, // exact match
                     _ if term_info.is_rarity => 5000,
                     _ if term_info.is_name => 4000,
                     _ if term_info.is_event => 3000,
@@ -277,7 +290,7 @@ impl AppState {
 
                 // Prefix boost
                 if term.starts_with(&last_part_lower) {
-                    boost += 1500;
+                    boost += 10000;
                 }
 
                 // Length normalization
@@ -340,23 +353,35 @@ impl AppState {
             self.record_input();
         }
     }
+
     fn next(&mut self) {
-        let i = self.table_state.selected().map_or(0, |i| {
-            if i + 1 < self.results.len() {
-                i + 1
-            } else {
-                i
+        let selected = self.table_state.selected().unwrap_or(0);
+        let start = self.current_page * self.items_per_page;
+        let end = (start + self.items_per_page).min(self.results.len());
+        let current_page_items = end - start;
+
+        if selected + 1 < current_page_items {
+            self.table_state.select(Some(selected + 1));
+        } else {
+            let total_pages = (self.results.len() + self.items_per_page - 1) / self.items_per_page;
+            if self.current_page < total_pages - 1 {
+                self.current_page += 1;
+                self.table_state.select(Some(0));
             }
-        });
-        self.table_state.select(Some(i));
+        }
     }
 
     fn previous(&mut self) {
-        let i = self
-            .table_state
-            .selected()
-            .map_or(0, |i| if i > 0 { i - 1 } else { 0 });
-        self.table_state.select(Some(i));
+        let selected = self.table_state.selected().unwrap_or(0);
+        if selected > 0 {
+            self.table_state.select(Some(selected - 1));
+        } else if self.current_page > 0 {
+            self.current_page -= 1;
+            let prev_start = self.current_page * self.items_per_page;
+            let prev_end = (prev_start + self.items_per_page).min(self.results.len());
+            let prev_page_items = prev_end - prev_start;
+            self.table_state.select(Some(prev_page_items - 1));
+        }
     }
 
     fn record_input(&mut self) {
@@ -367,6 +392,20 @@ impl AppState {
             self.input_history.push(self.input.clone());
             self.history_index = self.input_history.len() - 1;
         }
+    }
+
+    fn first_page(&mut self) {
+        self.current_page = 0;
+        self.table_state.select(Some(0));
+    }
+
+    fn last_page(&mut self) {
+        let total_pages = (self.results.len() + self.items_per_page - 1) / self.items_per_page;
+        self.current_page = total_pages.saturating_sub(1);
+        let start = self.current_page * self.items_per_page;
+        let end = (start + self.items_per_page).min(self.results.len());
+        let last_page_items = end - start;
+        self.table_state.select(Some(last_page_items - 1));
     }
 
     fn undo(&mut self) {
@@ -412,26 +451,20 @@ fn main() -> io::Result<()> {
                     }
                     match key.code {
                         KeyCode::Esc => break,
-
-                        // Ctrl+L: clear the search bar
                         KeyCode::Char('l') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             app.input.clear();
                             app.update_search();
                             app.record_input();
                         }
-                        // Ctrl+H: show help page
                         KeyCode::Char('h') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             show_help(&mut terminal)?;
                         }
-                        // Ctrl+D toggle detailed view
                         KeyCode::Char('d') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             app.show_detail = !app.show_detail;
                         }
-                        // Ctrl+Z: undo input
                         KeyCode::Char('z') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             app.undo();
                         }
-                        // Ctrl+Y: redo input
                         KeyCode::Char('y') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             app.redo();
                         }
@@ -447,10 +480,24 @@ fn main() -> io::Result<()> {
                         }
                         KeyCode::Down => app.next(),
                         KeyCode::Up => app.previous(),
-                        KeyCode::Home => app.table_state.select(Some(0)),
-                        KeyCode::End => app
-                            .table_state
-                            .select(Some(app.results.len().saturating_sub(1))),
+                        KeyCode::Home => app.first_page(), // Jump to first page
+                        KeyCode::End => app.last_page(),   // Jump to last page
+                        KeyCode::PageUp => {
+                            // Go to previous page
+                            if app.current_page > 0 {
+                                app.current_page -= 1;
+                                app.table_state.select(Some(0));
+                            }
+                        }
+                        KeyCode::PageDown => {
+                            // Go to next page
+                            let total_pages =
+                                (app.results.len() + app.items_per_page - 1) / app.items_per_page;
+                            if app.current_page < total_pages - 1 {
+                                app.current_page += 1;
+                                app.table_state.select(Some(0));
+                            }
+                        }
                         KeyCode::Tab => {
                             if key.modifiers.contains(KeyModifiers::SHIFT) {
                                 app.cycle_suggestion(-1);
@@ -473,7 +520,6 @@ fn main() -> io::Result<()> {
                             app.previous();
                         }
                         MouseEventKind::Down(_button) => {
-                            // Recalculate layout to determine the table area
                             let term_area = terminal.size()?;
                             let outer_chunks = Layout::default()
                                 .direction(Direction::Vertical)
@@ -494,16 +540,12 @@ fn main() -> io::Result<()> {
                                 .split(outer_chunks[2]);
                             let table_area = main_chunks[0];
 
-                            // Adjust for the block borders and header row
-                            let inner_y = table_area.y + 1; // skip top border
-                            let header_height = 1; // header row height
+                            let inner_y = table_area.y + 1; // Skip top border
+                            let header_height = 1;
 
-                            // Check if the click is within the header row.
                             if mouse_event.row == inner_y {
-                                // Calculate the relative x position in the table.
                                 let relative_x = mouse_event.column.saturating_sub(table_area.x);
                                 let table_width = table_area.width;
-                                // Based on the header column widths (30%, 10%, 25%, 10%, 25%)
                                 let name_width = (table_width as f32 * 0.30).round() as u16;
                                 let rarity_width = (table_width as f32 * 0.10).round() as u16;
                                 let event_width = (table_width as f32 * 0.25).round() as u16;
@@ -515,7 +557,6 @@ fn main() -> io::Result<()> {
                                     app.toggle_sort(SortField::Event);
                                 }
                             } else {
-                                // Otherwise, treat as row selection.
                                 let results_start_y = inner_y + header_height;
                                 let visible_index = (mouse_event.row - results_start_y) as usize;
                                 let absolute_index = app.scroll_offset + visible_index;
@@ -621,7 +662,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         let mut current_token = String::new();
         let mut current_is_whitespace = false;
 
-        // Split input into whitespace and term tokens
         for c in app.input.chars() {
             if c.is_whitespace() {
                 if !current_is_whitespace && !current_token.is_empty() {
@@ -642,7 +682,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
             }
         }
 
-        // Add remaining token
         if !current_token.is_empty() {
             if current_is_whitespace {
                 line.spans.push(Span::raw(current_token));
@@ -653,7 +692,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
             }
         }
 
-        // Add suggestion suffix if applicable
         if let Some(suggestion) = &app.suggestion {
             let last_part = app
                 .input
@@ -685,7 +723,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
 
     f.render_widget(search_input, chunks[0]);
 
-    // Set the cursor position at the end of the input
     let inner_area = chunks[0].inner(&Margin {
         horizontal: 1,
         vertical: 1,
@@ -694,12 +731,11 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     let cursor_y = inner_area.y;
     f.set_cursor(cursor_x, cursor_y);
 
-    // Suggestions list
     let suggestions: Vec<ListItem> = app
         .suggestion_list
         .iter()
         .map(|t| {
-            let default_term_info = TermInfo::default(); // Create a longer-lived value
+            let default_term_info = TermInfo::default();
             let term_info = app
                 .current_suggestion_terms
                 .get(t)
@@ -721,7 +757,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                 Style::default().fg(D_FOREGROUND)
             };
 
-            // Count occurrences of the term in the current results
             let count = app
                 .results
                 .iter()
@@ -734,7 +769,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                 })
                 .count();
 
-            // Create the suggestion text with styling and count
             let mut spans = vec![Span::styled(t, style)];
             spans.push(Span::styled(
                 format!(" ({})", count),
@@ -778,7 +812,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         render_detail_panel(f, app, detail_area);
     }
 
-    // Status bar
     let status = Line::from(vec![
         Span::styled(" esc ", Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND)),
         Span::styled(" exit  ", Style::default().fg(D_FOREGROUND)),
@@ -792,7 +825,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         Span::styled(" ► ", Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND)),
         Span::styled(" accept ", Style::default().fg(D_FOREGROUND)),
         Span::styled(" ▲/▼ ", Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND)),
-        Span::styled(" select ", Style::default().fg(D_FOREGROUND)),
+        Span::styled(" select  ", Style::default().fg(D_FOREGROUND)),
     ]);
     let status_bar = Paragraph::new(status)
         .style(Style::default())
@@ -836,7 +869,12 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
             .style(Style::default().fg(Color::Red).add_modifier(Modifier::BOLD));
         f.render_widget(message, area);
     } else {
-        // Build header titles
+        // Calculate pagination variables
+        let total_pages = (app.results.len() + app.items_per_page - 1) / app.items_per_page;
+        let start = app.current_page * app.items_per_page;
+        let end = (start + app.items_per_page).min(app.results.len());
+
+        // Build header titles with sort indicators
         let name_header = if app.sort_field == SortField::Name && app.sort_descending {
             "Name ↓"
         } else {
@@ -862,8 +900,8 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
         ])
         .style(Style::default().fg(D_YELLOW).add_modifier(Modifier::BOLD));
 
-        let rows: Vec<Row> = app
-            .results
+        // Slice results for the current page
+        let rows: Vec<Row> = app.results[start..end]
             .iter()
             .map(|skin| {
                 let year = skin.year.map_or(String::from("N/A"), |y| y.to_string());
@@ -883,6 +921,7 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
             })
             .collect();
 
+        // Create table with pagination info in the title
         let table = Table::new(rows)
             .header(header)
             .block(
@@ -891,9 +930,12 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
                     .border_type(BorderType::Rounded)
                     .border_style(Style::default().fg(D_CYAN))
                     .title(format!(
-                        "Results: {} | Selected: {}",
+                        "Results: {} | Page {}/{} | {} - {}",
                         app.results.len(),
-                        app.table_state.selected().map(|i| i + 1).unwrap_or(0)
+                        app.current_page + 1,
+                        total_pages,
+                        start + 1,
+                        end
                     )),
             )
             .widths(&[
