@@ -82,11 +82,8 @@ struct AppState {
 impl AppState {
     fn new() -> Self {
         let skins = load_skins();
-        let name_map: HashMap<_, _> = skins
-            .iter()
-            .enumerate()
-            .map(|(i, s)| (s.name_lower.clone(), i))
-            .collect();
+        let name_map: HashMap<_, _> =
+            skins.iter().enumerate().map(|(i, s)| (s.name_lower.clone(), i)).collect();
         let all_terms = load_all_terms(&skins);
         let mut results = skins.clone();
         // Default sort: Name ascending.
@@ -144,25 +141,21 @@ impl AppState {
                 } else {
                     self.results.sort_by(|a, b| a.name_lower.cmp(&b.name_lower));
                 }
-            }
+            },
             SortField::Rarity => {
                 if self.sort_descending {
-                    self.results
-                        .sort_by(|a, b| b.rarity_lower.cmp(&a.rarity_lower));
+                    self.results.sort_by(|a, b| b.rarity_lower.cmp(&a.rarity_lower));
                 } else {
-                    self.results
-                        .sort_by(|a, b| a.rarity_lower.cmp(&b.rarity_lower));
+                    self.results.sort_by(|a, b| a.rarity_lower.cmp(&b.rarity_lower));
                 }
-            }
+            },
             SortField::Event => {
                 if self.sort_descending {
-                    self.results
-                        .sort_by(|a, b| b.event_lower.cmp(&a.event_lower));
+                    self.results.sort_by(|a, b| b.event_lower.cmp(&a.event_lower));
                 } else {
-                    self.results
-                        .sort_by(|a, b| a.event_lower.cmp(&b.event_lower));
+                    self.results.sort_by(|a, b| a.event_lower.cmp(&b.event_lower));
                 }
-            }
+            },
         }
     }
 
@@ -192,10 +185,7 @@ impl AppState {
                 if !skin.year_str.is_empty() && skin.year_str.contains(&last_part_lower) {
                     let entry = current_terms
                         .entry(skin.year_str.clone())
-                        .or_insert_with(|| TermInfo {
-                            is_year: true,
-                            ..TermInfo::default()
-                        });
+                        .or_insert_with(|| TermInfo { is_year: true, ..TermInfo::default() });
                     entry.is_year = true;
                 }
 
@@ -203,10 +193,7 @@ impl AppState {
                     if tag.contains(&last_part_lower) {
                         let entry = current_terms
                             .entry(tag.clone())
-                            .or_insert_with(|| TermInfo {
-                                is_tag: true,
-                                ..TermInfo::default()
-                            });
+                            .or_insert_with(|| TermInfo { is_tag: true, ..TermInfo::default() });
                         entry.is_tag = true;
                     }
                 }
@@ -217,23 +204,16 @@ impl AppState {
                 if skin.rarity_lower.contains(&last_part_lower) {
                     let entry = current_terms
                         .entry(skin.rarity_lower.clone())
-                        .or_insert_with(|| TermInfo {
-                            is_rarity: true,
-                            ..TermInfo::default()
-                        });
+                        .or_insert_with(|| TermInfo { is_rarity: true, ..TermInfo::default() });
                     entry.is_rarity = true;
                 }
 
                 // Skin name words
                 for word in skin.name_lower.split_whitespace() {
                     if word.contains(&last_part_lower) {
-                        let entry =
-                            current_terms
-                                .entry(word.to_string())
-                                .or_insert_with(|| TermInfo {
-                                    is_name: true,
-                                    ..TermInfo::default()
-                                });
+                        let entry = current_terms
+                            .entry(word.to_string())
+                            .or_insert_with(|| TermInfo { is_name: true, ..TermInfo::default() });
                         entry.is_name = true;
                     }
                 }
@@ -242,10 +222,7 @@ impl AppState {
                 if skin.event_lower.contains(&last_part_lower) {
                     let entry = current_terms
                         .entry(skin.event_lower.clone())
-                        .or_insert_with(|| TermInfo {
-                            is_event: true,
-                            ..TermInfo::default()
-                        });
+                        .or_insert_with(|| TermInfo { is_event: true, ..TermInfo::default() });
                     entry.is_event = true;
                 }
             }
@@ -263,9 +240,7 @@ impl AppState {
                     continue;
                 }
 
-                let score = matcher
-                    .fuzzy_match(&term, &last_part_lower)
-                    .unwrap_or(i64::MIN);
+                let score = matcher.fuzzy_match(&term, &last_part_lower).unwrap_or(i64::MIN);
 
                 // Priority system
                 let mut boost = match true {
@@ -330,11 +305,7 @@ impl AppState {
                 parts.push(suggestion);
 
                 let joined = parts.join(" ");
-                self.input = if joined.is_empty() {
-                    String::new()
-                } else {
-                    format!("{} ", joined)
-                };
+                self.input = if joined.is_empty() { String::new() } else { format!("{} ", joined) };
             }
 
             self.update_search();
@@ -445,29 +416,29 @@ fn main() -> io::Result<()> {
                             app.input.clear();
                             app.update_search();
                             app.record_input();
-                        }
+                        },
                         KeyCode::Char('h') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             show_help(&mut terminal)?;
-                        }
+                        },
                         KeyCode::Char('d') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             app.show_detail = !app.show_detail;
-                        }
+                        },
                         KeyCode::Char('z') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             app.undo();
-                        }
+                        },
                         KeyCode::Char('y') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             app.redo();
-                        }
+                        },
                         KeyCode::Char(c) => {
                             app.input.push(c);
                             app.update_search();
                             app.record_input();
-                        }
+                        },
                         KeyCode::Backspace => {
                             app.input.pop();
                             app.update_search();
                             app.record_input();
-                        }
+                        },
                         KeyCode::Down => app.next(),
                         KeyCode::Up => app.previous(),
                         KeyCode::Home => app.first_page(), // Jump to first page
@@ -478,7 +449,7 @@ fn main() -> io::Result<()> {
                                 app.current_page -= 1;
                                 app.table_state.select(Some(0));
                             }
-                        }
+                        },
                         KeyCode::PageDown => {
                             // Go to next page
                             let total_pages =
@@ -487,28 +458,28 @@ fn main() -> io::Result<()> {
                                 app.current_page += 1;
                                 app.table_state.select(Some(0));
                             }
-                        }
+                        },
                         KeyCode::Tab => {
                             if key.modifiers.contains(KeyModifiers::SHIFT) {
                                 app.cycle_suggestion(-1);
                             } else {
                                 app.cycle_suggestion(1);
                             }
-                        }
+                        },
                         KeyCode::Right => app.accept_suggestion(),
-                        _ => {}
+                        _ => {},
                     }
-                }
+                },
                 Event::Mouse(mouse_event) => {
                     match mouse_event.kind {
                         MouseEventKind::ScrollDown => {
                             app.scroll_offset = app.scroll_offset.saturating_add(1);
                             app.next();
-                        }
+                        },
                         MouseEventKind::ScrollUp => {
                             app.scroll_offset = app.scroll_offset.saturating_sub(1);
                             app.previous();
-                        }
+                        },
                         MouseEventKind::Down(_button) => {
                             let term_area = terminal.size()?;
                             let outer_chunks = Layout::default()
@@ -554,11 +525,11 @@ fn main() -> io::Result<()> {
                                     app.table_state.select(Some(absolute_index));
                                 }
                             }
-                        }
-                        _ => {}
+                        },
+                        _ => {},
                     }
-                }
-                _ => {}
+                },
+                _ => {},
             }
         }
     }
@@ -684,19 +655,12 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         }
 
         if let Some(suggestion) = &app.suggestion {
-            let last_part = app
-                .input
-                .split_whitespace()
-                .last()
-                .unwrap_or("")
-                .to_lowercase();
+            let last_part = app.input.split_whitespace().last().unwrap_or("").to_lowercase();
             if suggestion.starts_with(&last_part) {
                 let suffix = &suggestion[last_part.len()..];
                 line.spans.push(Span::styled(
                     suffix,
-                    Style::default()
-                        .fg(Color::DarkGray)
-                        .add_modifier(Modifier::DIM),
+                    Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM),
                 ));
             }
         }
@@ -714,10 +678,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
 
     f.render_widget(search_input, chunks[0]);
 
-    let inner_area = chunks[0].inner(&Margin {
-        horizontal: 1,
-        vertical: 1,
-    });
+    let inner_area = chunks[0].inner(&Margin { horizontal: 1, vertical: 1 });
     let cursor_x = inner_area.x + app.input.len() as u16;
     let cursor_y = inner_area.y;
     f.set_cursor(cursor_x, cursor_y);
@@ -727,10 +688,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         .iter()
         .map(|t| {
             let default_term_info = TermInfo::default();
-            let term_info = app
-                .current_suggestion_terms
-                .get(t)
-                .unwrap_or(&default_term_info);
+            let term_info = app.current_suggestion_terms.get(t).unwrap_or(&default_term_info);
             let style = if term_info.is_rarity {
                 match t.as_str() {
                     "pink" => Style::default().fg(D_PINK),
@@ -761,10 +719,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                 .count();
 
             let mut spans = vec![Span::styled(t, style)];
-            spans.push(Span::styled(
-                format!(" ({})", count),
-                Style::default().fg(D_FOREGROUND),
-            ));
+            spans.push(Span::styled(format!(" ({})", count), Style::default().fg(D_FOREGROUND)));
 
             ListItem::new(Line::from(spans))
         })
@@ -806,10 +761,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     let status = Line::from(vec![
         Span::styled(" esc ", Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND)),
         Span::styled(" exit  ", Style::default().fg(D_FOREGROUND)),
-        Span::styled(
-            " ctrl+h ",
-            Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND),
-        ),
+        Span::styled(" ctrl+h ", Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND)),
         Span::styled(" help  ", Style::default().fg(D_FOREGROUND)),
         Span::styled(" tab ", Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND)),
         Span::styled(" cycle suggestions  ", Style::default().fg(D_FOREGROUND)),
@@ -818,9 +770,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         Span::styled(" ▲/▼ ", Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND)),
         Span::styled(" select  ", Style::default().fg(D_FOREGROUND)),
     ]);
-    let status_bar = Paragraph::new(status)
-        .style(Style::default())
-        .alignment(Alignment::Center);
+    let status_bar = Paragraph::new(status).style(Style::default()).alignment(Alignment::Center);
     f.render_widget(status_bar, chunks[3]);
 }
 
@@ -882,14 +832,8 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
             "Event"
         };
 
-        let header = Row::new(vec![
-            name_header,
-            rarity_header,
-            event_header,
-            "Year",
-            "Tags",
-        ])
-        .style(Style::default().fg(D_YELLOW).add_modifier(Modifier::BOLD));
+        let header = Row::new(vec![name_header, rarity_header, event_header, "Year", "Tags"])
+            .style(Style::default().fg(D_YELLOW).add_modifier(Modifier::BOLD));
 
         // Slice results for the current page
         let rows: Vec<Row> = app.results[start..end]
@@ -936,11 +880,7 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
                 Constraint::Percentage(10),
                 Constraint::Percentage(25),
             ])
-            .highlight_style(
-                Style::default()
-                    .bg(D_BACKGROUND)
-                    .add_modifier(Modifier::BOLD),
-            );
+            .highlight_style(Style::default().bg(D_BACKGROUND).add_modifier(Modifier::BOLD));
 
         f.render_stateful_widget(table, area, &mut app.table_state);
     }
@@ -1000,10 +940,7 @@ fn render_tags(tags: &[String]) -> Vec<Span> {
     for tag in tags {
         spans.push(Span::styled(
             format!(" {} ", tag),
-            Style::default()
-                .bg(D_BACKGROUND)
-                .fg(D_FOREGROUND)
-                .add_modifier(Modifier::BOLD),
+            Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND).add_modifier(Modifier::BOLD),
         ));
         spans.push(Span::raw(" ")); // Space between tags
     }
@@ -1056,10 +993,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Rainbow Periastron".to_string(),
@@ -1070,19 +1004,11 @@ fn load_skins() -> Vec<Skin> {
             event_lower: "valentine case (exquisite)".to_string(),
             year: None,
             year_str: "".to_string(),
-            tags: vec![
-                "case".to_string(),
-                "exquisite".to_string(),
-                "periastron".to_string(),
-            ],
-            tags_lower: vec![
-                "case".to_string(),
-                "exquisite".to_string(),
-                "periastron".to_string(),
-            ]
-            .into_iter()
-            .map(|t| t.to_lowercase())
-            .collect(),
+            tags: vec!["case".to_string(), "exquisite".to_string(), "periastron".to_string()],
+            tags_lower: vec!["case".to_string(), "exquisite".to_string(), "periastron".to_string()]
+                .into_iter()
+                .map(|t| t.to_lowercase())
+                .collect(),
         },
         Skin {
             name: "Crimson Periastron".to_string(),
@@ -1109,10 +1035,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Ivory Periastron".to_string(),
@@ -1123,19 +1046,11 @@ fn load_skins() -> Vec<Skin> {
             event_lower: "valentine case (exquisite)".to_string(),
             year: None,
             year_str: "".to_string(),
-            tags: vec![
-                "case".to_string(),
-                "exquisite".to_string(),
-                "periastron".to_string(),
-            ],
-            tags_lower: vec![
-                "case".to_string(),
-                "exquisite".to_string(),
-                "periastron".to_string(),
-            ]
-            .into_iter()
-            .map(|t| t.to_lowercase())
-            .collect(),
+            tags: vec!["case".to_string(), "exquisite".to_string(), "periastron".to_string()],
+            tags_lower: vec!["case".to_string(), "exquisite".to_string(), "periastron".to_string()]
+                .into_iter()
+                .map(|t| t.to_lowercase())
+                .collect(),
         },
         Skin {
             name: "Diamond".to_string(),
@@ -1178,10 +1093,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Hellfire".to_string(),
@@ -1193,10 +1105,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Surge".to_string(),
@@ -1252,19 +1161,11 @@ fn load_skins() -> Vec<Skin> {
             event_lower: "birthday case".to_string(),
             year: None,
             year_str: "".to_string(),
-            tags: vec![
-                "case".to_string(),
-                "periastron".to_string(),
-                "popular".to_string(),
-            ],
-            tags_lower: vec![
-                "case".to_string(),
-                "periastron".to_string(),
-                "popular".to_string(),
-            ]
-            .into_iter()
-            .map(|t| t.to_lowercase())
-            .collect(),
+            tags: vec!["case".to_string(), "periastron".to_string(), "popular".to_string()],
+            tags_lower: vec!["case".to_string(), "periastron".to_string(), "popular".to_string()]
+                .into_iter()
+                .map(|t| t.to_lowercase())
+                .collect(),
         },
         // Easter Case
         Skin {
@@ -1277,10 +1178,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Amethyst Periastron".to_string(),
@@ -1307,10 +1205,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Guitar".to_string(),
@@ -1322,10 +1217,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Joyful Periastron".to_string(),
@@ -1368,10 +1260,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Mystic".to_string(),
@@ -1413,10 +1302,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Cythrex".to_string(),
@@ -1428,10 +1314,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Dog".to_string(),
@@ -1458,10 +1341,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Ghostfire".to_string(),
@@ -1473,10 +1353,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Inscription".to_string(),
@@ -1488,10 +1365,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Mummy".to_string(),
@@ -1503,10 +1377,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Retrowave".to_string(),
@@ -1518,10 +1389,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Shikai".to_string(),
@@ -1533,10 +1401,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         // Halloween Case
         Skin {
@@ -1564,10 +1429,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Dusekkar".to_string(),
@@ -1594,10 +1456,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Dracula".to_string(),
@@ -1609,10 +1468,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Hallowing".to_string(),
@@ -1624,10 +1480,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Orange Energy".to_string(),
@@ -1654,10 +1507,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         // Christmas Case
         Skin {
@@ -1670,10 +1520,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Icycle".to_string(),
@@ -1685,10 +1532,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Santa".to_string(),
@@ -1700,10 +1544,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Candy Energy".to_string(),
@@ -1745,10 +1586,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Snowman".to_string(),
@@ -1760,10 +1598,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         // Easter Event
         Skin {
@@ -1806,10 +1641,7 @@ fn load_skins() -> Vec<Skin> {
             year: Some(2024),
             year_str: "2024".to_string(),
             tags: vec!["event".to_string()],
-            tags_lower: vec!["event".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["event".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         // Summer Bundle
         Skin {
@@ -1822,10 +1654,7 @@ fn load_skins() -> Vec<Skin> {
             year: Some(2023),
             year_str: "2023".to_string(),
             tags: vec!["bundle".to_string()],
-            tags_lower: vec!["bundle".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["bundle".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Cyberlight".to_string(),
@@ -1837,10 +1666,7 @@ fn load_skins() -> Vec<Skin> {
             year: Some(2023),
             year_str: "2023".to_string(),
             tags: vec!["bundle".to_string()],
-            tags_lower: vec!["bundle".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["bundle".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Frostburn".to_string(),
@@ -1852,10 +1678,7 @@ fn load_skins() -> Vec<Skin> {
             year: Some(2023),
             year_str: "2023".to_string(),
             tags: vec!["bundle".to_string()],
-            tags_lower: vec!["bundle".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["bundle".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Inferno Angel".to_string(),
@@ -1882,10 +1705,7 @@ fn load_skins() -> Vec<Skin> {
             year: Some(2024),
             year_str: "2024".to_string(),
             tags: vec!["bundle".to_string()],
-            tags_lower: vec!["bundle".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["bundle".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Darkness".to_string(),
@@ -1897,10 +1717,7 @@ fn load_skins() -> Vec<Skin> {
             year: Some(2024),
             year_str: "2024".to_string(),
             tags: vec!["bundle".to_string()],
-            tags_lower: vec!["bundle".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["bundle".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Vilethorn".to_string(),
@@ -1912,10 +1729,7 @@ fn load_skins() -> Vec<Skin> {
             year: Some(2024),
             year_str: "2024".to_string(),
             tags: vec!["bundle".to_string()],
-            tags_lower: vec!["bundle".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["bundle".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Winged".to_string(),
@@ -1943,10 +1757,7 @@ fn load_skins() -> Vec<Skin> {
             year: Some(2025),
             year_str: "2025".to_string(),
             tags: vec!["bundle".to_string()],
-            tags_lower: vec!["bundle".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["bundle".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Love Scepter".to_string(),
@@ -2064,10 +1875,7 @@ fn load_skins() -> Vec<Skin> {
             year: Some(2023),
             year_str: "2023".to_string(),
             tags: vec!["event".to_string()],
-            tags_lower: vec!["event".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["event".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Iceblade".to_string(),
@@ -2125,10 +1933,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["code".to_string()],
-            tags_lower: vec!["code".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["code".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Pearl".to_string(),
@@ -2171,10 +1976,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["launch".to_string()],
-            tags_lower: vec!["launch".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["launch".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         // Exquisite Case (Pinks & Reds)
         Skin {
@@ -2201,19 +2003,11 @@ fn load_skins() -> Vec<Skin> {
             event_lower: "exquisite case".to_string(),
             year: None,
             year_str: "".to_string(),
-            tags: vec![
-                "case".to_string(),
-                "exquisite".to_string(),
-                "popular".to_string(),
-            ],
-            tags_lower: vec![
-                "case".to_string(),
-                "exquisite".to_string(),
-                "popular".to_string(),
-            ]
-            .into_iter()
-            .map(|t| t.to_lowercase())
-            .collect(),
+            tags: vec!["case".to_string(), "exquisite".to_string(), "popular".to_string()],
+            tags_lower: vec!["case".to_string(), "exquisite".to_string(), "popular".to_string()]
+                .into_iter()
+                .map(|t| t.to_lowercase())
+                .collect(),
         },
         Skin {
             name: "Crescendo".to_string(),
@@ -2376,10 +2170,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Unicorn".to_string(),
@@ -2391,10 +2182,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Bacon".to_string(),
@@ -2406,10 +2194,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Salmon".to_string(),
@@ -2436,10 +2221,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Slither".to_string(),
@@ -2451,10 +2233,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         // Camouflage Case
         Skin {
@@ -2467,10 +2246,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Glacial".to_string(),
@@ -2482,10 +2258,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Chartreuse Periastron".to_string(),
@@ -2512,10 +2285,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Prehistoric".to_string(),
@@ -2527,10 +2297,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Shadow".to_string(),
@@ -2542,10 +2309,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Violet Energy".to_string(),
@@ -2573,10 +2337,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Orinthian".to_string(),
@@ -2588,10 +2349,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Azure Periastron".to_string(),
@@ -2618,10 +2376,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Galactic".to_string(),
@@ -2633,10 +2388,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Green Energy".to_string(),
@@ -2663,10 +2415,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Omega".to_string(),
@@ -2678,10 +2427,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         // Material Case
         Skin {
@@ -2694,10 +2440,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Adurite".to_string(),
@@ -2709,10 +2452,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Bluesteel".to_string(),
@@ -2724,10 +2464,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Wooden".to_string(),
@@ -2739,10 +2476,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         // Nature Case
         Skin {
@@ -2755,10 +2489,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Elven".to_string(),
@@ -2770,10 +2501,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Molten".to_string(),
@@ -2785,10 +2513,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Autumnal".to_string(),
@@ -2800,10 +2525,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Beach".to_string(),
@@ -2815,10 +2537,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Breeze".to_string(),
@@ -2830,10 +2549,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Earth".to_string(),
@@ -2845,10 +2561,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Ocean".to_string(),
@@ -2860,10 +2573,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         // Pattern Case
         Skin {
@@ -2876,10 +2586,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Relic".to_string(),
@@ -2891,10 +2598,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Sorcus".to_string(),
@@ -2906,10 +2610,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         // Refined Case
         Skin {
@@ -2922,10 +2623,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Breaker".to_string(),
@@ -2937,10 +2635,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Divine".to_string(),
@@ -2952,10 +2647,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Enforcer".to_string(),
@@ -2967,10 +2659,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Frosted".to_string(),
@@ -2982,10 +2671,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Hunter".to_string(),
@@ -2997,10 +2683,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Neon".to_string(),
@@ -3012,10 +2695,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Pharaoh".to_string(),
@@ -3027,10 +2707,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Skyward".to_string(),
@@ -3042,10 +2719,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Steampunk".to_string(),
@@ -3057,10 +2731,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["case".to_string()],
-            tags_lower: vec!["case".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["case".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "No Dagger".to_string(),
@@ -3102,10 +2773,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["special".to_string()],
-            tags_lower: vec!["special".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["special".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Banana".to_string(),
@@ -3117,10 +2785,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "2021".to_string(),
             tags: vec!["special".to_string()],
-            tags_lower: vec!["special".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["special".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Hammer".to_string(),
@@ -3132,10 +2797,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["special".to_string()],
-            tags_lower: vec!["special".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["special".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Paintbrush".to_string(),
@@ -3147,10 +2809,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["special".to_string()],
-            tags_lower: vec!["special".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["special".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "Riddling".to_string(),
@@ -3162,10 +2821,7 @@ fn load_skins() -> Vec<Skin> {
             year: None,
             year_str: "".to_string(),
             tags: vec!["special".to_string()],
-            tags_lower: vec!["special".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags_lower: vec!["special".to_string()].into_iter().map(|t| t.to_lowercase()).collect(),
         },
         Skin {
             name: "VIP".to_string(),
@@ -3201,11 +2857,8 @@ fn search_skins(
     name_map: &HashMap<String, usize>,
     tags: &HashSet<&str>,
 ) -> Vec<Skin> {
-    let exact_matches: Vec<Skin> = tags
-        .iter()
-        .filter_map(|tag| name_map.get(*tag))
-        .map(|&i| skins[i].clone())
-        .collect();
+    let exact_matches: Vec<Skin> =
+        tags.iter().filter_map(|tag| name_map.get(*tag)).map(|&i| skins[i].clone()).collect();
 
     if !exact_matches.is_empty() {
         return exact_matches;
@@ -3256,3 +2909,4 @@ fn search_skins(
     scored_skins.sort_by(|a, b| b.0.cmp(&a.0));
     scored_skins.into_iter().map(|(_, s)| s.clone()).collect()
 }
+
