@@ -55,6 +55,7 @@ features to-do's:
 - suggestions should prioritize the suggestion that has more possible outcomes like energy instead of enforcer
 - suggestions should prioritize suggestions that actually has the string like "er" so it doesnt show azurite first so fix alphabet sorting being default all the time
 - accidentally pressing middle mouse scroll button makes the scrollable items bugged so need to scroll back up to new prev page
+- improve title table sorting so it allows multi sorting and default unsorted non asc/desc
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
