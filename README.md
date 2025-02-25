@@ -25,10 +25,14 @@ Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org
 
 Option 3: You can also install the `pola` package directly using Cargo:
 
-```sh
-cargo install pola --locked
-pola
-```
+1. Install the package
+   ```bash
+   cargo install pola --locked
+   ```
+2. Run the application
+   ```bash
+   pola
+   ```
 
 <img src="https://img.shields.io/crates/d/pola" alt="Crates.io Download Badge">
 
