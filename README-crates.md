@@ -21,7 +21,7 @@ Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org
 1. Clone the repository:
    ```bash
    git clone https://github.com/sethispr/pola
-   cd pola
+   cd yourdirectory/pola
    ```
 
 2. Run the application
@@ -52,7 +52,7 @@ https://crates.io/crates/pola
 <details>
 <summary>Tags List</summary>
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/4d6d2147-6013-4fd7-9c6a-99f8f5074e3a" alt="demo" width="706">
+  <img src="https://github.com/user-attachments/assets/4d6d2147-6013-4fd7-9c6a-99f8f5074e3a" alt="Outdated Demo v0.1.1-beta" width="706">
 
   Old Demo
 </p>
