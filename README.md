@@ -29,6 +29,7 @@ Option 3: You can also install the `pola` package directly using Cargo:
    ```bash
    cargo install pola --locked
    ```
+
 2. Run the application
    ```bash
    pola
