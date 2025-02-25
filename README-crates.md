@@ -12,16 +12,24 @@
 <tr>
 <td>
 
+<p align="center">
+  <strong>Rust TUI for searching all known skins in SA faster!</strong>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/954e923f-6d2c-4220-9091-3f02bc331d92" alt="demo" width="721">
+</p>
+
 ## Installation
 
-Option 1: [Install - sadb.exe](https://github.com/Sethispr/pola/releases/tag/v0.12a)
+Option 1: [Install (pola.exe)](https://github.com/Sethispr/pola/releases/tag/v0.1.1-beta) from the Release page.
 
-Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org/), [Cargo](https://doc.rust-lang.org/cargo/), and [Git](https://git-scm.com/) first.
+Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org/tools/install) and [Git](https://git-scm.com/downloads/win) first.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/sethispr/sadb
-   cd sadb
+   git clone https://github.com/sethispr/pola
+   cd pola
    ```
 
 2. Run the application
@@ -31,10 +39,15 @@ Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org
 
 Option 3: You can also install the `pola` package directly using Cargo:
 
-```sh
-cargo install pola
-pola
-```
+1. Install the package
+   ```bash
+   cargo install pola --locked
+   ```
+
+2. Run the application
+   ```bash
+   pola
+   ```
 
 <img src="https://img.shields.io/crates/d/pola" alt="Crates.io Download Badge">
 
