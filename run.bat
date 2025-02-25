@@ -2,7 +2,7 @@
 setlocal
 
 :: Define the project path
-set "PROJECT_DIR=%USERPROFILE%\Documents\sadb\src"
+set "PROJECT_DIR=%USERPROFILE%\Documents\pola"
 
 :: Check if the directory exists
 if not exist "%PROJECT_DIR%" (
