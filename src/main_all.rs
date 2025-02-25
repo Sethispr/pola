@@ -28,16 +28,6 @@ const D_RED: Color = Color::Rgb(224, 108, 117); // for red skins (muted warm red
 const D_YELLOW: Color = Color::Rgb(244, 163, 180); // main pale red
 const D_TEAL: Color = Color::Rgb(244, 163, 180); // for teal skins (deep sea teal) for now its red 58, 139, 132
 
-const POLA_ASCII: &str = r#"
- ________  ________  ___       ________ 
-|\   __  \|\   __  \|\  \     |\   __  \    
-\ \  \|\  \ \  \|\  \ \  \    \ \  \|\  \   
- \ \   ____\ \  \\\  \ \  \    \ \   __  \  
-  \ \  \___|\ \  \\\  \ \  \____\ \  \ \  \ 
-   \ \__\    \ \_______\ \_______\ \__\ \__\
-    \|__|     \|_______|\|_______|\|__|\|__|
-"#;
-
 #[derive(PartialEq, Eq)]
 enum SortField {
     Name,
@@ -290,7 +280,7 @@ impl AppState {
 
                 // Prefix boost
                 if term.starts_with(&last_part_lower) {
-                    boost += 10000;
+                    boost += 1500;
                 }
 
                 // Length normalization
@@ -607,7 +597,8 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
                 Line::from("[CTRL+Y] : Redo input in search bar"),
                 Line::from("[UP/DOWN ▲▼] Or Mouse Scroll: Navigate results"),
                 Line::from("[TAB]: Cycle suggestions"),
-                Line::from("[HOME/END] : Jump to first/last result"),
+                Line::from("[HOME/END] : Jump to first/last page"),
+                Line::from("[PG UP/DOWN] : Go to previous/next page"),
                 Line::from("[RIGHT ►] : Accept suggestion and auto-fills"),
                 Line::from("[ESC]: Exit help or exit application"),
             ];
@@ -939,8 +930,8 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
                     )),
             )
             .widths(&[
-                Constraint::Percentage(30),
-                Constraint::Percentage(10),
+                Constraint::Percentage(25),
+                Constraint::Percentage(15),
                 Constraint::Percentage(25),
                 Constraint::Percentage(10),
                 Constraint::Percentage(25),
@@ -1261,11 +1252,19 @@ fn load_skins() -> Vec<Skin> {
             event_lower: "birthday case".to_string(),
             year: None,
             year_str: "".to_string(),
-            tags: vec!["case".to_string(), "periastron".to_string()],
-            tags_lower: vec!["case".to_string(), "periastron".to_string()]
-                .into_iter()
-                .map(|t| t.to_lowercase())
-                .collect(),
+            tags: vec![
+                "case".to_string(),
+                "periastron".to_string(),
+                "popular".to_string(),
+            ],
+            tags_lower: vec![
+                "case".to_string(),
+                "periastron".to_string(),
+                "popular".to_string(),
+            ]
+            .into_iter()
+            .map(|t| t.to_lowercase())
+            .collect(),
         },
         // Easter Case
         Skin {
