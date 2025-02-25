@@ -1,11 +1,3 @@
-<p align="center">
-  <strong>Rust TUI for searching all known skins in SA faster!</strong>
-</p>
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/624b113e-36c2-4661-96ed-c760e66283dc" alt="demo" width="596">
-</p>
-
 <div align="center">
 
 <table>
