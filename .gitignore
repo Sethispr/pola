@@ -1,1 +1,24 @@
-/target
+# IDE directories and folders
+.vscode/
+.idea/
+
+# Target directory
+target/
+
+# Lockfile
+Cargo.lock
+
+# Debugging files
+*.pdb
+
+# Rust compilation artifacts
+*.rlib
+*.rmeta
+*.d
+*.lo
+*.so
+*.a
+*.o
+
+# Windows files
+$RECYCLE.BIN/
