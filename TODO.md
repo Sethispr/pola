@@ -54,6 +54,7 @@ features to-do's:
 - paginated results so show 10 skins per page to "fix" click offset (implemented though it didnt fix click offset)
 - suggestions should prioritize the suggestion that has more possible outcomes like energy instead of enforcer
 - suggestions should prioritize suggestions that actually has the string like "er" so it doesnt show azurite first so fix alphabet sorting being default all the time
+- accidentally pressing middle mouse scroll button makes the scrollable items bugged so need to scroll back up to new prev page
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
