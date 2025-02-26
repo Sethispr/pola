@@ -113,13 +113,30 @@ impl AppState {
     }
 
     fn update_search(&mut self) {
+        let selected_index = self.table_state.selected().unwrap_or(0);
+        let current_page = self.current_page;
+
         if self.input.trim().is_empty() {
             self.results = self.skins.clone();
-            // When the search is cleared, default sort is by name ascending.
             self.sort_field = SortField::Name;
             self.sort_descending = false;
             self.sort_results();
-            self.table_state.select(Some(0));
+
+            // Preserve the current page, adjust selection if necessary
+            let total_pages = self.results.len().div_ceil(self.items_per_page);
+            self.current_page = current_page.min(total_pages.saturating_sub(1));
+            let start = self.current_page * self.items_per_page;
+            let end = (start + self.items_per_page).min(self.results.len());
+            let page_items = end - start;
+
+            // Adjust selection to stay within the current page's bounds
+            let new_selection = if selected_index < page_items {
+                Some(selected_index)
+            } else {
+                Some(page_items.saturating_sub(1)) // Last item on the page if out of bounds
+            };
+            self.table_state.select(new_selection);
+
             self.suggestion_list.clear();
             self.suggestion_index = 0;
             self.suggestion = None;
@@ -128,11 +145,37 @@ impl AppState {
 
         let binding = self.input.to_lowercase();
         let tags: HashSet<&str> = binding.split_whitespace().collect();
-        self.results = search_skins(&self.skins, &self.name_map, &tags, &self.favorites); // Pass favorites here
-                                                                                          // After filtering, sort using current sort settings.
+        self.results = search_skins(&self.skins, &self.name_map, &tags, &self.favorites);
         self.sort_results();
-        self.table_state.select(Some(0));
+
+        let total_pages = self.results.len().div_ceil(self.items_per_page);
+        self.current_page = current_page.min(total_pages.saturating_sub(1));
+        let start = self.current_page * self.items_per_page;
+        let end = (start + self.items_per_page).min(self.results.len());
+        let page_items = end - start;
+
+        let new_selection = if selected_index < page_items {
+            Some(selected_index)
+        } else {
+            Some(page_items.saturating_sub(1))
+        };
+        self.table_state.select(new_selection);
         self.update_suggestion();
+    }
+
+    fn toggle_favorite(&mut self) {
+        if let Some(selected) = self.table_state.selected() {
+            let absolute_index = self.current_page * self.items_per_page + selected;
+            if let Some(skin) = self.results.get(absolute_index) {
+                if self.favorites.contains(&skin.name) {
+                    self.favorites.remove(&skin.name);
+                } else {
+                    self.favorites.insert(skin.name.clone());
+                }
+                save_favorites(&self.favorites).expect("Failed to save favorites");
+                self.update_search(); // Update search to reflect the change
+            }
+        }
     }
 
     fn sort_results(&mut self) {
@@ -433,18 +476,7 @@ fn main() -> io::Result<()> {
                             app.redo();
                         },
                         KeyCode::Char('f') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-                            if let Some(selected) = app.table_state.selected() {
-                                if let Some(skin) = app.results.get(selected) {
-                                    if app.favorites.contains(&skin.name) {
-                                        app.favorites.remove(&skin.name);
-                                    } else {
-                                        app.favorites.insert(skin.name.clone());
-                                    }
-                                    save_favorites(&app.favorites)
-                                        .expect("Failed to save favorites");
-                                    app.update_search();
-                                }
-                            }
+                            app.toggle_favorite(); // Use the new toggle_favorite method
                         },
                         KeyCode::Char('F') if key.modifiers.contains(KeyModifiers::SHIFT) => {
                             app.favorites.clear();
@@ -463,17 +495,15 @@ fn main() -> io::Result<()> {
                         },
                         KeyCode::Down => app.next(),
                         KeyCode::Up => app.previous(),
-                        KeyCode::Home => app.first_page(), // Jump to first page
-                        KeyCode::End => app.last_page(),   // Jump to last page
+                        KeyCode::Home => app.first_page(),
+                        KeyCode::End => app.last_page(),
                         KeyCode::PageUp => {
-                            // Go to previous page
                             if app.current_page > 0 {
                                 app.current_page -= 1;
                                 app.table_state.select(Some(0));
                             }
                         },
                         KeyCode::PageDown => {
-                            // Go to next page
                             let total_pages = app.results.len().div_ceil(app.items_per_page);
                             if app.current_page < total_pages - 1 {
                                 app.current_page += 1;
@@ -926,7 +956,11 @@ fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect)
     f.render_widget(block, area);
 
     if let Some(selected) = app.table_state.selected() {
-        if let Some(skin) = app.results.get(selected) {
+        // Calculate the absolute index in the full results list
+        let absolute_index = app.current_page * app.items_per_page + selected;
+
+        // Safely get the skin from the results list using the absolute index
+        if let Some(skin) = app.results.get(absolute_index) {
             let mut tags = skin.tags.clone();
             if app.favorites.contains(&skin.name) {
                 tags.push("favorite".to_string());
@@ -1652,8 +1686,8 @@ fn load_skins() -> Vec<Skin> {
         Skin {
             name: "Corrupted".to_string(),
             name_lower: "corrupted".to_string(),
-            rarity: "Pink".to_string(),
-            rarity_lower: "pink".to_string(),
+            rarity: "Teal".to_string(),
+            rarity_lower: "teal".to_string(),
             event: "Easter Event".to_string(),
             event_lower: "easter event".to_string(),
             year: Some(2023),
