@@ -18,8 +18,8 @@ use std::io;
 use std::time::Duration;
 
 // Passion Fruit Colors (Main Colors from MonkeyType)
-const D_BACKGROUND: Color = Color::Rgb(131, 60, 94); //the highlight in the table view, tags and binds bg (dark rosewood)
-const D_FOREGROUND: Color = Color::Rgb(244, 163, 180); //for tags and binds fg (pastel rose)
+const D_BACKGROUND: Color = Color::Rgb(131, 60, 94); // the highlight in the table view, tags and binds bg (dark rosewood)
+const D_FOREGROUND: Color = Color::Rgb(244, 163, 180); // for tags and binds fg (pastel rose)
 const D_CYAN: Color = Color::Rgb(244, 163, 180); // main pale red (pastel rose)
 const D_GREEN: Color = Color::Rgb(244, 163, 180); // main pale red
 const D_PINK: Color = Color::Rgb(255, 155, 155); // for pink skins (soft pinkish-red)
@@ -235,12 +235,13 @@ impl AppState {
 
             let mut suggestions = Vec::new();
 
+            // Note: Assuming '¤t_terms' was a typo for 'current_terms'
             for (term, term_info) in &current_terms {
                 if used_terms.contains(term) {
                     continue;
                 }
 
-                let score = matcher.fuzzy_match(&term, &last_part_lower).unwrap_or(i64::MIN);
+                let score = matcher.fuzzy_match(term, &last_part_lower).unwrap_or(i64::MIN);
 
                 // Priority system
                 let mut boost = match true {
@@ -273,7 +274,7 @@ impl AppState {
             let mut seen = HashSet::new();
             self.suggestion_list = suggestions
                 .into_iter()
-                .filter_map(|(score, term)| seen.insert(term.clone()).then(|| (score, term)))
+                .filter_map(|(score, term)| seen.insert(term.clone()).then_some((score, term)))
                 .take(5)
                 .map(|(_, term)| term)
                 .collect();
@@ -324,7 +325,7 @@ impl AppState {
         if selected + 1 < current_page_items {
             self.table_state.select(Some(selected + 1));
         } else {
-            let total_pages = (self.results.len() + self.items_per_page - 1) / self.items_per_page;
+            let total_pages = self.results.len().div_ceil(self.items_per_page);
             if self.current_page < total_pages - 1 {
                 self.current_page += 1;
                 self.table_state.select(Some(0));
@@ -361,7 +362,7 @@ impl AppState {
     }
 
     fn last_page(&mut self) {
-        let total_pages = (self.results.len() + self.items_per_page - 1) / self.items_per_page;
+        let total_pages = self.results.len().div_ceil(self.items_per_page);
         self.current_page = total_pages.saturating_sub(1);
         let start = self.current_page * self.items_per_page;
         let end = (start + self.items_per_page).min(self.results.len());
@@ -452,8 +453,7 @@ fn main() -> io::Result<()> {
                         },
                         KeyCode::PageDown => {
                             // Go to next page
-                            let total_pages =
-                                (app.results.len() + app.items_per_page - 1) / app.items_per_page;
+                            let total_pages = app.results.len().div_ceil(app.items_per_page);
                             if app.current_page < total_pages - 1 {
                                 app.current_page += 1;
                                 app.table_state.select(Some(0));
@@ -470,64 +470,59 @@ fn main() -> io::Result<()> {
                         _ => {},
                     }
                 },
-                Event::Mouse(mouse_event) => {
-                    match mouse_event.kind {
-                        MouseEventKind::ScrollDown => {
-                            app.scroll_offset = app.scroll_offset.saturating_add(1);
-                            app.next();
-                        },
-                        MouseEventKind::ScrollUp => {
-                            app.scroll_offset = app.scroll_offset.saturating_sub(1);
-                            app.previous();
-                        },
-                        MouseEventKind::Down(_button) => {
-                            let term_area = terminal.size()?;
-                            let outer_chunks = Layout::default()
-                                .direction(Direction::Vertical)
-                                .margin(1)
-                                .constraints([
-                                    Constraint::Length(3),
-                                    Constraint::Length(5),
-                                    Constraint::Min(3),
-                                    Constraint::Length(1),
-                                ])
-                                .split(term_area);
-                            let main_chunks = Layout::default()
-                                .direction(Direction::Horizontal)
-                                .constraints([
-                                    Constraint::Percentage(60),
-                                    Constraint::Percentage(40),
-                                ])
-                                .split(outer_chunks[2]);
-                            let table_area = main_chunks[0];
+                Event::Mouse(mouse_event) => match mouse_event.kind {
+                    MouseEventKind::ScrollDown => {
+                        app.scroll_offset = app.scroll_offset.saturating_add(1);
+                        app.next();
+                    },
+                    MouseEventKind::ScrollUp => {
+                        app.scroll_offset = app.scroll_offset.saturating_sub(1);
+                        app.previous();
+                    },
+                    MouseEventKind::Down(_button) => {
+                        let term_area = terminal.size()?;
+                        let outer_chunks = Layout::default()
+                            .direction(Direction::Vertical)
+                            .margin(1)
+                            .constraints([
+                                Constraint::Length(3),
+                                Constraint::Length(5),
+                                Constraint::Min(3),
+                                Constraint::Length(1),
+                            ])
+                            .split(term_area);
+                        let main_chunks = Layout::default()
+                            .direction(Direction::Horizontal)
+                            .constraints([Constraint::Percentage(60), Constraint::Percentage(40)])
+                            .split(outer_chunks[2]);
+                        let table_area = main_chunks[0];
 
-                            let inner_y = table_area.y + 1; // Skip top border
-                            let header_height = 1;
+                        let inner_y = table_area.y + 1; // Skip top border
+                        let header_height = 1;
 
-                            if mouse_event.row == inner_y {
-                                let relative_x = mouse_event.column.saturating_sub(table_area.x);
-                                let table_width = table_area.width;
-                                let name_width = (table_width as f32 * 0.30).round() as u16;
-                                let rarity_width = (table_width as f32 * 0.10).round() as u16;
-                                let event_width = (table_width as f32 * 0.25).round() as u16;
-                                if relative_x < name_width {
-                                    app.toggle_sort(SortField::Name);
-                                } else if relative_x < name_width + rarity_width {
-                                    app.toggle_sort(SortField::Rarity);
-                                } else if relative_x < name_width + rarity_width + event_width {
-                                    app.toggle_sort(SortField::Event);
-                                }
-                            } else {
-                                let results_start_y = inner_y + header_height;
-                                let visible_index = (mouse_event.row - results_start_y) as usize;
-                                let absolute_index = app.scroll_offset + visible_index;
-                                if absolute_index < app.results.len() {
-                                    app.table_state.select(Some(absolute_index));
-                                }
+                        if mouse_event.row == inner_y {
+                            let relative_x = mouse_event.column.saturating_sub(table_area.x);
+                            let table_width = table_area.width;
+                            let name_width = (table_width as f32 * 0.30).round() as u16;
+                            let rarity_width = (table_width as f32 * 0.10).round() as u16;
+                            let event_width = (table_width as f32 * 0.25).round() as u16;
+                            if relative_x < name_width {
+                                app.toggle_sort(SortField::Name);
+                            } else if relative_x < name_width + rarity_width {
+                                app.toggle_sort(SortField::Rarity);
+                            } else if relative_x < name_width + rarity_width + event_width {
+                                app.toggle_sort(SortField::Event);
                             }
-                        },
-                        _ => {},
-                    }
+                        } else {
+                            let results_start_y = inner_y + header_height;
+                            let visible_index = (mouse_event.row - results_start_y) as usize;
+                            let absolute_index = app.scroll_offset + visible_index;
+                            if absolute_index < app.results.len() {
+                                app.table_state.select(Some(absolute_index));
+                            }
+                        }
+                    },
+                    _ => {},
                 },
                 _ => {},
             }
@@ -698,9 +693,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                 }
             } else if term_info.is_event {
                 Style::default().fg(D_PINK)
-            } else if term_info.is_year {
-                Style::default().fg(D_GREEN)
-            } else if term_info.is_tag {
+            } else if term_info.is_year || term_info.is_tag {
                 Style::default().fg(D_GREEN)
             } else {
                 Style::default().fg(D_FOREGROUND)
@@ -785,9 +778,7 @@ fn get_term_style(term: &str, all_terms: &HashMap<String, TermInfo>) -> Style {
             }
         } else if term_info.is_event {
             Style::default().fg(D_PINK)
-        } else if term_info.is_year {
-            Style::default().fg(D_GREEN)
-        } else if term_info.is_tag {
+        } else if term_info.is_year || term_info.is_tag {
             Style::default().fg(D_GREEN)
         } else {
             Style::default().fg(D_FOREGROUND)
@@ -811,7 +802,7 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
         f.render_widget(message, area);
     } else {
         // Calculate pagination variables
-        let total_pages = (app.results.len() + app.items_per_page - 1) / app.items_per_page;
+        let total_pages = app.results.len().div_ceil(app.items_per_page);
         let start = app.current_page * app.items_per_page;
         let end = (start + app.items_per_page).min(app.results.len());
 
@@ -2909,4 +2900,3 @@ fn search_skins(
     scored_skins.sort_by(|a, b| b.0.cmp(&a.0));
     scored_skins.into_iter().map(|(_, s)| s.clone()).collect()
 }
-
