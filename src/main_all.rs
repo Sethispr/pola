@@ -77,6 +77,7 @@ struct AppState {
     current_suggestion_terms: HashMap<String, TermInfo>,
     current_page: usize,
     items_per_page: usize,
+    favorites: HashSet<String>,
 }
 
 impl AppState {
@@ -86,8 +87,8 @@ impl AppState {
             skins.iter().enumerate().map(|(i, s)| (s.name_lower.clone(), i)).collect();
         let all_terms = load_all_terms(&skins);
         let mut results = skins.clone();
-        // Default sort: Name ascending.
         results.sort_by(|a, b| a.name_lower.cmp(&b.name_lower));
+        let favorites = load_favorites().unwrap_or_default();
         AppState {
             input: String::new(),
             skins,
@@ -107,6 +108,7 @@ impl AppState {
             current_suggestion_terms: HashMap::new(),
             current_page: 0,
             items_per_page: 10,
+            favorites,
         }
     }
 
@@ -126,8 +128,8 @@ impl AppState {
 
         let binding = self.input.to_lowercase();
         let tags: HashSet<&str> = binding.split_whitespace().collect();
-        self.results = search_skins(&self.skins, &self.name_map, &tags);
-        // After filtering, sort using current sort settings.
+        self.results = search_skins(&self.skins, &self.name_map, &tags, &self.favorites); // Pass favorites here
+                                                                                          // After filtering, sort using current sort settings.
         self.sort_results();
         self.table_state.select(Some(0));
         self.update_suggestion();
@@ -430,6 +432,25 @@ fn main() -> io::Result<()> {
                         KeyCode::Char('y') if key.modifiers.contains(KeyModifiers::CONTROL) => {
                             app.redo();
                         },
+                        KeyCode::Char('f') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+                            if let Some(selected) = app.table_state.selected() {
+                                if let Some(skin) = app.results.get(selected) {
+                                    if app.favorites.contains(&skin.name) {
+                                        app.favorites.remove(&skin.name);
+                                    } else {
+                                        app.favorites.insert(skin.name.clone());
+                                    }
+                                    save_favorites(&app.favorites)
+                                        .expect("Failed to save favorites");
+                                    app.update_search();
+                                }
+                            }
+                        },
+                        KeyCode::Char('F') if key.modifiers.contains(KeyModifiers::SHIFT) => {
+                            app.favorites.clear();
+                            save_favorites(&app.favorites).expect("Failed to clear favorites");
+                            app.update_search();
+                        },
                         KeyCode::Char(c) => {
                             app.input.push(c);
                             app.update_search();
@@ -537,6 +558,21 @@ fn main() -> io::Result<()> {
     )?;
     terminal.show_cursor()?;
     Ok(())
+}
+
+fn load_favorites() -> io::Result<HashSet<String>> {
+    let path = "favorites.txt";
+    if let Ok(content) = std::fs::read_to_string(path) {
+        Ok(content.lines().map(|s| s.trim().to_string()).filter(|s| !s.is_empty()).collect())
+    } else {
+        Ok(HashSet::new())
+    }
+}
+
+fn save_favorites(favorites: &HashSet<String>) -> io::Result<()> {
+    let path = "favorites.txt";
+    let content = favorites.iter().map(|s| s.as_str()).collect::<Vec<_>>().join("\n");
+    std::fs::write(path, content)
 }
 
 fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
@@ -801,12 +837,10 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
             .style(Style::default().fg(Color::Red).add_modifier(Modifier::BOLD));
         f.render_widget(message, area);
     } else {
-        // Calculate pagination variables
         let total_pages = app.results.len().div_ceil(app.items_per_page);
         let start = app.current_page * app.items_per_page;
         let end = (start + app.items_per_page).min(app.results.len());
 
-        // Build header titles with sort indicators
         let name_header = if app.sort_field == SortField::Name && app.sort_descending {
             "Name ↓"
         } else {
@@ -826,10 +860,14 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
         let header = Row::new(vec![name_header, rarity_header, event_header, "Year", "Tags"])
             .style(Style::default().fg(D_YELLOW).add_modifier(Modifier::BOLD));
 
-        // Slice results for the current page
         let rows: Vec<Row> = app.results[start..end]
             .iter()
             .map(|skin| {
+                let mut tags_display = skin.tags.clone();
+                if app.favorites.contains(&skin.name) {
+                    tags_display.push("favorite".to_string());
+                }
+
                 let year = skin.year.map_or(String::from("N/A"), |y| y.to_string());
                 Row::new(vec![
                     Line::from(Span::styled(&skin.name, Style::default().fg(D_CYAN))),
@@ -840,14 +878,13 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
                     Line::from(Span::styled(&skin.event, Style::default().fg(D_ORANGE))),
                     Line::from(Span::styled(year, Style::default().fg(D_GREEN))),
                     Line::from(Span::styled(
-                        skin.tags.join(", "),
+                        tags_display.join(", "),
                         Style::default().fg(D_FOREGROUND),
                     )),
                 ])
             })
             .collect();
 
-        // Create table with pagination info in the title
         let table = Table::new(rows)
             .header(header)
             .block(
@@ -890,6 +927,11 @@ fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect)
 
     if let Some(selected) = app.table_state.selected() {
         if let Some(skin) = app.results.get(selected) {
+            let mut tags = skin.tags.clone();
+            if app.favorites.contains(&skin.name) {
+                tags.push("favorite".to_string());
+            }
+
             let details = vec![
                 Line::from(vec![
                     Span::styled("Name: ", Style::default().fg(D_YELLOW)),
@@ -912,7 +954,7 @@ fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect)
                 ]),
                 Line::from(
                     std::iter::once(Span::styled("Tags: ", Style::default().fg(D_YELLOW)))
-                        .chain(render_tags(&skin.tags))
+                        .chain(render_tags(&tags))
                         .collect::<Vec<_>>(),
                 ),
             ];
@@ -2847,6 +2889,7 @@ fn search_skins(
     skins: &[Skin],
     name_map: &HashMap<String, usize>,
     tags: &HashSet<&str>,
+    favorites: &HashSet<String>,
 ) -> Vec<Skin> {
     let exact_matches: Vec<Skin> =
         tags.iter().filter_map(|tag| name_map.get(*tag)).map(|&i| skins[i].clone()).collect();
@@ -2859,19 +2902,22 @@ fn search_skins(
     let mut scored_skins: Vec<(i64, &Skin)> = skins
         .iter()
         .filter_map(|skin| {
-            // Enhanced partial matching logic
             let all_tags_matched = tags.iter().all(|&tag| {
-                skin.name_lower.contains(tag) ||
-                skin.rarity_lower == tag || // Exact match for rarity
-                skin.event_lower.contains(tag) ||
-                skin.year_str.contains(tag) || // Partial year matching
-                skin.tags_lower.iter().any(|t| t.contains(tag)) // Partial tag matching
+                let tag_lower = tag.to_lowercase();
+                if tag_lower == "favorite" {
+                    favorites.contains(&skin.name)
+                } else {
+                    skin.name_lower.contains(&tag_lower)
+                        || skin.rarity_lower == tag_lower
+                        || skin.event_lower.contains(&tag_lower)
+                        || skin.year_str.contains(&tag_lower)
+                        || skin.tags_lower.iter().any(|t| t.contains(&tag_lower))
+                }
             });
 
             if !all_tags_matched {
                 return None;
             }
-
             let mut score = 0;
             for tag in tags {
                 // Boost exact matches in special fields
