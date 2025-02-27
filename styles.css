@@ -6,11 +6,11 @@
 }
 
 :root {
-  --bg-color: #121212;
-  --text-color: #e0e0e0;
-  --accent-color: #0A84FF;
-  --border-color: #333333;
-  --placeholder-color: #888888;
+  --bg-color: #121212; /* Dark background */
+  --text-color: #e0e0e0; /* Light text color */
+  --accent-color: #0A84FF; /* Accent color (blue) */
+  --border-color: #333333; /* Border color */
+  --placeholder-color: #888888; /* Placeholder text color */
 }
 
 /* Global Styles */
