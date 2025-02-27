@@ -20,13 +20,13 @@ _A clear and concise description of the issue or feature request._
 - **Actual:** What actually happened.
 
 ## Environment Details
-- **OS:** (e.g., Windows, macOS, Linux)
-- **Rust Version:** (e.g., rustc 1.XX.X)
-- **Installation Method:** (e.g., via Cargo, from release executable)
+- **OS:** (e.g. Windows 10, 11, macOS)
+- **Rust Version:** (e.g. rustc 1.XX.X)
+- **Installation Method:** (e.g. via Cargo, from release executable)
 
 ## Additional Context
-_Add any extra details or context that might help resolve the issue (e.g. logs, screenshots if relevant)._
-
----
+_Add any extra context that might help resolve the issue (e.g. logs, screenshots if relevant)._
 
 *If you have any questions or need further guidance, please refer to the README or reach out @sethyl on Discord!*
+
+---
