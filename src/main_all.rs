@@ -627,7 +627,7 @@ fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
                 Line::from("[CTRL+D] : Toggle detailed view"),
                 Line::from("[CTRL+Z] : Undo input in search bar"),
                 Line::from("[CTRL+Y] : Redo input in search bar"),
-                Line::from("[CTRL+F] : Add favorite tag to current selected skin"),	
+                Line::from("[CTRL+F] : Add favorite tag to current selected skin"),
                 Line::from("[SHIFT+F] : Clear all favorites"),
                 Line::from("[UP/DOWN ▲▼] Or Mouse Scroll: Navigate results"),
                 Line::from("[TAB]: Cycle suggestions"),
