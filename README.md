@@ -46,9 +46,8 @@ https://crates.io/crates/pola
 
 <details>
 <summary>Tags List</summary>
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/2e8b5a87-2ce7-4f41-b6f0-03c8d08c161f" alt="Outdated Demo v0.1.1-beta" width="706">
-</p>
+  
+<img src="https://github.com/user-attachments/assets/2e8b5a87-2ce7-4f41-b6f0-03c8d08c161f" alt="Outdated Demo v0.1.1-beta" width="706">
 
 | Tag                   | Description                         | Tag                   | Description                         |
 |-----------------------|-------------------------------------|-----------------------|-------------------------------------|
