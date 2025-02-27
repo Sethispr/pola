@@ -1,8 +1,0 @@
-[book]
-title = "pola"
-authors = ["sethyl"]
-language = "en"
-multilingual = false
-
-[output.html]
-default-theme = "dark"
