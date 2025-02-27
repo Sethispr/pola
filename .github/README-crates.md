@@ -19,12 +19,14 @@ Option 1: [Install (pola.exe)](https://github.com/Sethispr/pola/releases/tag/v0.
 Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org/tools/install) and [Git](https://git-scm.com/downloads/win) first.
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/sethispr/pola
    cd yourdirectory/pola
    ```
 
 2. Run the application
+
    ```bash
    cargo run --release
    ```
@@ -32,18 +34,20 @@ Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org
 Option 3: You can also install the `pola` package directly using Cargo:
 
 1. Install the package
+
    ```bash
    cargo install pola --locked
    ```
 
 2. Run the application
+
    ```bash
    pola
    ```
 
 <img src="https://img.shields.io/crates/d/pola" alt="Crates.io Download Badge">
 
-https://crates.io/crates/pola
+<https://crates.io/crates/pola>
 
 > If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/pola) or [Skin List](https://github.com/Sethispr/pola/blob/main/.github/SKIN.md)
 
@@ -71,6 +75,7 @@ https://crates.io/crates/pola
 | <kbd>Material</kbd>   | Skins from the Material case        | <kbd>Nature</kbd>     | Skins from the Nature case          |
 | <kbd>Pattern</kbd>    | Skins from the Pattern case         | <kbd>Refined</kbd>    | Skins from the Refined case         |
 | <kbd>Gamenight</kbd>  | Code skins given on Gamenight       | <kbd>Special</kbd>    | Skins obtained for contributing     |
+
 </details>
 
 <details>
