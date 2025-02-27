@@ -50,9 +50,8 @@ https://crates.io/crates/pola
 
 <details>
 <summary>Tags List</summary>
-
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/2e8b5a87-2ce7-4f41-b6f0-03c8d08c161f" alt="demo" width="596">
+  <img src="https://github.com/user-attachments/assets/2e8b5a87-2ce7-4f41-b6f0-03c8d08c161f" alt="Outdated Demo v0.1.1-beta" width="706">
 </p>
 
 | Tag                   | Description                         | Tag                   | Description                         |
@@ -70,6 +69,7 @@ https://crates.io/crates/pola
 | <kbd>Camouflage</kbd> | Skins from the Camouflage case      | <kbd>Future</kbd>     | Skins from the Future case          |
 | <kbd>Material</kbd>   | Skins from the Material case        | <kbd>Nature</kbd>     | Skins from the Nature case          |
 | <kbd>Pattern</kbd>    | Skins from the Pattern case         | <kbd>Refined</kbd>    | Skins from the Refined case         |
+| <kbd>Gamenight</kbd>  | Code skins given on Gamenight       | <kbd>Special</kbd>    | Skins obtained for contributing     |
 </details>
 
 <details>
