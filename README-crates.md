@@ -70,6 +70,7 @@ https://crates.io/crates/pola
 | <kbd>Camouflage</kbd> | Skins from the Camouflage case      | <kbd>Future</kbd>     | Skins from the Future case          |
 | <kbd>Material</kbd>   | Skins from the Material case        | <kbd>Nature</kbd>     | Skins from the Nature case          |
 | <kbd>Pattern</kbd>    | Skins from the Pattern case         | <kbd>Refined</kbd>    | Skins from the Refined case         |
+| <kbd>Gamenight</kbd>  | Code skins given on Gamenight       | <kbd>Special</kbd>    | Skins obtained for contributing     |
 </details>
 
 <details>
@@ -82,6 +83,7 @@ https://crates.io/crates/pola
 | <kbd>home/end</kbd> | Go to first last result        | <kbd>ctrl+d</kbd>          | Toggle detailed view            |
 | <kbd>ctrl+l</kbd>   | Clear search input             | <kbd>esc</kbd>             | Close TUI/Help                  |
 | <kbd>ctrl+y</kbd>   | Redo                           | <kbd>ctrl+z</kbd>          | Undo                            |
+| <kbd>ctrl+f</kbd>   | Favorite/Undo Favorite         | <kbd>shift+f</kbd>         | Remove all favorites            |
 
 </details>
 
