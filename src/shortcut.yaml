@@ -1,0 +1,14 @@
+shortcut:
+  name: "Pola"
+  description: "Launches the Pola Rust application in Windows Terminal using the Windows PowerShell profile."
+  command: 'wt.exe -p "Windows PowerShell" -d "C:\Users\YourUsername\YourDirectory\pola\target\release" "C:\Users\YourUsername\YourDirectory\pola\target\release\pola.exe"'
+  working_directory: "C:\Users\YourUsername\YourDirectory\pola\target\release"
+  requirements:
+    - Windows Terminal must be installed.
+    - wt.exe should be available in your system PATH.
+  instructions:
+    - "Right-click on your desktop (or desired folder) and select 'New > Shortcut'."
+    - "In the 'Type the location of the item' field, paste the following command:"
+    - 'wt.exe -p "Windows PowerShell" -d "C:\Users\YourUsername\YourDirectory\pola\target\release" "C:\Users\YourUsername\YourDirectory\pola\target\release\pola.exe"'
+    - "Click Next, then enter a name for your shortcut (for example, 'Pola')."
+    - "Click Finish to create the shortcut."
