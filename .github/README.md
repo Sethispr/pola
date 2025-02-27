@@ -1,9 +1,3 @@
-<div align="center">
-
-<table>
-<tr>
-<td>
-
 <p align="center">
   <strong>Rust TUI for searching all known skins in SA faster!</strong>
 </p>
@@ -14,7 +8,7 @@
 
 ## Installation
 
-Option 1: [Install (pola.exe)](https://github.com/Sethispr/pola/releases/tag/v0.1.1-beta) from the Github Release page. (Windows Only)
+Option 1: [Install (pola.exe)](https://github.com/Sethispr/pola/releases/tag/v0.1.1-stable) from the Release page.
 
 Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org/tools/install) and [Git](https://git-scm.com/downloads/win) first.
 
@@ -49,15 +43,15 @@ Option 3: You can also install the `pola` package directly using Cargo:
 
 <https://crates.io/crates/pola>
 
+> [!TIP]
 > If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/pola) or [Skin List](https://github.com/Sethispr/pola/blob/main/.github/SKIN.md)
 
 ## Cheat Sheet
 
 <details>
 <summary>Tags List</summary>
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/2e8b5a87-2ce7-4f41-b6f0-03c8d08c161f" alt="Outdated Demo v0.1.1-beta" width="706">
-</p>
+  
+<img src="https://github.com/user-attachments/assets/2e8b5a87-2ce7-4f41-b6f0-03c8d08c161f" alt="Outdated Demo v0.1.1-beta" width="706">
 
 | Tag                   | Description                         | Tag                   | Description                         |
 |-----------------------|-------------------------------------|-----------------------|-------------------------------------|
@@ -91,9 +85,3 @@ Option 3: You can also install the `pola` package directly using Cargo:
 | <kbd>ctrl+f</kbd>   | Favorite/Undo Favorite         | <kbd>shift+f</kbd>         | Remove all favorites            |
 
 </details>
-
-</td>
-</tr>
-</table>
-
-</div>
