@@ -44,10 +44,6 @@ https://crates.io/crates/pola
 
 ## Cheat Sheet
 
-<table>
-<tr>
-<td>
-
 <details>
 <summary>Tags List</summary>
 <p align="center">
@@ -85,7 +81,3 @@ https://crates.io/crates/pola
 | <kbd>ctrl+f</kbd>   | Favorite/Undo Favorite         | <kbd>shift+f</kbd>         | Remove all favorites            |
 
 </details>
-
-</td>
-</tr>
-</table>
