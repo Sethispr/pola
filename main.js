@@ -8,41 +8,313 @@ function debounce(func, delay) {
 
 const SKIN_COLLECTION = [
   {
-    name: "Azurite",
+    name: "Cupid",
     rarity: "Pink",
-    event: "Easter Event",
-    year: 2022,
-    tags: ["event"],
-    img: null 
-  },
-  {
-    name: "Blastoff",
-    rarity: "Teal",
-    event: "Launch",
+    event: "Valentine Case",
     year: null,
-    tags: ["launch"],
+    tags: ["case"],
     img: null
   },
   {
-    name: "Bubbles",
-    rarity: "Teal",
-    event: "Code Redeemed",
+    name: "Rainbow Periastron",
+    rarity: "Pink",
+    event: "Valentine Case (Exquisite)",
     year: null,
-    tags: ["code"],
-    img: null
-  },
-  {
-    name: "Cartoony Rainbow",
-    rarity: "Teal",
-    event: "Summer Bundle",
-    year: 2023,
-    tags: ["bundle"],
+    tags: ["case", "exquisite", "periastron"],
     img: null
   },
   {
     name: "Crimson Periastron",
     rarity: "Red",
     event: "Valentine Case",
+    year: null,
+    tags: ["case", "periastron"],
+    img: null
+  },
+  {
+    name: "Heartsong",
+    rarity: "Red",
+    event: "Valentine Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Ivory Periastron",
+    rarity: "Red",
+    event: "Valentine Case (Exquisite)",
+    year: null,
+    tags: ["case", "exquisite", "periastron"],
+    img: null
+  },
+  {
+    name: "Diamond",
+    rarity: "Red",
+    event: "Valentine Case (Exquisite)",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Epicredness",
+    rarity: "Red",
+    event: "Valentine Case (Exquisite)",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Ghostly",
+    rarity: "Pink",
+    event: "Birthday Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Hellfire",
+    rarity: "Pink",
+    event: "Birthday Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Surge",
+    rarity: "Pink",
+    event: "Birthday Case (Exquisite)",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Epicblueness",
+    rarity: "Red",
+    event: "Birthday Case (Exquisite)",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Golden",
+    rarity: "Red",
+    event: "Birthday Case (Exquisite)",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Grimgold Periastron",
+    rarity: "Red",
+    event: "Birthday Case",
+    year: null,
+    tags: ["case", "periastron", "popular"],
+    img: null
+  },
+  {
+    name: "Spring Growth",
+    rarity: "Pink",
+    event: "Easter Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Amethyst Periastron",
+    rarity: "Red",
+    event: "Easter Case",
+    year: null,
+    tags: ["case", "periastron"],
+    img: null
+  },
+  {
+    name: "Bunny",
+    rarity: "Red",
+    event: "Easter Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Guitar",
+    rarity: "Red",
+    event: "Easter Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Joyful Periastron",
+    rarity: "Red",
+    event: "Easter Case",
+    year: null,
+    tags: ["case", "periastron"],
+    img: null
+  },
+  {
+    name: "Noir Periastron",
+    rarity: "Red",
+    event: "Easter Case",
+    year: null,
+    tags: ["case", "periastron"],
+    img: null
+  },
+  {
+    name: "Midsummer",
+    rarity: "Pink",
+    event: "Summer Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Mystic",
+    rarity: "Pink",
+    event: "Summer Case",
+    year: null,
+    tags: ["case", "popular"],
+    img: null
+  },
+  {
+    name: "Void Lord",
+    rarity: "Pink",
+    event: "Summer Case",
+    year: null,
+    tags: ["case", "popular"],
+    img: null
+  },
+  {
+    name: "Warlord",
+    rarity: "Pink",
+    event: "Summer Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Cythrex",
+    rarity: "Red",
+    event: "Summer Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Dog",
+    rarity: "Red",
+    event: "Summer Case",
+    year: null,
+    tags: ["case", "popular"],
+    img: null
+  },
+  {
+    name: "Fire Wyvern",
+    rarity: "Red",
+    event: "Summer Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Ghostfire",
+    rarity: "Red",
+    event: "Summer Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Inscription",
+    rarity: "Red",
+    event: "Summer Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Mummy",
+    rarity: "Red",
+    event: "Summer Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Retrowave",
+    rarity: "Red",
+    event: "Summer Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Shikai",
+    rarity: "Red",
+    event: "Summer Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "All Hallow's",
+    rarity: "Pink",
+    event: "Halloween Case",
+    year: null,
+    tags: ["case", "popular"],
+    img: null
+  },
+  {
+    name: "Anansi",
+    rarity: "Pink",
+    event: "Halloween Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Dusekkar",
+    rarity: "Pink",
+    event: "Halloween Case",
+    year: null,
+    tags: ["case", "popular"],
+    img: null
+  },
+  {
+    name: "Count",
+    rarity: "Red",
+    event: "Halloween Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Dracula",
+    rarity: "Red",
+    event: "Halloween Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Hallowing",
+    rarity: "Red",
+    event: "Halloween Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Orange Energy",
+    rarity: "Red",
+    event: "Halloween Case",
+    year: null,
+    tags: ["case", "energy"],
+    img: null
+  },
+  {
+    name: "Pumpkin",
+    rarity: "Red",
+    event: "Halloween Case",
     year: null,
     tags: ["case"],
     img: null
@@ -56,27 +328,139 @@ const SKIN_COLLECTION = [
     img: null
   },
   {
-    name: "Ghostly",
+    name: "Icycle",
     rarity: "Pink",
-    event: "Birthday Case",
+    event: "Christmas Case",
     year: null,
     tags: ["case"],
     img: null
   },
   {
-    name: "Heartsong",
+    name: "Santa",
+    rarity: "Pink",
+    event: "Christmas Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Candy Energy",
     rarity: "Red",
-    event: "Valentine Case",
+    event: "Christmas Case",
+    year: null,
+    tags: ["case", "energy"],
+    img: null
+  },
+  {
+    name: "Festive Periastron",
+    rarity: "Red",
+    event: "Christmas Case",
+    year: null,
+    tags: ["case", "periastron"],
+    img: null
+  },
+  {
+    name: "Snowflake",
+    rarity: "Red",
+    event: "Christmas Case",
     year: null,
     tags: ["case"],
     img: null
   },
   {
-    name: "Cupid",
-    rarity: "Pink",
-    event: "Valentine Case",
+    name: "Snowman",
+    rarity: "Red",
+    event: "Christmas Case",
     year: null,
     tags: ["case"],
+    img: null
+  },
+  {
+    name: "Azurite",
+    rarity: "Pink",
+    event: "Easter Event",
+    year: 2022,
+    tags: ["event", "popular"],
+    img: null
+  },
+  {
+    name: "Corrupted",
+    rarity: "Teal",
+    event: "Easter Event",
+    year: 2023,
+    tags: ["event", "popular"],
+    img: null
+  },
+  {
+    name: "Sun Slayer",
+    rarity: "Pink",
+    event: "Easter Event",
+    year: 2024,
+    tags: ["event"],
+    img: null
+  },
+  {
+    name: "Cartoony Rainbow",
+    rarity: "Teal",
+    event: "Summer Bundle",
+    year: 2023,
+    tags: ["bundle"],
+    img: null
+  },
+  {
+    name: "Cyberlight",
+    rarity: "Teal",
+    event: "Summer Bundle",
+    year: 2023,
+    tags: ["bundle"],
+    img: null
+  },
+  {
+    name: "Frostburn",
+    rarity: "Teal",
+    event: "Summer Bundle",
+    year: 2023,
+    tags: ["bundle"],
+    img: null
+  },
+  {
+    name: "Inferno Angel",
+    rarity: "Teal",
+    event: "Summer Bundle",
+    year: 2023,
+    tags: ["bundle", "popular"],
+    img: null
+  },
+  {
+    name: "Azure Dragon",
+    rarity: "Teal",
+    event: "Summer Bundle",
+    year: 2024,
+    tags: ["bundle"],
+    img: null
+  },
+  {
+    name: "Darkness",
+    rarity: "Teal",
+    event: "Summer Bundle",
+    year: 2024,
+    tags: ["bundle"],
+    img: null
+  },
+  {
+    name: "Vilethorn",
+    rarity: "Teal",
+    event: "Summer Bundle",
+    year: 2024,
+    tags: ["bundle"],
+    img: null
+  },
+  {
+    name: "Winged",
+    rarity: "Teal",
+    event: "Summer Bundle",
+    year: 2024,
+    tags: ["bundle", "popular"],
     img: null
   },
   {
@@ -85,38 +469,654 @@ const SKIN_COLLECTION = [
     event: "Valentine Bundle",
     year: 2025,
     tags: ["bundle"],
-    img: "https://i.ibb.co/ynPprrzM/IMG-0069.png"
-  },
-  {
-    name: "Midsummer",
-    rarity: "Pink",
-    event: "Summer Case",
-    year: null,
-    tags: ["case"],
     img: null
   },
   {
-    name: "Rainbow Periastron",
+    name: "Love Scepter",
+    rarity: "Teal",
+    event: "Valentine Bundle",
+    year: 2025,
+    tags: ["bundle", "popular"],
+    img: null
+  },
+  {
+    name: "Wicked Rose",
+    rarity: "Teal",
+    event: "Valentine Bundle",
+    year: 2025,
+    tags: ["bundle", "popular"],
+    img: null
+  },
+  {
+    name: "Redmaster",
+    rarity: "Red",
+    event: "Christmas Event",
+    year: 2022,
+    tags: ["event", "rare"],
+    img: null
+  },
+  {
+    name: "Yellowflame",
+    rarity: "Red",
+    event: "Christmas Event",
+    year: 2022,
+    tags: ["event", "rare"],
+    img: null
+  },
+  {
+    name: "Goldenrod",
     rarity: "Pink",
-    event: "Valentine Case (Exquisite)",
+    event: "Christmas Event",
+    year: 2022,
+    tags: ["event", "rare"],
+    img: null
+  },
+  {
+    name: "Whisper",
+    rarity: "Pink",
+    event: "Christmas Event",
+    year: 2022,
+    tags: ["event", "rare"],
+    img: null
+  },
+  {
+    name: "Gingerblade",
+    rarity: "Teal",
+    event: "Christmas Event",
+    year: 2022,
+    tags: ["event", "rare"],
+    img: null
+  },
+  {
+    name: "Candy Cane",
+    rarity: "Teal",
+    event: "Christmas Event",
+    year: 2023,
+    tags: ["event"],
+    img: null
+  },
+  {
+    name: "Iceblade",
+    rarity: "Teal",
+    event: "Christmas Event",
+    year: 2024,
+    tags: ["event", "popular"],
+    img: null
+  },
+  {
+    name: "Bubbles",
+    rarity: "Teal",
+    event: "Code",
+    year: null,
+    tags: ["code", "gamenight"],
+    img: null
+  },
+  {
+    name: "Butter",
+    rarity: "Teal",
+    event: "Code",
+    year: null,
+    tags: ["code", "duped"],
+    img: null
+  },
+  {
+    name: "Fireworks",
+    rarity: "Teal",
+    event: "Code",
+    year: null,
+    tags: ["code"],
+    img: null
+  },
+  {
+    name: "Pearl",
+    rarity: "Teal",
+    event: "Code",
+    year: null,
+    tags: ["code", "gamenight"],
+    img: null
+  },
+  {
+    name: "Tin",
+    rarity: "Teal",
+    event: "Code",
+    year: null,
+    tags: ["code", "gamenight"],
+    img: null
+  },
+  {
+    name: "Blastoff",
+    rarity: "Teal",
+    event: "Launch",
+    year: null,
+    tags: ["launch"],
+    img: null
+  },
+  {
+    name: "Behemoth",
+    rarity: "Pink",
+    event: "Exquisite Case",
     year: null,
     tags: ["case", "exquisite"],
     img: null
   },
   {
-    name: "Spring Growth",
+    name: "Blizzard",
     rarity: "Pink",
-    event: "Easter Case",
+    event: "Exquisite Case",
+    year: null,
+    tags: ["case", "exquisite", "popular"],
+    img: null
+  },
+  {
+    name: "Crescendo",
+    rarity: "Pink",
+    event: "Exquisite Case",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Demon",
+    rarity: "Pink",
+    event: "Exquisite Case",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Overseer",
+    rarity: "Pink",
+    event: "Exquisite Case",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Redcliff",
+    rarity: "Pink",
+    event: "Exquisite Case",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Skeletal",
+    rarity: "Pink",
+    event: "Exquisite Case",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Telamonster",
+    rarity: "Pink",
+    event: "Exquisite Case",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Unseen",
+    rarity: "Pink",
+    event: "Exquisite Case",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Bombastic",
+    rarity: "Red",
+    event: "Exquisite Case",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Crimsonwrath",
+    rarity: "Red",
+    event: "Exquisite Case",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Sanctum",
+    rarity: "Red",
+    event: "Exquisite Case",
+    year: null,
+    tags: ["case", "exquisite"],
+    img: null
+  },
+  {
+    name: "Spider",
+    rarity: "Pink",
+    event: "Animal Case",
     year: null,
     tags: ["case"],
     img: null
   },
   {
-    name: "All Hallow's",
+    name: "Unicorn",
     rarity: "Pink",
-    event: "Halloween Case",
+    event: "Animal Case",
     year: null,
     tags: ["case"],
+    img: null
+  },
+  {
+    name: "Bacon",
+    rarity: "Red",
+    event: "Animal Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Salmon",
+    rarity: "Red",
+    event: "Animal Case",
+    year: null,
+    tags: ["case", "popular"],
+    img: null
+  },
+  {
+    name: "Shark",
+    rarity: "Red",
+    event: "Animal Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Slither",
+    rarity: "Red",
+    event: "Animal Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Dragon's Forge",
+    rarity: "Pink",
+    event: "Camouflage Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Glacial",
+    rarity: "Pink",
+    event: "Camouflage Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Chartreuse Periastron",
+    rarity: "Red",
+    event: "Camouflage Case",
+    year: null,
+    tags: ["case", "periastron"],
+    img: null
+  },
+  {
+    name: "Fallen",
+    rarity: "Red",
+    event: "Camouflage Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Prehistoric",
+    rarity: "Red",
+    event: "Camouflage Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Shadow",
+    rarity: "Red",
+    event: "Camouflage Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Violet Energy",
+    rarity: "Red",
+    event: "Camouflage Case",
+    year: null,
+    tags: ["case", "energy"],
+    img: null
+  },
+  {
+    name: "Laser",
+    rarity: "Pink",
+    event: "Future Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Orinthian",
+    rarity: "Pink",
+    event: "Future Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Azure Periastron",
+    rarity: "Red",
+    event: "Future Case",
+    year: null,
+    tags: ["case", "periastron"],
+    img: null
+  },
+  {
+    name: "Celestial",
+    rarity: "Red",
+    event: "Future Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Galactic",
+    rarity: "Red",
+    event: "Future Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Green Energy",
+    rarity: "Red",
+    event: "Future Case",
+    year: null,
+    tags: ["case", "energy"],
+    img: null
+  },
+  {
+    name: "Motherboard",
+    rarity: "Red",
+    event: "Future Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Omega",
+    rarity: "Red",
+    event: "Future Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Crystal",
+    rarity: "Pink",
+    event: "Material Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Adurite",
+    rarity: "Red",
+    event: "Material Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Bluesteel",
+    rarity: "Red",
+    event: "Material Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Wooden",
+    rarity: "Red",
+    event: "Material Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Crystallised",
+    rarity: "Pink",
+    event: "Nature Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Elven",
+    rarity: "Pink",
+    event: "Nature Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Molten",
+    rarity: "Pink",
+    event: "Nature Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Autumnal",
+    rarity: "Red",
+    event: "Nature Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Beach",
+    rarity: "Red",
+    event: "Nature Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Breeze",
+    rarity: "Red",
+    event: "Nature Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Earth",
+    rarity: "Red",
+    event: "Nature Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Ocean",
+    rarity: "Red",
+    event: "Nature Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Monochrome",
+    rarity: "Pink",
+    event: "Pattern Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Relic",
+    rarity: "Red",
+    event: "Pattern Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Sorcus",
+    rarity: "Red",
+    event: "Pattern Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Archon",
+    rarity: "Red",
+    event: "Refined Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Breaker",
+    rarity: "Red",
+    event: "Refined Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Divine",
+    rarity: "Red",
+    event: "Refined Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Enforcer",
+    rarity: "Red",
+    event: "Refined Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Frosted",
+    rarity: "Red",
+    event: "Refined Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Hunter",
+    rarity: "Red",
+    event: "Refined Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Neon",
+    rarity: "Red",
+    event: "Refined Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Pharaoh",
+    rarity: "Red",
+    event: "Refined Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Skyward",
+    rarity: "Red",
+    event: "Refined Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "Steampunk",
+    rarity: "Red",
+    event: "Refined Case",
+    year: null,
+    tags: ["case"],
+    img: null
+  },
+  {
+    name: "No Dagger",
+    rarity: "Red",
+    event: "April Fools",
+    year: null,
+    tags: ["all case", "popular"],
+    img: null
+  },
+  {
+    name: "Whiteheart",
+    rarity: "Teal",
+    event: "Worthy Individuals",
+    year: null,
+    tags: ["special", "rare"],
+    img: null
+  },
+  {
+    name: "Darkheart",
+    rarity: "Teal",
+    event: "Worthy Individuals",
+    year: null,
+    tags: ["special"],
+    img: null
+  },
+  {
+    name: "Banana",
+    rarity: "Teal",
+    event: "Pre-release Tester",
+    year: 2021,
+    tags: ["special"],
+    img: null
+  },
+  {
+    name: "Hammer",
+    rarity: "Teal",
+    event: "Builder",
+    year: null,
+    tags: ["special"],
+    img: null
+  },
+  {
+    name: "Paintbrush",
+    rarity: "Teal",
+    event: "Artist",
+    year: null,
+    tags: ["special"],
+    img: null
+  },
+  {
+    name: "Riddling",
+    rarity: "Teal",
+    event: "Worthy Individuals",
+    year: null,
+    tags: ["special"],
+    img: null
+  },
+  {
+    name: "VIP",
+    rarity: "Teal",
+    event: "VIP Players",
+    year: null,
+    tags: ["special", "VIP"],
     img: null
   },
 ].sort((a, b) => a.name.localeCompare(b.name));
