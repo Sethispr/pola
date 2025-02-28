@@ -63,6 +63,9 @@ features to-do's:
 - jump to certain skin name ctrl+j
 - mouse hover tool tips
 - stats panel ctrl+s show tags created too
+- resizable layout
+- better mouse support beyond scolling so can click suggestion to accpet add close buttons x icons to close detailed view panel help panel or clear search bar etc
+- fast clickables so click a button with text pink to instantly find pink skins 
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
