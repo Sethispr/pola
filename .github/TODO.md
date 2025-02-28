@@ -1,107 +1,122 @@
-optimizing to-do's:
+# pola To-Do List
 
-- reduce allocations
-- more cache-friendly data structures
-- swap fuzzymatcher to nucleo (x8 times faster)
-- more efficient index-based operations
-- reuse fuzzy matcher instance
-- change fuzzy matching to using nucleo (x8 times faster)
-- use indices instead of cloning entire skin objects
-- compressing term metadata with bitflags in TermInfo reducing memory usage
-- improve tags especially long ones such as valentines case (exquisite) and just separate tags using exquisite and valentines as tags
+#### Performance Improvements
 
-features to-do's:
-- add value and owner tags
-- allow tags to be excluded by using -- ? or -
-- combining rarity tags such as pink and red can still show pink and red skins or summer and pattern case can show both
-- fix number of suggestions features (fixed)
-- fix non tags being tagged
-- keyboard shortcut changer
-- tui -> gui or standalone terminal
-- use 256 bit colors from ratatui (slightly added, only fg, border color and bg of binds etc not the whole bg yet)
-- add mod-only skins (added)
-- add description to detailed view
-- add placeholder images to all skins and start adding skins to assets folder
-- improve auto suggestions (ex: if you type valentine then type sth it should auto suggest a skin in a valentine case)
-- fix auto suggestions where if u input sth like "omg" and accept the suggestion omega, omg will still be in search bar which looks not so clean. or when cycling suggestions it happens too
-- add highlight feature like the website where if you type in anything it also shows what you input highlighted in the suggested skins
-- ten results per table page? then cycle through next pages using keybind or arrow button, can also customize amount of results shown per page
-- logging and advanced error handling
-- performance monitoring view and binds for it
-- add scrollbar
-- make ui more modern and more flexible with other terminals
-- separate codes into different files not just 1 whole main.rs file
-- adding a caret in the search bar
-- keybind to,toggle detail view on/off default is on
-- ctrl + r to select random skin
-- contextual suggestion should get refined since case and event overlaps e.g. valentine case and bundle or christmas case and event
-- putting 2 in the search doesnt suggest 2022 etc year tags
-- skins with popular tag should be suggested first for any prompt trying for a name
-- when typing red and then s it should be showing skins with names that start with s like salmon or sanctum
-- skin translation in diff lang spanish russian, config for lang
-- favorite or star system OR add/edit tags like add favorite / for trade tags
-- persistent bg color so can make light mode theme and hc
-- support importing skin data from csv or json
-- select multiple skins using shift up down, can export or add to favs or compare
-- search results stats and overall stats of skins in sa
-- export list of skin to csv/json/txt format
-- x icon in search bar at the right to clear search
-- introduce operators like and or not similar to include exclude etc skins
-- year range search e.g. 2022-2025
-- show current shop, needs live backend
-- search history clear history
-- fix block styling when theres 3 tags particularly the valentine/birthday exquisite case skins
-- paginated results so show 10 skins per page to "fix" click offset (implemented though it didnt fix click offset)
-- suggestions should prioritize the suggestion that has more possible outcomes like energy instead of enforcer
-- suggestions should prioritize suggestions that actually has the string like "er" so it doesnt show azurite first so fix alphabet sorting being default all the time
-- accidentally pressing middle mouse scroll button makes the scrollable items bugged so need to scroll back up to new prev page
-- improve title table sorting so it allows multi sorting and default unsorted non asc/desc
-- add shaders https://github.com/junkdog/tachyonfx
-- add custom tags so user can add their own ctrl+t to make tag select color and name styling etc and then shift+t to add the tag if user made more than 1 tag then show a short rectangle with all the tags they made
-- allow sorting by year in table title
-- filter menu with buttons to include/exclude tags like website
-- jump to certain skin name ctrl+j
-- mouse hover tool tips
-- stats panel ctrl+s show tags created too
-- resizable layout
-- better mouse support beyond scolling so can click suggestion to accpet add close buttons x icons to close detailed view panel help panel or clear search bar etc
-- fast clickables so click a button with text pink to instantly find pink skins
-- disallow duplicate tags in the suggestionsand cant spam accept suggestion too
+- Reduce memory allocations.  
+- Use more cache-friendly data structures.  
+- Replace **FuzzyMatcher** with **Nucleo** (8× faster).  
+- Optimize index-based operations for efficiency.  
+- Reuse the fuzzy matcher instance.  
+- Use indices instead of cloning entire skin objects.  
+- Compress term metadata with bitflags in **TermInfo** to reduce memory usage.  
+- Improve tag handling, especially long ones (e.g., "Valentine Case (Exquisite)") by separating them into individual tags like "Exquisite" and "Valentine."  
 
-website to-do's:
-- make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
-- optimize suggestions speed
-- add all images for the little amount of skins we currently have in website
-- add all skins, images into assets
-- fix tags and help modal and add rarity, value, owner and year tags
-- get owner list thrugh trade-sa or ask people or promote site
-- remove name and rarity from detailed view since its redudant if we have a skin image already showing it
-- add max-width for images
-- make tags capitalized at first letter
+#### New TUI Features
 
-pola-cli to-do's:
-- animated ASCII intro?
-- featured skin of the day
-- random skin feature
-- export results
-- favorite skins
-- introduce operators AND OR NOT similar to include/exclude etc skins
-- ANSI colors?
-- history and clear history
-- numbered results and quick selection
-- compact view
-- value converter pink = 4 reds = ... 256 blues
-- paginated results
-- instead of back to go back from husotry maybe it shouldalso act as search but if you type in 1-1999 then like yeah it shows history results
+- Add **value** and **owner** tags.  
+- Allow tag exclusion using `--`, `?`, or `-`.  
+- Enable combined rarity tags (e.g., searching "Pink" and "Red" should return both).
+- Fix the **number of suggestions** feature. **(fixed)**
+- Prevent non-tags from being mistakenly tagged.
+- Implement a **keyboard shortcut changer**.  
+- Transition from **TUI** to **GUI** or a standalone terminal.  
+- Expand **256-bit color support** from Ratatui (currently applied to FG, border color, and keybinds but not full BG). **(done)**
+- Add **mod-only skins**. **(done)**
+- Display skin descriptions in **detailed view**.
+- Add **placeholder images** for all skins and begin populating the assets folder.
+- Improve **auto-suggestions** (e.g., typing "Valentine" should suggest a skin from the Valentine Case).  
+- Fix **auto-suggestion bugs**, such as lingering previous input when accepting a suggestion (e.g., typing "OMG" → accepting "Omega" leaves "OMG" in the search bar). **(fixed slightly)**
+- Highlight search terms in suggested skins (similar to the website). **(done)**
+- Display **10 results per table page** and allow navigation via keybinds or arrows (Multi-paginated view). **(done)**
+- Add **logging** and **advanced error handling**.  
+- Implement a **performance monitoring** view with keybinds.  
+- Add a **scrollbar**.  
+- Modernize UI and improve compatibility with different terminals.  
+- Refactor code into separate files instead of a single **main.rs** file.
+- Introduce a **caret** in the search bar. **(done)**
+- Keybind to toggle **detailed view** (default: ON). **(done)**
+- **Ctrl + R** to select a random skin.  
+- Improve **contextual suggestions** (e.g., differentiating between "Valentine Case" and "Valentine Bundle").  
+- Allow **year-based searching** (e.g., `2022-2025`). **(done)**
+- Ensure skins with the "Popular" tag appear first in **name-based searches**.  
+- Improve **autocomplete logic** (e.g., searching "Red S" should return skins like "Salmon" or "Sanctum"). **(done)**  
+- Implement **multilingual support** (Spanish, Russian, etc.) with a language config option.  
+- Add a **favorites** system and the ability to create/edit tags (e.g., "Favorite," "For Trade").  
+- Support **light mode and high contrast themes** via persistent background color settings.  
+- Enable **importing skin data** from CSV or JSON.  
+- Allow selecting multiple skins via **Shift + Up/Down** for exporting, favoriting, or comparison.  
+- Display **search result statistics** and overall skin stats.  
+- Add export functionality for **CSV, JSON, and TXT formats**.  
+- Add an **"X" icon** in the search bar to clear input.  
+- Introduce logical search operators (`AND`, `OR`, `NOT`).  
+- Display **current shop listings** (requires live backend).  
+- Add **search history** with a clear history option.  
+- Fix block styling when displaying **multiple tags** (e.g., "Valentine/Birthday Exquisite Case Skins").  
+- Paginate search results (10 skins per page) to resolve **click offset issues** (partially implemented).
+- Prioritize **suggestions with more matching outcomes** (e.g., suggesting "Energy" over "Enforcer").  
+- Ensure sorting logic prioritizes matches over alphabetic order (e.g., searching "er" shouldn’t return "Azurite" first).  
+- Fix **scrolling bugs** where accidental middle-mouse clicks break scrolling behavior.  
+- Improve **table sorting** to allow multi-sorting and remove default ascending/descending states.  
+- Add shader effects using **TachyonFX** ([GitHub](https://github.com/junkdog/tachyonfx)).  
+- Allow users to create **custom tags** (e.g., **Ctrl + T** to create a tag with color/style options, **Shift + T** to apply tags).  
+- Enable sorting skins by **year** in table headers.  
+- Implement a **filter menu** with buttons for including/excluding tags (similar to the website).  
+- **Ctrl + J** to jump to a specific skin name.  
+- Add **mouse-hover tooltips**.  
+- **Ctrl + S** for a **stats panel**, including user-created tags.  
+- Support **resizable layouts**.  
+- Enhance **mouse interactions**, including clickable suggestions, close buttons (`X`), and panel controls.  
+- Add **fast clickable filters** (e.g., clicking "Pink" instantly filters pink skins).  
+- Prevent **duplicate tags** in suggestions and block excessive suggestion acceptance spam.  
 
-github to-do's:
-- neaten out tables in skin.md
-- put all github related md files into a .github folder
+---
 
-tui bugs to fix:
-- suggestion isnt too smart (not contextual), also doesnt clear input after accpeting suggestion (fixed)
-- after turning off detailed view rarity descending sort feature activates the event descending sort instead (found reason: the state doesnt actually update where the mouse is suppposed to click so theres an offset)
-- ctrl+y redo feature not working
-- click feature doesnt work after 12 results, it offsets
-- number of suggestions feature doesnt actually show accurate number (fixed)
-- caret being shown near the block styled tags in detailed view when scrolling fast
+### TUI Bug Fixes
+
+- Improve **suggestions** (make them more contextual and ensure they clear input upon acceptance). **(fixed)**  
+- Fix **sorting issues** (turning off detailed view triggers incorrect sorting due to state mismatches).  
+- Resolve **Ctrl + Y (redo) not working**.  
+- Fix **click offset bug** when there are more than 12 results.  
+- Ensure the **number of suggestions feature** displays correctly **(fixed)**.  
+- Prevent the **caret from appearing in block-styled tags** when scrolling fast.  
+
+---
+
+### Website To-Do List
+
+- Round only the **top-left** border for skin images (full rounding looks bad).
+- Optimize **suggestion speed**.  
+- Add missing images for the few skins currently on the website.  
+- Populate **all skins** and their images in assets. **(done)**
+- Fix **tags/help modal** and include **rarity, value, owner, and year tags**. **(done)**
+- Gather an **owner list** via Trade-SA or user input.
+- Remove **redundant info** (name and rarity) from **detailed view** (already visible in skin image).  
+- Set a **max-width** for images.
+- Capitalize the **first letter** of all tags. **(done)**
+
+---
+
+### pola-cli To-Do List
+
+- Add an **animated ASCII intro**. **(done)**
+- Feature a **"Skin of the Day"**.  
+- Implement a **random skin generator**.  
+- Support **exporting results**.  
+- Allow favoriting skins.  
+- Introduce **search operators** (`AND`, `OR`, `NOT`).  
+- Use **ANSI colors**.  
+- Add **search history** with a clear history function. **(done)**
+- Display **numbered results** for quick selection.
+- Add a **compact view** mode.  
+- Implement a **value converter** (e.g., "Pink = 4 Reds = 256 Blues").  
+- Support **paginated results**. **(done)**
+- Make **history navigation more intuitive** (typing a number like `1-1999` should return past searches). **(done)**
+
+---
+
+### GitHub To-Do List
+
+- Clean up **tables** in `skin.md`. **(done)**
+- Move all GitHub-related `.md` files into a `.github` folder. **(done)**
+
+---
