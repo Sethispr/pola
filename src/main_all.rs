@@ -145,7 +145,22 @@ impl AppState {
 
         let binding = self.input.to_lowercase();
         let tags: HashSet<&str> = binding.split_whitespace().collect();
-        self.results = search_skins(&self.skins, &self.name_map, &tags, &self.favorites);
+        let last_part = binding.split_whitespace().last().unwrap_or("");
+
+        // Check if the last part of the input is a prefix of "favorite"
+        if "favorite".starts_with(last_part) && !self.favorites.is_empty() {
+            // If it's a prefix of "favorite", filter to only favorited skins
+            self.results = self
+                .skins
+                .iter()
+                .filter(|skin| self.favorites.contains(&skin.name))
+                .cloned()
+                .collect();
+        } else {
+            // Otherwise, use the regular search logic
+            self.results = search_skins(&self.skins, &self.name_map, &tags, &self.favorites);
+        }
+
         self.sort_results();
 
         let total_pages = self.results.len().div_ceil(self.items_per_page);
@@ -225,8 +240,16 @@ impl AppState {
             let matcher = fuzzy_matcher::skim::SkimMatcherV2::default();
             let mut current_terms = HashMap::new();
 
+            // Always include "favorite" as a possible suggestion term with its count
+            if "favorite".contains(&last_part_lower) && !self.favorites.is_empty() {
+                let entry = current_terms
+                    .entry("favorite".to_string())
+                    .or_insert_with(|| TermInfo { is_tag: true, ..TermInfo::default() });
+                entry.is_tag = true;
+            }
+
             for skin in &self.skins {
-                // Always include tags and years from all skins
+                // Include tags and years from all skins
                 if !skin.year_str.is_empty() && skin.year_str.contains(&last_part_lower) {
                     let entry = current_terms
                         .entry(skin.year_str.clone())
@@ -279,8 +302,6 @@ impl AppState {
                 .collect();
 
             let mut suggestions = Vec::new();
-
-            // Note: Assuming '¤t_terms' was a typo for 'current_terms'
             for (term, term_info) in &current_terms {
                 if used_terms.contains(term) {
                     continue;
@@ -288,9 +309,10 @@ impl AppState {
 
                 let score = matcher.fuzzy_match(term, &last_part_lower).unwrap_or(i64::MIN);
 
-                // Priority system
+                // Priority system with "favorite" boost
                 let mut boost = match true {
                     _ if *term == last_part_lower => 10000, // exact match
+                    _ if *term == "favorite" => 6000, // Boost "favorite" higher than most terms
                     _ if term_info.is_rarity => 5000,
                     _ if term_info.is_name => 4000,
                     _ if term_info.is_event => 3000,
@@ -761,23 +783,27 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                 }
             } else if term_info.is_event {
                 Style::default().fg(D_PINK)
-            } else if term_info.is_year || term_info.is_tag {
+            } else if term_info.is_year || term_info.is_tag || *t == "favorite" {
                 Style::default().fg(D_GREEN)
             } else {
                 Style::default().fg(D_FOREGROUND)
             };
 
-            let count = app
-                .results
-                .iter()
-                .filter(|s| {
-                    s.name_lower.contains(t)
-                        || s.rarity_lower == *t
-                        || s.event_lower.contains(t)
-                        || s.tags_lower.contains(t)
-                        || s.year_str == *t
-                })
-                .count();
+            let count = if *t == "favorite" {
+                // Count favorited skins directly from the favorites set
+                app.favorites.len()
+            } else {
+                app.results
+                    .iter()
+                    .filter(|s| {
+                        s.name_lower.contains(t)
+                            || s.rarity_lower == *t
+                            || s.event_lower.contains(t)
+                            || s.tags_lower.contains(t)
+                            || s.year_str == *t
+                    })
+                    .count()
+            };
 
             let mut spans = vec![Span::styled(t, style)];
             spans.push(Span::styled(format!(" ({})", count), Style::default().fg(D_FOREGROUND)));
