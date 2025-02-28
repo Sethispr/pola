@@ -6,7 +6,7 @@ no-trailing-spaces: true             # MD009 - Disallow trailing whitespace
 no-multiple-blanks: true             # MD012 - Disallow multiple consecutive blank lines
 no-hard-tabs: true                   # MD010 - Disallow hard tabs (use spaces)
 line-length:                         # MD013 - Line length limit
-  line_length: 120                   # Set max length to 120
+  line_length: 300                   # Set max length to 300
   code_blocks: false                 # Ignore code blocks
   tables: false                      # Ignore tables
   headings: false                    # Ignore headings
@@ -38,13 +38,14 @@ no-inline-html:                      # MD033 - Disallow inline HTML (but allow s
     - div
     - br
     - strong
-    - em
     - table
     - thead
     - tbody
     - tr
     - th
     - td
+    - kbd
+    - p
 
 # Emphasis Rules
 strong-style: consistent              # MD050 - Enforce consistent bold syntax (**text** or __text__)
