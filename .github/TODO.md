@@ -60,6 +60,9 @@ features to-do's:
 - add custom tags so user can add their own ctrl+t to make tag select color and name styling etc and then shift+t to add the tag if user made more than 1 tag then show a short rectangle with all the tags they made
 - allow sorting by year in table title
 - filter menu with buttons to include/exclude tags like website
+- jump to certain skin name ctrl+j
+- mouse hover tool tips
+- stats panel ctrl+s show tags created too
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
