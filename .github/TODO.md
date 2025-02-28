@@ -30,7 +30,7 @@
 - Display **10 results per table page** and allow navigation via keybinds or arrows (Multi-paginated view). **(done)**
 - Add **logging** and **advanced error handling**.  
 - Implement a **performance monitoring** view with keybinds.  
-- Add a **scrollbar**.  
+- Add a **scrollbar**. **(done)**
 - Modernize UI and improve compatibility with different terminals.  
 - Refactor code into separate files instead of a single **main.rs** file.
 - Introduce a **caret** in the search bar. **(done)**
