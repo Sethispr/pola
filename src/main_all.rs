@@ -84,7 +84,11 @@ struct AppState {
     items_per_page: usize,
     favorites: HashSet<String>,
     key_bindings: HashMap<String, (KeyCode, KeyModifiers)>,
-    should_exit: bool, // Added to manage exit cleanly
+    should_exit: bool,
+    // New fields for keybind editing
+    help_state: ListState,
+    editing_keybinds: bool,
+    awaiting_key: Option<String>, // Action being rebound
 }
 
 impl AppState {
@@ -124,6 +128,9 @@ impl AppState {
             favorites,
             key_bindings,
             should_exit: false,
+            help_state: ListState::default().with_selected(Some(0)),
+            editing_keybinds: false,
+            awaiting_key: None,
         }
     }
 
@@ -297,8 +304,7 @@ impl AppState {
                 .collect();
 
             let mut suggestions = Vec::new();
-            for (term, term_info) in &current_terms {
-                // Fixed typo from `¤t_terms`
+            for (term, term_info) in current_terms.iter() {
                 if used_terms.contains(term) {
                     continue;
                 }
@@ -327,10 +333,7 @@ impl AppState {
                 }
             }
 
-            // Sort by score (descending) and then by term (ascending) for tie-breaking
             suggestions.sort_by(|a, b| b.0.cmp(&a.0).then_with(|| a.1.cmp(&b.1)));
-
-            // Deduplicate and take top 5, preserving score-based order
             let mut seen = HashSet::new();
             self.suggestion_list = suggestions
                 .into_iter()
@@ -494,7 +497,7 @@ impl AppState {
         }
     }
 
-    fn show_help<B: Backend>(&self, terminal: &mut Terminal<B>) -> io::Result<()> {
+    fn show_help<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> io::Result<()> {
         loop {
             terminal.draw(|f| {
                 let size = f.size();
@@ -503,13 +506,25 @@ impl AppState {
                     .margin(5)
                     .constraints([Constraint::Percentage(100)].as_ref())
                     .split(size)[0];
+
+                let title = if self.editing_keybinds {
+                    if self.awaiting_key.is_some() {
+                        "Help - Editing... (Press new key)"
+                    } else {
+                        "Help - Edit Mode (Enter to rebind, E to exit edit)"
+                    }
+                } else {
+                    "Help (E to edit keybinds, ▲/▼ or scroll to select)"
+                };
+
                 let block = Block::default()
-                    .title("Help")
+                    .title(title)
                     .borders(Borders::ALL)
                     .border_type(BorderType::Rounded)
                     .border_style(Style::default().fg(D_CYAN));
-                let help_text: Vec<Line> = self
-                    .get_help_actions()
+
+                let actions = self.get_help_actions();
+                let items: Vec<ListItem> = actions
                     .iter()
                     .map(|(action, description)| {
                         let binding = self
@@ -517,28 +532,111 @@ impl AppState {
                             .get(*action)
                             .map(|&b| get_key_binding_str(&b))
                             .unwrap_or_else(|| "Not bound".to_string());
-                        Line::from(vec![
-                            Span::styled(format!("[{}] ", binding), Style::default().fg(D_CYAN)),
-                            Span::raw(": "),
-                            Span::styled(*description, Style::default().fg(D_FOREGROUND)),
-                        ])
+                        let is_awaiting =
+                            self.awaiting_key.as_ref().map(|s| s.as_str()) == Some(*action);
+                        let content = if is_awaiting {
+                            Line::from(vec![
+                                Span::styled("[Press a key] ", Style::default().fg(D_PINK)),
+                                Span::raw(": "),
+                                Span::styled(*description, Style::default().fg(D_FOREGROUND)),
+                            ])
+                        } else {
+                            Line::from(vec![
+                                Span::styled(
+                                    format!("[{}] ", binding),
+                                    Style::default().fg(D_CYAN),
+                                ),
+                                Span::raw(": "),
+                                Span::styled(*description, Style::default().fg(D_FOREGROUND)),
+                            ])
+                        };
+                        ListItem::new(content)
                     })
                     .collect();
-                let paragraph = Paragraph::new(help_text)
-                    .block(block)
-                    .alignment(Alignment::Left)
-                    .wrap(Wrap { trim: true });
-                f.render_widget(paragraph, modal_area);
+
+                let list = List::new(items).block(block).highlight_style(
+                    Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND).add_modifier(Modifier::BOLD),
+                );
+
+                f.render_stateful_widget(list, modal_area, &mut self.help_state);
             })?;
 
             if event::poll(Duration::from_millis(50))? {
-                if let Event::Key(key) = event::read()? {
-                    if key.code == KeyCode::Esc {
-                        break;
-                    }
+                match event::read()? {
+                    Event::Key(key) => {
+                        if key.kind != KeyEventKind::Press {
+                            continue;
+                        }
+                        if let Some(awaiting_action) = self.awaiting_key.clone() {
+                            // Capture the new keybinding
+                            self.key_bindings
+                                .insert(awaiting_action.clone(), (key.code, key.modifiers));
+                            self.awaiting_key = None;
+                            save_default_key_bindings(&self.key_bindings)?;
+                        } else if key.code == KeyCode::Esc {
+                            break;
+                        } else if key.code == KeyCode::Char('e') || key.code == KeyCode::Char('E') {
+                            self.editing_keybinds = !self.editing_keybinds;
+                            // Selection is preserved due to help_state
+                        } else {
+                            match key.code {
+                                KeyCode::Up => {
+                                    let i =
+                                        self.help_state.selected().unwrap_or(0).saturating_sub(1);
+                                    self.help_state.select(Some(i));
+                                },
+                                KeyCode::Down => {
+                                    let i = self.help_state.selected().unwrap_or(0) + 1;
+                                    let max = self.get_help_actions().len().saturating_sub(1);
+                                    self.help_state.select(Some(i.min(max)));
+                                },
+                                KeyCode::Enter if self.editing_keybinds => {
+                                    if let Some(i) = self.help_state.selected() {
+                                        let action = self.get_help_actions()[i].0.to_string();
+                                        self.awaiting_key = Some(action);
+                                    }
+                                },
+                                _ => {},
+                            }
+                        }
+                    },
+                    Event::Mouse(mouse_event) => match mouse_event.kind {
+                        MouseEventKind::ScrollUp => {
+                            let i = self.help_state.selected().unwrap_or(0).saturating_sub(1);
+                            self.help_state.select(Some(i));
+                        },
+                        MouseEventKind::ScrollDown => {
+                            let i = self.help_state.selected().unwrap_or(0) + 1;
+                            let max = self.get_help_actions().len().saturating_sub(1);
+                            self.help_state.select(Some(i.min(max)));
+                        },
+                        MouseEventKind::Down(_) => {
+                            let term_area = terminal.size()?;
+                            let modal_area = Layout::default()
+                                .direction(Direction::Vertical)
+                                .margin(5)
+                                .constraints([Constraint::Percentage(100)].as_ref())
+                                .split(term_area)[0];
+                            let inner_y = modal_area.y + 1; // Skip top border
+                            let header_height = 1; // Account for title
+                            let list_start_y = inner_y + header_height;
+
+                            if mouse_event.row >= list_start_y
+                                && mouse_event.row
+                                    < list_start_y + self.get_help_actions().len() as u16
+                            {
+                                let selected_index = (mouse_event.row - list_start_y) as usize;
+                                self.help_state.select(Some(selected_index));
+                            }
+                        },
+                        _ => {},
+                    },
+                    _ => {},
                 }
             }
         }
+        self.editing_keybinds = false; // Reset on exit
+        self.awaiting_key = None;
         Ok(())
     }
 
