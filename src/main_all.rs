@@ -709,6 +709,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         let mut current_token = String::new();
         let mut current_is_whitespace = false;
 
+        // Process input characters
         for c in app.input.chars() {
             if c.is_whitespace() {
                 if !current_is_whitespace && !current_token.is_empty() {
@@ -729,24 +730,52 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
             }
         }
 
+        // Handle the last token with suggestion
         if !current_token.is_empty() {
             if current_is_whitespace {
                 line.spans.push(Span::raw(current_token));
+            } else if let Some(suggestion) = &app.suggestion {
+                let last_part = current_token.clone();
+                let last_part_lower = last_part.to_lowercase();
+                let style = get_term_style(&last_part_lower, &app.all_terms);
+                let suggestion_lower = suggestion.to_lowercase();
+
+                if suggestion_lower.contains(&last_part_lower) {
+                    // Find the position of the match in the suggestion
+                    let start_idx = suggestion_lower.find(&last_part_lower).unwrap_or(0);
+                    let end_idx = start_idx + last_part.len();
+
+                    // Split suggestion into before, match, and after parts
+                    let before_match = &suggestion[..start_idx];
+                    let matched_part = &suggestion[start_idx..end_idx];
+                    let after_match = &suggestion[end_idx..];
+
+                    // Add the part before the match (if any) dimly
+                    if !before_match.is_empty() {
+                        line.spans.push(Span::styled(
+                            before_match,
+                            Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM),
+                        ));
+                    }
+                    // Underline the typed part in pink
+                    line.spans.push(Span::styled(
+                        matched_part,
+                        style.fg(D_PINK).add_modifier(Modifier::UNDERLINED),
+                    ));
+                    // Add the remaining suggestion part dimly
+                    if !after_match.is_empty() {
+                        line.spans.push(Span::styled(
+                            after_match,
+                            Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM),
+                        ));
+                    }
+                } else {
+                    line.spans.push(Span::styled(current_token, style));
+                }
             } else {
                 let lower_token = current_token.to_lowercase();
                 let style = get_term_style(&lower_token, &app.all_terms);
                 line.spans.push(Span::styled(current_token, style));
-            }
-        }
-
-        if let Some(suggestion) = &app.suggestion {
-            let last_part = app.input.split_whitespace().last().unwrap_or("").to_lowercase();
-            if suggestion.starts_with(&last_part) {
-                let suffix = &suggestion[last_part.len()..];
-                line.spans.push(Span::styled(
-                    suffix,
-                    Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM),
-                ));
             }
         }
 
@@ -764,7 +793,24 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
     f.render_widget(search_input, chunks[0]);
 
     let inner_area = chunks[0].inner(&Margin { horizontal: 1, vertical: 1 });
-    let cursor_x = inner_area.x + app.input.len() as u16;
+    let cursor_x = if app.input.is_empty() {
+        inner_area.x
+    } else if let Some(suggestion) = &app.suggestion {
+        let last_part = app.input.split_whitespace().last().unwrap_or("");
+        let suggestion_lower = suggestion.to_lowercase();
+        let last_part_lower = last_part.to_lowercase();
+
+        if suggestion_lower.contains(&last_part_lower) {
+            // Position cursor at the end of the full suggestion
+            inner_area.x + suggestion.len() as u16
+        } else {
+            // Position cursor at the end of the typed input
+            inner_area.x + app.input.len() as u16
+        }
+    } else {
+        // Position cursor at the end of the typed input
+        inner_area.x + app.input.len() as u16
+    };
     let cursor_y = inner_area.y;
     f.set_cursor(cursor_x, cursor_y);
 
@@ -789,8 +835,38 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                 Style::default().fg(D_FOREGROUND)
             };
 
+            let last_part = app.input.split_whitespace().last().unwrap_or("").to_lowercase();
+            let mut spans = Vec::new();
+            let suggestion_lower = t.to_lowercase();
+
+            if suggestion_lower.contains(&last_part) && !last_part.is_empty() {
+                // Find the position of the match in the suggestion
+                let start_idx = suggestion_lower.find(&last_part).unwrap_or(0);
+                let end_idx = start_idx + last_part.len();
+
+                // Split suggestion into before, match, and after parts
+                let before_match = &t[..start_idx];
+                let matched_part = &t[start_idx..end_idx];
+                let after_match = &t[end_idx..];
+
+                // Add the part before the match (if any)
+                if !before_match.is_empty() {
+                    spans.push(Span::styled(before_match, style));
+                }
+                // Underline the matched part in pink
+                spans.push(Span::styled(
+                    matched_part,
+                    style.fg(D_PINK).add_modifier(Modifier::UNDERLINED),
+                ));
+                // Add the part after the match (if any)
+                if !after_match.is_empty() {
+                    spans.push(Span::styled(after_match, style));
+                }
+            } else {
+                spans.push(Span::styled(t, style));
+            }
+
             let count = if *t == "favorite" {
-                // Count favorited skins directly from the favorites set
                 app.favorites.len()
             } else {
                 app.results
@@ -805,7 +881,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                     .count()
             };
 
-            let mut spans = vec![Span::styled(t, style)];
             spans.push(Span::styled(format!(" ({})", count), Style::default().fg(D_FOREGROUND)));
 
             ListItem::new(Line::from(spans))
