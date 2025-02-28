@@ -532,8 +532,7 @@ impl AppState {
                             .get(*action)
                             .map(|&b| get_key_binding_str(&b))
                             .unwrap_or_else(|| "Not bound".to_string());
-                        let is_awaiting =
-                            self.awaiting_key.as_ref().map(|s| s.as_str()) == Some(*action);
+                        let is_awaiting = self.awaiting_key.as_deref() == Some(*action);
                         let content = if is_awaiting {
                             Line::from(vec![
                                 Span::styled("[Press a key] ", Style::default().fg(D_PINK)),
