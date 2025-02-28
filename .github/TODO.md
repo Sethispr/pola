@@ -57,6 +57,9 @@ features to-do's:
 - accidentally pressing middle mouse scroll button makes the scrollable items bugged so need to scroll back up to new prev page
 - improve title table sorting so it allows multi sorting and default unsorted non asc/desc
 - add shaders https://github.com/junkdog/tachyonfx
+- add custom tags so user can add their own ctrl+t to make tag select color and name styling etc and then shift+t to add the tag if user made more than 1 tag then show a short rectangle with all the tags they made
+- allow sorting by year in table title
+- filter menu with buttons to include/exclude tags like website
 
 website to-do's:
 - make only the top left border rounded specifically since sa skins won't look good in a fully rounded square
