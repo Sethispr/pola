@@ -18,7 +18,7 @@
 - Enable combined rarity tags (e.g., searching "Pink" and "Red" should return both).
 - Fix the **number of suggestions** feature. **(fixed)**
 - Prevent non-tags from being mistakenly tagged.
-- Implement a **keyboard shortcut changer**.  
+- Implement a **custom keybind changer**. **(done)**
 - Transition from **TUI** to **GUI** or a standalone terminal.  
 - Expand **256-bit color support** from Ratatui (currently applied to FG, border color, and keybinds but not full BG). **(done)**
 - Add **mod-only skins**. **(done)**
