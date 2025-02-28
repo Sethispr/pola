@@ -17,6 +17,7 @@ no-inline-html:
     - td
     - kbd
     - p
+    - strong
 
 # 300 line length since long lines in skin.md
 line-length:
