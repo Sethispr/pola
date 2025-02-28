@@ -792,23 +792,26 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
 
     f.render_widget(search_input, chunks[0]);
 
+    // Smart cursor positioning based on match location in suggestion
     let inner_area = chunks[0].inner(&Margin { horizontal: 1, vertical: 1 });
     let cursor_x = if app.input.is_empty() {
         inner_area.x
     } else if let Some(suggestion) = &app.suggestion {
         let last_part = app.input.split_whitespace().last().unwrap_or("");
-        let suggestion_lower = suggestion.to_lowercase();
         let last_part_lower = last_part.to_lowercase();
+        let suggestion_lower = suggestion.to_lowercase();
 
         if suggestion_lower.contains(&last_part_lower) {
-            // Position cursor at the end of the full suggestion
-            inner_area.x + suggestion.len() as u16
+            let start_idx = suggestion_lower.find(&last_part_lower).unwrap_or(0);
+            let end_idx = start_idx + last_part.len();
+            // Position cursor at the end of the matched part within the suggestion
+            inner_area.x + end_idx as u16
         } else {
-            // Position cursor at the end of the typed input
+            // No match, position at end of typed input
             inner_area.x + app.input.len() as u16
         }
     } else {
-        // Position cursor at the end of the typed input
+        // No suggestion, position at end of typed input
         inner_area.x + app.input.len() as u16
     };
     let cursor_y = inner_area.y;
@@ -881,7 +884,10 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                     .count()
             };
 
-            spans.push(Span::styled(format!(" ({})", count), Style::default().fg(D_FOREGROUND)));
+            spans.push(Span::styled(
+                format!(" ({})", count),
+                Style::default().fg(D_FOREGROUND),
+            ));
 
             ListItem::new(Line::from(spans))
         })
