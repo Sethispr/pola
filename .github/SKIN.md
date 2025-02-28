@@ -12,13 +12,11 @@
 4. [Launch Skins (Teal)](#launch-skins-teal)
 5. [Non-event Case Skins](#non-event-case-skins)
    - [Exquisite Case (Pinks & Reds)](#exquisite-case-pinks--reds)
-   - [Other Crates](#other-cases)
-
-# Seasonal Pinks & Reds
+   - [Other Crates](#normal-shop-cases)
 
 ## Seasonal Case Skins
 
-> [!NOTE]  
+> [!NOTE]
 > Some skins mentioned here are also obtainable through Exquisite case.
 
 ### Pinks
@@ -48,7 +46,7 @@
 
 ## Event Skins and Event Bundle Skins
 
-> [!NOTE]  
+> [!NOTE]
 > Each bundle costs 249 RBX, usually 1 teal is worth 2-3 pinks. Newer ones are worth 2-3 reds.
 > Event seasonal skins are obtained through event tasks or finishing top 100 in leaderboard.
 
@@ -83,7 +81,7 @@
 
 ## Code Redeemed Skins (Teal)
 
-> [!NOTE]  
+> [!NOTE]
 > These skins are not available to all guns.
 
 | Skin      | Guns                                          |
@@ -98,7 +96,7 @@
 
 ## Launch Skins (Teal)
 
-> [!NOTE]  
+> [!NOTE]
 > The only current known player with all guns of Blastoff is Iceman_dashe.
 
 | Skin     | Guns        |
@@ -109,12 +107,12 @@
 
 ## Non-event Case Skins
 
-> [!NOTE]  
+> [!NOTE]
 > Some skins mentioned here are also obtainable through event cases, these are noted in brackets beside the name of the skin.
 
 ### Exquisite Case (Pinks & Reds)
 
-> [!TIP]  
+> [!TIP]
 > Some people consider exquisite case skins more valuable than event cases.
 
 | Rarity          | Skins                                                                                                                   |
@@ -124,9 +122,9 @@
 
 ---
 
-### Other Cases
+### Normal Shop Cases
 
-> [!NOTE]  
+> [!NOTE]
 > Skins in the Refined case are also found in the Exquisite case.
 
 | Case                       | Pink                        | Red                                                                                   |
