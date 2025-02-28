@@ -1,6 +1,6 @@
 # pola To-Do List
 
-#### Performance Improvements
+### Performance Improvements
 
 - Reduce memory allocations.  
 - Use more cache-friendly data structures.  
@@ -11,7 +11,7 @@
 - Compress term metadata with bitflags in **TermInfo** to reduce memory usage.  
 - Improve tag handling, especially long ones (e.g., "Valentine Case (Exquisite)") by separating them into individual tags like "Exquisite" and "Valentine."  
 
-#### New TUI Features
+### New TUI Features
 
 - Add **value** and **owner** tags.  
 - Allow tag exclusion using `--`, `?`, or `-`.  
