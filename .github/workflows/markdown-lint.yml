@@ -1,4 +1,4 @@
-name: Markdown Lint
+name: markdown linter
 
 on: [push, pull_request]
 
@@ -6,11 +6,12 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: checkout repository
         uses: actions/checkout@v3
 
-      - name: Run markdownlint-cli2
+      - name: run markdownlint-cli2
         uses: DavidAnson/markdownlint-cli2-action@v19
         with:
-          globs: '**/*.md'  # lint all markdown files
-          fix: true         # automatically fix issues
+          globs: '**/*.md'
+          fix: true
+          config: '.markdownlint.yaml'
