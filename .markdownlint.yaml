@@ -1,29 +1,63 @@
-# configuration for https://github.com/DavidAnson/markdownlint
-
+# Enable all rules by default
 default: true
 
-first-line-heading: false
+# Formatting & Whitespace Rules
+no-trailing-spaces: true             # MD009 - Disallow trailing whitespace
+no-multiple-blanks: true             # MD012 - Disallow multiple consecutive blank lines
+no-hard-tabs: true                   # MD010 - Disallow hard tabs (use spaces)
+line-length:                         # MD013 - Line length limit
+  line_length: 120                   # Set max length to 120
+  code_blocks: false                 # Ignore code blocks
+  tables: false                      # Ignore tables
+  headings: false                    # Ignore headings
 
-no-inline-html:
+# Header Rules
+no-duplicate-heading: true           # MD024 - Disallow duplicate headings
+header-start-left: true              # MD022 - Headers must start at the left (no leading spaces)
+header-style: atx                    # MD018 - Force ATX (# Heading) style instead of Setext (====)
+
+# List Rules
+ul-style: consistent                 # MD004 - Use consistent unordered list style (- or *)
+ol-prefix: ordered                   # MD029 - Ordered list prefixes must be correct (1., 2., 3.)
+list-marker-space: true              # MD030 - List markers should be followed by a space
+list-indent: true                    # MD007 - Lists should be properly indented
+no-missing-space-atx: true           # MD018 - Space after `#` in headings required
+
+# Link & URL Rules
+no-bare-urls: true                   # MD034 - Disallow bare URLs (force proper Markdown links)
+proper-names: true                   # MD044 - Ensure proper capitalization of names
+
+# Code Block Rules
+fenced-code-blocks: true             # MD040 - Use triple backticks (```) for code blocks
+code-block-style: fenced             # MD046 - Enforce fenced code blocks instead of indentation
+no-inline-html:                      # MD033 - Disallow inline HTML (but allow some tags)
   allowed_elements:
     - img
     - details
     - summary
     - div
     - br
+    - strong
+    - em
     - table
     - thead
     - tbody
     - tr
     - th
     - td
-    - kbd
-    - p
-    - strong
 
-# 300 line length since long lines in skin.md
-line-length:
-  line_length: 300
+# Emphasis Rules
+strong-style: consistent              # MD050 - Enforce consistent bold syntax (**text** or __text__)
+emphasis-style: consistent            # MD049 - Enforce consistent italic syntax (*text* or _text_)
 
-# allow repeated headers, useful for changelogs
-no-duplicate-heading: false
+# Blockquote Rules
+blockquote-style: consistent          # MD027 - Use consistent blockquote style (> )
+
+# Table Rules
+table-pipes: true                     # MD043 - Require pipes (|) in tables to be correctly formatted
+
+# Miscellaneous Rules
+no-consecutive-blank-lines: false     # MD012 - Allow multiple blank lines
+no-multiple-space-atx: true           # MD019 - No multiple spaces in ATX headings
+no-space-in-emphasis: true            # MD038 - No space inside emphasis (** text ** is invalid)
+no-space-in-links: true               # MD039 - No space inside link text
