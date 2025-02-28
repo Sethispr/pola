@@ -19,7 +19,7 @@ Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org
    cd yourdirectory/pola
    ```
 
-2. Run the applicatio
+2. Run the application
 
    ```bash
    cargo run --release
