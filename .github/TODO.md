@@ -1,6 +1,6 @@
 # pola To-Do List
 
-### Performance Improvements
+## Performance Improvements
 
 - Reduce memory allocations.  
 - Use more cache-friendly data structures.  
@@ -11,7 +11,7 @@
 - Compress term metadata with bitflags in **TermInfo** to reduce memory usage.  
 - Improve tag handling, especially long ones (e.g., "Valentine Case (Exquisite)") by separating them into individual tags like "Exquisite" and "Valentine."  
 
-### New TUI Features
+## New TUI Features
 
 - Add **value** and **owner** tags.  
 - Allow tag exclusion using `--`, `?`, or `-`.  
@@ -71,7 +71,7 @@
 
 ---
 
-### TUI Bug Fixes
+## TUI Bug Fixes
 
 - Improve **suggestions** (make them more contextual and ensure they clear input upon acceptance). **(fixed)**  
 - Fix **sorting issues** (turning off detailed view triggers incorrect sorting due to state mismatches).  
@@ -96,7 +96,7 @@
 
 ---
 
-### pola-cli To-Do List
+## pola-cli To-Do List
 
 - Add an **animated ASCII intro**. **(done)**
 - Feature a **"Skin of the Day"**.  
@@ -114,7 +114,7 @@
 
 ---
 
-### GitHub To-Do List
+## GitHub To-Do List
 
 - Clean up **tables** in `skin.md`. **(done)**
 - Move all GitHub-related `.md` files into a `.github` folder. **(done)**
