@@ -12,7 +12,7 @@
 4. [Launch Skins (Teal)](#launch-skins-teal)
 5. [Non-event Case Skins](#non-event-case-skins)
    - [Exquisite Case (Pinks & Reds)](#exquisite-case-pinks--reds)
-   - [Other Crates](#normal-shop-cases)
+   - [Normal Shop Cases](#normal-shop-cases)
 
 ## Seasonal Case Skins
 
