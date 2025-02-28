@@ -12,7 +12,10 @@ use ratatui::{
     layout::{Constraint, Direction, Layout, Margin},
     prelude::*,
     text::{Line, Span},
-    widgets::*,
+    widgets::{
+        Block, BorderType, Borders, List, ListItem, ListState, Paragraph, Row, Scrollbar,
+        ScrollbarOrientation, ScrollbarState, Table, TableState, Wrap,
+    },
     Terminal,
 };
 use std::{
@@ -85,10 +88,9 @@ struct AppState {
     favorites: HashSet<String>,
     key_bindings: HashMap<String, (KeyCode, KeyModifiers)>,
     should_exit: bool,
-    // New fields for keybind editing
     help_state: ListState,
     editing_keybinds: bool,
-    awaiting_key: Option<String>, // Action being rebound
+    awaiting_key: Option<String>,
 }
 
 impl AppState {
@@ -1223,6 +1225,14 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
         let start = app.current_page * app.items_per_page;
         let end = (start + app.items_per_page).min(app.results.len());
 
+        // Split the area: table on the left, scrollbar on the right
+        let table_chunks = Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints([Constraint::Min(1), Constraint::Length(1)].as_ref())
+            .split(area);
+        let table_area = table_chunks[0];
+        let scrollbar_area = table_chunks[1];
+
         let name_header = if app.sort_field == SortField::Name && app.sort_descending {
             "Name ↓"
         } else {
@@ -1292,7 +1302,23 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
             ])
             .highlight_style(Style::default().bg(D_BACKGROUND).add_modifier(Modifier::BOLD));
 
-        f.render_stateful_widget(table, area, &mut app.table_state);
+        f.render_stateful_widget(table, table_area, &mut app.table_state);
+
+        let selected = app.table_state.selected().unwrap_or(0);
+        let absolute_position = start + selected;
+        let mut scrollbar_state = ScrollbarState::default()
+            .content_length(app.results.len().try_into().unwrap())
+            .position(absolute_position.try_into().unwrap())
+            .viewport_content_length((end - start).try_into().unwrap());
+        let scrollbar = Scrollbar::new(ScrollbarOrientation::VerticalRight)
+            .begin_symbol(Some("▲"))
+            .end_symbol(Some("▼"))
+            .track_symbol(Some("│"))
+            .thumb_symbol("▓")
+            .style(Style::default().fg(D_CYAN))
+            .thumb_style(Style::default().fg(D_PINK).bg(D_BACKGROUND));
+
+        f.render_stateful_widget(scrollbar, scrollbar_area, &mut scrollbar_state);
     }
 }
 
