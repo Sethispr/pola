@@ -1,5 +1,7 @@
 # configuration for https://github.com/DavidAnson/markdownlint
 
+default: true
+
 first-line-heading: false
 
 no-inline-html:
