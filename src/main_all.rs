@@ -884,10 +884,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                     .count()
             };
 
-            spans.push(Span::styled(
-                format!(" ({})", count),
-                Style::default().fg(D_FOREGROUND),
-            ));
+            spans.push(Span::styled(format!(" ({})", count), Style::default().fg(D_FOREGROUND)));
 
             ListItem::new(Line::from(spans))
         })
