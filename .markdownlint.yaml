@@ -1,0 +1,26 @@
+# configuration for https://github.com/DavidAnson/markdownlint
+
+first-line-heading: false
+
+no-inline-html:
+  allowed_elements:
+    - img
+    - details
+    - summary
+    - div
+    - br
+    - table
+    - thead
+    - tbody
+    - tr
+    - th
+    - td
+    - kbd
+    - p
+
+# 300 line length since long lines in skin.md
+line-length:
+  line_length: 300
+
+# allow repeated headers, useful for changelogs
+no-duplicate-heading: false
