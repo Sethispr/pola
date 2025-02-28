@@ -1,0 +1,10 @@
+# configuration for https://github.com/crate-ci/typos
+
+[default.extend-words]
+ratatui = "ratatui"
+serde = "serde"
+no_std = "no_std"
+
+# ignore lock file
+[default.ignore-paths]
+"Cargo.lock" = true
