@@ -1,32 +1,37 @@
 use crossterm::{
     event::{
-        self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEventKind, KeyModifiers,
-        MouseEventKind,
+        self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEvent, KeyEventKind,
+        KeyModifiers, MouseEventKind,
     },
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use fuzzy_matcher::FuzzyMatcher;
 use ratatui::{
-    layout::Constraint,
+    backend::CrosstermBackend,
+    layout::{Constraint, Direction, Layout, Margin},
     prelude::*,
     text::{Line, Span},
     widgets::*,
+    Terminal,
 };
-use std::collections::{HashMap, HashSet};
-use std::io;
-use std::time::Duration;
+use std::{
+    collections::{HashMap, HashSet},
+    fs, io,
+    path::PathBuf,
+    time::Duration,
+};
 
 // Passion Fruit Colors (Main Colors from MonkeyType)
-const D_BACKGROUND: Color = Color::Rgb(131, 60, 94); // the highlight in the table view, tags and binds bg (dark rosewood)
-const D_FOREGROUND: Color = Color::Rgb(244, 163, 180); // for tags and binds fg (pastel rose)
-const D_CYAN: Color = Color::Rgb(244, 163, 180); // main pale red (pastel rose)
-const D_GREEN: Color = Color::Rgb(244, 163, 180); // main pale red
-const D_PINK: Color = Color::Rgb(255, 155, 155); // for pink skins (soft pinkish-red)
-const D_ORANGE: Color = Color::Rgb(244, 163, 180); // main pale red
-const D_RED: Color = Color::Rgb(224, 108, 117); // for red skins (muted warm red)
-const D_YELLOW: Color = Color::Rgb(244, 163, 180); // main pale red
-const D_TEAL: Color = Color::Rgb(244, 163, 180); // for teal skins (deep sea teal) for now its red 58, 139, 132
+const D_BACKGROUND: Color = Color::Rgb(131, 60, 94);
+const D_FOREGROUND: Color = Color::Rgb(244, 163, 180);
+const D_CYAN: Color = Color::Rgb(244, 163, 180);
+const D_GREEN: Color = Color::Rgb(244, 163, 180);
+const D_PINK: Color = Color::Rgb(255, 155, 155);
+const D_ORANGE: Color = Color::Rgb(244, 163, 180);
+const D_RED: Color = Color::Rgb(224, 108, 117);
+const D_YELLOW: Color = Color::Rgb(244, 163, 180);
+const D_TEAL: Color = Color::Rgb(244, 163, 180);
 
 #[derive(PartialEq, Eq)]
 enum SortField {
@@ -78,6 +83,8 @@ struct AppState {
     current_page: usize,
     items_per_page: usize,
     favorites: HashSet<String>,
+    key_bindings: HashMap<String, (KeyCode, KeyModifiers)>,
+    should_exit: bool, // Added to manage exit cleanly
 }
 
 impl AppState {
@@ -89,6 +96,12 @@ impl AppState {
         let mut results = skins.clone();
         results.sort_by(|a, b| a.name_lower.cmp(&b.name_lower));
         let favorites = load_favorites().unwrap_or_default();
+        let key_bindings = load_key_bindings().unwrap_or_else(|_| {
+            let defaults = default_key_bindings();
+            save_default_key_bindings(&defaults).unwrap_or(());
+            defaults
+        });
+
         AppState {
             input: String::new(),
             skins,
@@ -109,6 +122,8 @@ impl AppState {
             current_page: 0,
             items_per_page: 10,
             favorites,
+            key_bindings,
+            should_exit: false,
         }
     }
 
@@ -122,18 +137,16 @@ impl AppState {
             self.sort_descending = false;
             self.sort_results();
 
-            // Preserve the current page, adjust selection if necessary
             let total_pages = self.results.len().div_ceil(self.items_per_page);
             self.current_page = current_page.min(total_pages.saturating_sub(1));
             let start = self.current_page * self.items_per_page;
             let end = (start + self.items_per_page).min(self.results.len());
             let page_items = end - start;
 
-            // Adjust selection to stay within the current page's bounds
             let new_selection = if selected_index < page_items {
                 Some(selected_index)
             } else {
-                Some(page_items.saturating_sub(1)) // Last item on the page if out of bounds
+                Some(page_items.saturating_sub(1))
             };
             self.table_state.select(new_selection);
 
@@ -147,9 +160,7 @@ impl AppState {
         let tags: HashSet<&str> = binding.split_whitespace().collect();
         let last_part = binding.split_whitespace().last().unwrap_or("");
 
-        // Check if the last part of the input is a prefix of "favorite"
         if "favorite".starts_with(last_part) && !self.favorites.is_empty() {
-            // If it's a prefix of "favorite", filter to only favorited skins
             self.results = self
                 .skins
                 .iter()
@@ -157,7 +168,6 @@ impl AppState {
                 .cloned()
                 .collect();
         } else {
-            // Otherwise, use the regular search logic
             self.results = search_skins(&self.skins, &self.name_map, &tags, &self.favorites);
         }
 
@@ -188,7 +198,7 @@ impl AppState {
                     self.favorites.insert(skin.name.clone());
                 }
                 save_favorites(&self.favorites).expect("Failed to save favorites");
-                self.update_search(); // Update search to reflect the change
+                self.update_search();
             }
         }
     }
@@ -240,62 +250,47 @@ impl AppState {
             let matcher = fuzzy_matcher::skim::SkimMatcherV2::default();
             let mut current_terms = HashMap::new();
 
-            // Always include "favorite" as a possible suggestion term with its count
             if "favorite".contains(&last_part_lower) && !self.favorites.is_empty() {
-                let entry = current_terms
+                current_terms
                     .entry("favorite".to_string())
                     .or_insert_with(|| TermInfo { is_tag: true, ..TermInfo::default() });
-                entry.is_tag = true;
             }
 
             for skin in &self.skins {
-                // Include tags and years from all skins
                 if !skin.year_str.is_empty() && skin.year_str.contains(&last_part_lower) {
-                    let entry = current_terms
+                    current_terms
                         .entry(skin.year_str.clone())
                         .or_insert_with(|| TermInfo { is_year: true, ..TermInfo::default() });
-                    entry.is_year = true;
                 }
-
                 for tag in &skin.tags_lower {
                     if tag.contains(&last_part_lower) {
-                        let entry = current_terms
+                        current_terms
                             .entry(tag.clone())
                             .or_insert_with(|| TermInfo { is_tag: true, ..TermInfo::default() });
-                        entry.is_tag = true;
                     }
                 }
             }
 
             for skin in &self.results {
-                // Rarity terms
                 if skin.rarity_lower.contains(&last_part_lower) {
-                    let entry = current_terms
+                    current_terms
                         .entry(skin.rarity_lower.clone())
                         .or_insert_with(|| TermInfo { is_rarity: true, ..TermInfo::default() });
-                    entry.is_rarity = true;
                 }
-
-                // Skin name words
                 for word in skin.name_lower.split_whitespace() {
                     if word.contains(&last_part_lower) {
-                        let entry = current_terms
+                        current_terms
                             .entry(word.to_string())
                             .or_insert_with(|| TermInfo { is_name: true, ..TermInfo::default() });
-                        entry.is_name = true;
                     }
                 }
-
-                // Event names
                 if skin.event_lower.contains(&last_part_lower) {
-                    let entry = current_terms
+                    current_terms
                         .entry(skin.event_lower.clone())
                         .or_insert_with(|| TermInfo { is_event: true, ..TermInfo::default() });
-                    entry.is_event = true;
                 }
             }
 
-            // Filter out used terms (except current partial)
             let used_terms: HashSet<_> = input_parts[..input_parts.len().saturating_sub(1)]
                 .iter()
                 .map(|s| s.to_lowercase())
@@ -303,16 +298,15 @@ impl AppState {
 
             let mut suggestions = Vec::new();
             for (term, term_info) in &current_terms {
+                // Fixed typo from `¤t_terms`
                 if used_terms.contains(term) {
                     continue;
                 }
 
                 let score = matcher.fuzzy_match(term, &last_part_lower).unwrap_or(i64::MIN);
-
-                // Priority system with "favorite" boost
                 let mut boost = match true {
-                    _ if *term == last_part_lower => 10000, // exact match
-                    _ if *term == "favorite" => 6000, // Boost "favorite" higher than most terms
+                    _ if *term == last_part_lower => 10000,
+                    _ if *term == "favorite" => 6000,
                     _ if term_info.is_rarity => 5000,
                     _ if term_info.is_name => 4000,
                     _ if term_info.is_event => 3000,
@@ -321,14 +315,11 @@ impl AppState {
                     _ => 0,
                 };
 
-                // Prefix boost
                 if term.starts_with(&last_part_lower) {
                     boost += 1500;
                 }
 
-                // Length normalization
                 let length_penalty = (term.len() as i64).saturating_sub(4) * 100;
-
                 let total_score = score + boost - length_penalty;
 
                 if total_score > 0 {
@@ -336,12 +327,14 @@ impl AppState {
                 }
             }
 
-            // Sort and deduplicate
+            // Sort by score (descending) and then by term (ascending) for tie-breaking
             suggestions.sort_by(|a, b| b.0.cmp(&a.0).then_with(|| a.1.cmp(&b.1)));
+
+            // Deduplicate and take top 5, preserving score-based order
             let mut seen = HashSet::new();
             self.suggestion_list = suggestions
                 .into_iter()
-                .filter_map(|(score, term)| seen.insert(term.clone()).then_some((score, term)))
+                .filter(|(_, term)| seen.insert(term.clone()))
                 .take(5)
                 .map(|(_, term)| term)
                 .collect();
@@ -368,10 +361,8 @@ impl AppState {
             if parts.is_empty() {
                 self.input = format!("{} ", suggestion);
             } else {
-                // Replace last partial term with full suggestion
                 parts.pop();
                 parts.push(suggestion);
-
                 let joined = parts.join(" ");
                 self.input = if joined.is_empty() { String::new() } else { format!("{} ", joined) };
             }
@@ -452,6 +443,126 @@ impl AppState {
             self.update_search();
         }
     }
+
+    fn get_action_for_key(&self, key: &KeyEvent) -> Option<String> {
+        for (action, &(bound_key, bound_modifiers)) in &self.key_bindings {
+            if key.code == bound_key && key.modifiers == bound_modifiers {
+                return Some(action.clone());
+            }
+        }
+        None
+    }
+
+    fn handle_action(&mut self, action: &str) {
+        match action {
+            "clear_search" => {
+                self.input.clear();
+                self.update_search();
+                self.record_input();
+            },
+            "toggle_detail" => self.show_detail = !self.show_detail,
+            "undo_input" => self.undo(),
+            "redo_input" => self.redo(),
+            "toggle_favorite" => self.toggle_favorite(),
+            "clear_favorites" => {
+                self.favorites.clear();
+                save_favorites(&self.favorites).expect("Failed to clear favorites");
+                self.update_search();
+            },
+            "next_item" => self.next(),
+            "previous_item" => self.previous(),
+            "first_page" => self.first_page(),
+            "last_page" => self.last_page(),
+            "page_up" => {
+                if self.current_page > 0 {
+                    self.current_page -= 1;
+                    self.table_state.select(Some(0));
+                }
+            },
+            "page_down" => {
+                let total_pages = self.results.len().div_ceil(self.items_per_page);
+                if self.current_page < total_pages - 1 {
+                    self.current_page += 1;
+                    self.table_state.select(Some(0));
+                }
+            },
+            "cycle_suggestion_next" => self.cycle_suggestion(1),
+            "cycle_suggestion_prev" => self.cycle_suggestion(-1),
+            "accept_suggestion" => self.accept_suggestion(),
+            "exit" => self.should_exit = true,
+            _ => {},
+        }
+    }
+
+    fn show_help<B: Backend>(&self, terminal: &mut Terminal<B>) -> io::Result<()> {
+        loop {
+            terminal.draw(|f| {
+                let size = f.size();
+                let modal_area = Layout::default()
+                    .direction(Direction::Vertical)
+                    .margin(5)
+                    .constraints([Constraint::Percentage(100)].as_ref())
+                    .split(size)[0];
+                let block = Block::default()
+                    .title("Help")
+                    .borders(Borders::ALL)
+                    .border_type(BorderType::Rounded)
+                    .border_style(Style::default().fg(D_CYAN));
+                let help_text: Vec<Line> = self
+                    .get_help_actions()
+                    .iter()
+                    .map(|(action, description)| {
+                        let binding = self
+                            .key_bindings
+                            .get(*action)
+                            .map(|&b| get_key_binding_str(&b))
+                            .unwrap_or_else(|| "Not bound".to_string());
+                        Line::from(vec![
+                            Span::styled(format!("[{}] ", binding), Style::default().fg(D_CYAN)),
+                            Span::raw(": "),
+                            Span::styled(*description, Style::default().fg(D_FOREGROUND)),
+                        ])
+                    })
+                    .collect();
+                let paragraph = Paragraph::new(help_text)
+                    .block(block)
+                    .alignment(Alignment::Left)
+                    .wrap(Wrap { trim: true });
+                f.render_widget(paragraph, modal_area);
+            })?;
+
+            if event::poll(Duration::from_millis(50))? {
+                if let Event::Key(key) = event::read()? {
+                    if key.code == KeyCode::Esc {
+                        break;
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+
+    fn get_help_actions(&self) -> Vec<(&'static str, &'static str)> {
+        vec![
+            ("clear_search", "Clear search bar"),
+            ("show_help", "Show this help page"),
+            ("toggle_detail", "Toggle detailed view"),
+            ("undo_input", "Undo input in search bar"),
+            ("redo_input", "Redo input in search bar"),
+            ("toggle_favorite", "Add favorite tag to current selected skin"),
+            ("clear_favorites", "Clear all favorites"),
+            ("next_item", "Navigate to next item (▼)"),
+            ("previous_item", "Navigate to previous item (▲)"),
+            ("first_page", "Jump to first page"),
+            ("last_page", "Jump to last page"),
+            ("page_up", "Go to previous page"),
+            ("page_down", "Go to next page"),
+            ("cycle_suggestion_next", "Cycle suggestions forward"),
+            ("cycle_suggestion_prev", "Cycle suggestions backward"),
+            ("accept_suggestion", "Accept suggestion and auto-fill (►)"),
+            ("exit", "Exit application"),
+        ]
+    }
 }
 
 fn main() -> io::Result<()> {
@@ -469,7 +580,7 @@ fn main() -> io::Result<()> {
     let mut app = AppState::new();
     app.update_search();
 
-    loop {
+    while !app.should_exit {
         terminal.draw(|f| ui(f, &mut app))?;
 
         if event::poll(Duration::from_millis(50))? {
@@ -478,69 +589,26 @@ fn main() -> io::Result<()> {
                     if key.kind != KeyEventKind::Press {
                         continue;
                     }
-                    match key.code {
-                        KeyCode::Esc => break,
-                        KeyCode::Char('l') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-                            app.input.clear();
-                            app.update_search();
-                            app.record_input();
-                        },
-                        KeyCode::Char('h') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-                            show_help(&mut terminal)?;
-                        },
-                        KeyCode::Char('d') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-                            app.show_detail = !app.show_detail;
-                        },
-                        KeyCode::Char('z') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-                            app.undo();
-                        },
-                        KeyCode::Char('y') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-                            app.redo();
-                        },
-                        KeyCode::Char('f') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-                            app.toggle_favorite(); // Use the new toggle_favorite method
-                        },
-                        KeyCode::Char('F') if key.modifiers.contains(KeyModifiers::SHIFT) => {
-                            app.favorites.clear();
-                            save_favorites(&app.favorites).expect("Failed to clear favorites");
-                            app.update_search();
-                        },
-                        KeyCode::Char(c) => {
-                            app.input.push(c);
-                            app.update_search();
-                            app.record_input();
-                        },
-                        KeyCode::Backspace => {
-                            app.input.pop();
-                            app.update_search();
-                            app.record_input();
-                        },
-                        KeyCode::Down => app.next(),
-                        KeyCode::Up => app.previous(),
-                        KeyCode::Home => app.first_page(),
-                        KeyCode::End => app.last_page(),
-                        KeyCode::PageUp => {
-                            if app.current_page > 0 {
-                                app.current_page -= 1;
-                                app.table_state.select(Some(0));
-                            }
-                        },
-                        KeyCode::PageDown => {
-                            let total_pages = app.results.len().div_ceil(app.items_per_page);
-                            if app.current_page < total_pages - 1 {
-                                app.current_page += 1;
-                                app.table_state.select(Some(0));
-                            }
-                        },
-                        KeyCode::Tab => {
-                            if key.modifiers.contains(KeyModifiers::SHIFT) {
-                                app.cycle_suggestion(-1);
-                            } else {
-                                app.cycle_suggestion(1);
-                            }
-                        },
-                        KeyCode::Right => app.accept_suggestion(),
-                        _ => {},
+                    if let Some(action) = app.get_action_for_key(&key) {
+                        if action == "show_help" {
+                            app.show_help(&mut terminal)?;
+                        } else {
+                            app.handle_action(&action);
+                        }
+                    } else {
+                        match key.code {
+                            KeyCode::Char(c) => {
+                                app.input.push(c);
+                                app.update_search();
+                                app.record_input();
+                            },
+                            KeyCode::Backspace => {
+                                app.input.pop();
+                                app.update_search();
+                                app.record_input();
+                            },
+                            _ => {},
+                        }
                     }
                 },
                 Event::Mouse(mouse_event) => match mouse_event.kind {
@@ -570,7 +638,7 @@ fn main() -> io::Result<()> {
                             .split(outer_chunks[2]);
                         let table_area = main_chunks[0];
 
-                        let inner_y = table_area.y + 1; // Skip top border
+                        let inner_y = table_area.y + 1;
                         let header_height = 1;
 
                         if mouse_event.row == inner_y {
@@ -601,6 +669,7 @@ fn main() -> io::Result<()> {
             }
         }
     }
+
     disable_raw_mode()?;
     execute!(
         io::stdout(),
@@ -614,7 +683,7 @@ fn main() -> io::Result<()> {
 
 fn load_favorites() -> io::Result<HashSet<String>> {
     let path = "favorites.txt";
-    if let Ok(content) = std::fs::read_to_string(path) {
+    if let Ok(content) = fs::read_to_string(path) {
         Ok(content.lines().map(|s| s.trim().to_string()).filter(|s| !s.is_empty()).collect())
     } else {
         Ok(HashSet::new())
@@ -624,58 +693,154 @@ fn load_favorites() -> io::Result<HashSet<String>> {
 fn save_favorites(favorites: &HashSet<String>) -> io::Result<()> {
     let path = "favorites.txt";
     let content = favorites.iter().map(|s| s.as_str()).collect::<Vec<_>>().join("\n");
-    std::fs::write(path, content)
+    fs::write(path, content)
 }
 
-fn show_help<B: Backend>(terminal: &mut Terminal<B>) -> io::Result<()> {
-    loop {
-        terminal.draw(|f| {
-            let size = f.size();
-            let modal_area = Layout::default()
-                .direction(Direction::Vertical)
-                .margin(5)
-                .constraints([Constraint::Percentage(100)].as_ref())
-                .split(size)[0];
+fn get_key_config_path() -> PathBuf {
+    let mut path = dirs::home_dir().unwrap_or_else(|| PathBuf::from("."));
+    path.push(".skin_tui");
+    path.push("key_bindings.json");
+    path
+}
 
-            let block = Block::default()
-                .title("Help")
-                .borders(Borders::ALL)
-                .border_type(BorderType::Rounded)
-                .border_style(Style::default().fg(D_CYAN));
+fn default_key_bindings() -> HashMap<String, (KeyCode, KeyModifiers)> {
+    let mut bindings = HashMap::new();
+    bindings.insert("clear_search".to_string(), (KeyCode::Char('l'), KeyModifiers::CONTROL));
+    bindings.insert("show_help".to_string(), (KeyCode::Char('h'), KeyModifiers::CONTROL));
+    bindings.insert("toggle_detail".to_string(), (KeyCode::Char('d'), KeyModifiers::CONTROL));
+    bindings.insert("undo_input".to_string(), (KeyCode::Char('z'), KeyModifiers::CONTROL));
+    bindings.insert("redo_input".to_string(), (KeyCode::Char('y'), KeyModifiers::CONTROL));
+    bindings.insert("toggle_favorite".to_string(), (KeyCode::Char('f'), KeyModifiers::CONTROL));
+    bindings.insert("clear_favorites".to_string(), (KeyCode::Char('F'), KeyModifiers::SHIFT));
+    bindings.insert("next_item".to_string(), (KeyCode::Down, KeyModifiers::NONE));
+    bindings.insert("previous_item".to_string(), (KeyCode::Up, KeyModifiers::NONE));
+    bindings.insert("first_page".to_string(), (KeyCode::Home, KeyModifiers::NONE));
+    bindings.insert("last_page".to_string(), (KeyCode::End, KeyModifiers::NONE));
+    bindings.insert("page_up".to_string(), (KeyCode::PageUp, KeyModifiers::NONE));
+    bindings.insert("page_down".to_string(), (KeyCode::PageDown, KeyModifiers::NONE));
+    bindings.insert("cycle_suggestion_next".to_string(), (KeyCode::Tab, KeyModifiers::NONE));
+    bindings.insert("cycle_suggestion_prev".to_string(), (KeyCode::Tab, KeyModifiers::SHIFT));
+    bindings.insert("accept_suggestion".to_string(), (KeyCode::Right, KeyModifiers::NONE));
+    bindings.insert("exit".to_string(), (KeyCode::Esc, KeyModifiers::NONE));
+    bindings
+}
 
-            let help_text = vec![
-                Line::from("[CTRL+L] : Clear search bar"),
-                Line::from("[CTRL+H] : Show this help page"),
-                Line::from("[CTRL+D] : Toggle detailed view"),
-                Line::from("[CTRL+Z] : Undo input in search bar"),
-                Line::from("[CTRL+Y] : Redo input in search bar"),
-                Line::from("[CTRL+F] : Add favorite tag to current selected skin"),
-                Line::from("[SHIFT+F] : Clear all favorites"),
-                Line::from("[UP/DOWN ▲▼] Or Mouse Scroll: Navigate results"),
-                Line::from("[TAB]: Cycle suggestions"),
-                Line::from("[HOME/END] : Jump to first/last page"),
-                Line::from("[PG UP/DOWN] : Go to previous/next page"),
-                Line::from("[RIGHT ►] : Accept suggestion and auto-fills"),
-                Line::from("[ESC]: Exit help or exit application"),
-            ];
+fn save_default_key_bindings(
+    bindings: &HashMap<String, (KeyCode, KeyModifiers)>,
+) -> io::Result<()> {
+    let path = get_key_config_path();
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+    let mut raw_bindings = HashMap::new();
+    for (action, binding) in bindings {
+        raw_bindings.insert(action.clone(), get_key_binding_str(binding));
+    }
+    let json = serde_json::to_string_pretty(&raw_bindings)?;
+    fs::write(path, json)?;
+    Ok(())
+}
 
-            let paragraph = Paragraph::new(help_text)
-                .block(block)
-                .alignment(Alignment::Left)
-                .wrap(Wrap { trim: true });
-
-            f.render_widget(paragraph, modal_area);
-        })?;
-
-        if event::poll(Duration::from_millis(50))? {
-            if let Event::Key(key) = event::read()? {
-                if key.code == KeyCode::Esc {
-                    break;
-                }
+fn load_key_bindings() -> io::Result<HashMap<String, (KeyCode, KeyModifiers)>> {
+    let path = get_key_config_path();
+    if path.exists() {
+        let content = fs::read_to_string(&path)?;
+        let raw_bindings: HashMap<String, String> = serde_json::from_str(&content)?;
+        let mut bindings = HashMap::new();
+        for (action, key_str) in raw_bindings {
+            if let Some(binding) = parse_key_binding(&key_str) {
+                bindings.insert(action, binding);
             }
         }
+        Ok(bindings)
+    } else {
+        Ok(default_key_bindings())
     }
-    Ok(())
+}
+
+fn parse_key_binding(s: &str) -> Option<(KeyCode, KeyModifiers)> {
+    let parts: Vec<&str> = s.split('+').map(|p| p.trim()).collect();
+    let mut modifiers = KeyModifiers::NONE;
+    let mut key_part: Option<&str> = None;
+    for part in parts {
+        match part.to_lowercase().as_str() {
+            "ctrl" | "control" => modifiers |= KeyModifiers::CONTROL,
+            "shift" => modifiers |= KeyModifiers::SHIFT,
+            "alt" => modifiers |= KeyModifiers::ALT,
+            _ => {
+                if key_part.is_some() {
+                    return None;
+                }
+                key_part = Some(part);
+            },
+        }
+    }
+    if let Some(key_str) = key_part {
+        if key_str.len() == 1 {
+            let char = key_str.chars().next().unwrap();
+            Some((KeyCode::Char(char), modifiers))
+        } else {
+            let key_code = match key_str.to_lowercase().as_str() {
+                "tab" => KeyCode::Tab,
+                "backspace" => KeyCode::Backspace,
+                "enter" => KeyCode::Enter,
+                "up" => KeyCode::Up,
+                "down" => KeyCode::Down,
+                "left" => KeyCode::Left,
+                "right" => KeyCode::Right,
+                "home" => KeyCode::Home,
+                "end" => KeyCode::End,
+                "pageup" => KeyCode::PageUp,
+                "pagedown" => KeyCode::PageDown,
+                "insert" => KeyCode::Insert,
+                "delete" => KeyCode::Delete,
+                "esc" => KeyCode::Esc,
+                "null" => KeyCode::Null,
+                _ => return None,
+            };
+            Some((key_code, modifiers))
+        }
+    } else {
+        None
+    }
+}
+
+fn get_key_binding_str(binding: &(KeyCode, KeyModifiers)) -> String {
+    let (key_code, modifier) = binding;
+    let mut parts = Vec::new();
+    if modifier.contains(KeyModifiers::SHIFT) {
+        parts.push("Shift".to_string());
+    }
+    if modifier.contains(KeyModifiers::CONTROL) {
+        parts.push("Ctrl".to_string());
+    }
+    if modifier.contains(KeyModifiers::ALT) {
+        parts.push("Alt".to_string());
+    }
+    parts.push(key_code_to_string(*key_code));
+    parts.join("+")
+}
+
+fn key_code_to_string(key_code: KeyCode) -> String {
+    match key_code {
+        KeyCode::Char(c) => c.to_string(),
+        KeyCode::Backspace => "Backspace".to_string(),
+        KeyCode::Enter => "Enter".to_string(),
+        KeyCode::Left => "Left".to_string(),
+        KeyCode::Right => "Right".to_string(),
+        KeyCode::Up => "Up".to_string(),
+        KeyCode::Down => "Down".to_string(),
+        KeyCode::Home => "Home".to_string(),
+        KeyCode::End => "End".to_string(),
+        KeyCode::PageUp => "PageUp".to_string(),
+        KeyCode::PageDown => "PageDown".to_string(),
+        KeyCode::Insert => "Insert".to_string(),
+        KeyCode::Delete => "Delete".to_string(),
+        KeyCode::Tab => "Tab".to_string(),
+        KeyCode::Esc => "Esc".to_string(),
+        KeyCode::F(n) => format!("F{}", n),
+        _ => "Unknown".to_string(),
+    }
 }
 
 fn get_rarity_color(skin: &Skin) -> Color {
@@ -709,7 +874,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         let mut current_token = String::new();
         let mut current_is_whitespace = false;
 
-        // Process input characters
         for c in app.input.chars() {
             if c.is_whitespace() {
                 if !current_is_whitespace && !current_token.is_empty() {
@@ -730,7 +894,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
             }
         }
 
-        // Handle the last token with suggestion
         if !current_token.is_empty() {
             if current_is_whitespace {
                 line.spans.push(Span::raw(current_token));
@@ -741,28 +904,23 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
                 let suggestion_lower = suggestion.to_lowercase();
 
                 if suggestion_lower.contains(&last_part_lower) {
-                    // Find the position of the match in the suggestion
                     let start_idx = suggestion_lower.find(&last_part_lower).unwrap_or(0);
                     let end_idx = start_idx + last_part.len();
 
-                    // Split suggestion into before, match, and after parts
                     let before_match = &suggestion[..start_idx];
                     let matched_part = &suggestion[start_idx..end_idx];
                     let after_match = &suggestion[end_idx..];
 
-                    // Add the part before the match (if any) dimly
                     if !before_match.is_empty() {
                         line.spans.push(Span::styled(
                             before_match,
                             Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM),
                         ));
                     }
-                    // Underline the typed part in pink
                     line.spans.push(Span::styled(
                         matched_part,
                         style.fg(D_PINK).add_modifier(Modifier::UNDERLINED),
                     ));
-                    // Add the remaining suggestion part dimly
                     if !after_match.is_empty() {
                         line.spans.push(Span::styled(
                             after_match,
@@ -792,7 +950,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
 
     f.render_widget(search_input, chunks[0]);
 
-    // Smart cursor positioning based on match location in suggestion
     let inner_area = chunks[0].inner(&Margin { horizontal: 1, vertical: 1 });
     let cursor_x = if app.input.is_empty() {
         inner_area.x
@@ -804,14 +961,11 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         if suggestion_lower.contains(&last_part_lower) {
             let start_idx = suggestion_lower.find(&last_part_lower).unwrap_or(0);
             let end_idx = start_idx + last_part.len();
-            // Position cursor at the end of the matched part within the suggestion
             inner_area.x + end_idx as u16
         } else {
-            // No match, position at end of typed input
             inner_area.x + app.input.len() as u16
         }
     } else {
-        // No suggestion, position at end of typed input
         inner_area.x + app.input.len() as u16
     };
     let cursor_y = inner_area.y;
@@ -843,25 +997,20 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
             let suggestion_lower = t.to_lowercase();
 
             if suggestion_lower.contains(&last_part) && !last_part.is_empty() {
-                // Find the position of the match in the suggestion
                 let start_idx = suggestion_lower.find(&last_part).unwrap_or(0);
                 let end_idx = start_idx + last_part.len();
 
-                // Split suggestion into before, match, and after parts
                 let before_match = &t[..start_idx];
                 let matched_part = &t[start_idx..end_idx];
                 let after_match = &t[end_idx..];
 
-                // Add the part before the match (if any)
                 if !before_match.is_empty() {
                     spans.push(Span::styled(before_match, style));
                 }
-                // Underline the matched part in pink
                 spans.push(Span::styled(
                     matched_part,
                     style.fg(D_PINK).add_modifier(Modifier::UNDERLINED),
                 ));
-                // Add the part after the match (if any)
                 if !after_match.is_empty() {
                     spans.push(Span::styled(after_match, style));
                 }
@@ -1062,10 +1211,7 @@ fn render_detail_panel<B: Backend>(f: &mut Frame<B>, app: &AppState, area: Rect)
     f.render_widget(block, area);
 
     if let Some(selected) = app.table_state.selected() {
-        // Calculate the absolute index in the full results list
         let absolute_index = app.current_page * app.items_per_page + selected;
-
-        // Safely get the skin from the results list using the absolute index
         if let Some(skin) = app.results.get(absolute_index) {
             let mut tags = skin.tags.clone();
             if app.favorites.contains(&skin.name) {
@@ -1115,39 +1261,29 @@ fn render_tags(tags: &[String]) -> Vec<Span> {
             format!(" {} ", tag),
             Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND).add_modifier(Modifier::BOLD),
         ));
-        spans.push(Span::raw(" ")); // Space between tags
+        spans.push(Span::raw(" "));
     }
     if !spans.is_empty() {
-        spans.pop(); // Remove the trailing space
+        spans.pop();
     }
     spans
 }
 
 fn load_all_terms(skins: &[Skin]) -> HashMap<String, TermInfo> {
-    let mut terms = HashMap::new();
+    let mut terms: HashMap<String, TermInfo> = HashMap::new();
     for skin in skins {
-        // Name words
         for word in skin.name_lower.split_whitespace() {
-            let entry: &mut TermInfo = terms.entry(word.to_string()).or_default();
-            entry.is_name = true;
+            terms.entry(word.to_string()).or_default().is_name = true;
         }
-        // Event words
         for word in skin.event_lower.split_whitespace() {
-            let entry: &mut TermInfo = terms.entry(word.to_string()).or_default();
-            entry.is_event = true;
+            terms.entry(word.to_string()).or_default().is_event = true;
         }
-        // Rarity
-        let entry: &mut TermInfo = terms.entry(skin.rarity_lower.clone()).or_default();
-        entry.is_rarity = true;
-        // Tags
+        terms.entry(skin.rarity_lower.clone()).or_default().is_rarity = true;
         for tag in &skin.tags_lower {
-            let entry: &mut TermInfo = terms.entry(tag.clone()).or_default();
-            entry.is_tag = true;
+            terms.entry(tag.clone()).or_default().is_tag = true;
         }
-        // Year
         if !skin.year_str.is_empty() {
-            let entry: &mut TermInfo = terms.entry(skin.year_str.clone()).or_default();
-            entry.is_year = true;
+            terms.entry(skin.year_str.clone()).or_default().is_year = true;
         }
     }
     terms
