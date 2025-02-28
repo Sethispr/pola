@@ -84,4 +84,4 @@ Option 3: You can also install the `pola` package directly using Cargo:
 | <kbd>ctrl+y</kbd>   | Redo                           | <kbd>ctrl+z</kbd>          | Undo                            |
 | <kbd>ctrl+f</kbd>   | Favorite/Undo Favorite         | <kbd>shift+f</kbd>         | Remove all favorites            |
 
-</details>
+</details>        
