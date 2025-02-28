@@ -1,5 +1,10 @@
+# Configuration for https://github.com/DavidAnson/markdownlint
+
 # Enable all rules by default
 default: true
+
+# Allows first line to not be headings
+first-line-heading: false
 
 # Formatting & Whitespace Rules
 no-trailing-spaces: true             # MD009 - Disallow trailing whitespace
