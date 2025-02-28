@@ -1,3 +1,19 @@
+# Table of Contents  
+
+1. [Seasonal Case Skins](#seasonal-case-skins)
+   - [Pinks](#pinks)
+   - [Reds](#reds)
+2. [Event Skins and Event Bundle Skins](#event-skins-and-event-bundle-skins)
+   - [Christmas Event](#christmas-event)
+   - [Easter Event](#easter-event)
+   - [Summer Bundle](#summer-bundle)
+   - [Valentine Bundle](#valentine-bundle)
+3. [Code Redeemed Skins (Teal)](#code-redeemed-skins-teal)
+4. [Launch Skins (Teal)](#launch-skins-teal)
+5. [Non-event Case Skins](#non-event-case-skins)
+   - [Exquisite Case (Pinks & Reds)](#exquisite-case-pinks--reds)
+   - [Other Crates](#other-cases)
+
 # Seasonal Pinks & Reds
 
 ## Seasonal Case Skins
@@ -108,7 +124,7 @@
 
 ---
 
-### Other Crates
+### Other Cases
 
 > [!NOTE]  
 > Skins in the Refined case are also found in the Exquisite case.
