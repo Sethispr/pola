@@ -1,5 +1,0 @@
- - name: Check formatting of Rust code with rustfmt
-  # uses: actions-rust-lang/rustfmt@559aa3035a47390ba96088dffa783b5d26da9326
-   uses: actions-rust-lang/rustfmt@v1.1.1
-   with: manifest-path:
-          
