@@ -24,24 +24,24 @@
 - Add **mod-only skins**. **(done)**
 - Display skin descriptions in **detailed view**.
 - Add **placeholder images** for all skins and begin populating the assets folder.
-- Improve **auto-suggestions** (e.g., typing "Valentine" should suggest a skin from the Valentine Case).  
+- Improve **auto-suggestions** (e.g., typing "Valentine" should suggest a skin from the Valentine Case). **(done)**
 - Fix **auto-suggestion bugs**, such as lingering previous input when accepting a suggestion (e.g., typing "OMG" → accepting "Omega" leaves "OMG" in the search bar). **(fixed slightly)**
 - Highlight search terms in suggested skins (similar to the website). **(done)**
 - Display **10 results per table page** and allow navigation via keybinds or arrows (Multi-paginated view). **(done)**
-- Add **logging** and **advanced error handling**.  
-- Implement a **performance monitoring** view with keybinds.  
+- Add **logging** and **advanced error handling**.
+- Implement a **performance monitoring** view with keybinds.
 - Add a **scrollbar**. **(done)**
-- Modernize UI and improve compatibility with different terminals.  
+- Modernize UI and improve compatibility with different terminals.
 - Refactor code into separate files instead of a single **main.rs** file.
 - Introduce a **caret** in the search bar. **(done)**
 - Keybind to toggle **detailed view** (default: ON). **(done)**
 - **Ctrl + R** to select a random skin.  
-- Improve **contextual suggestions** (e.g., differentiating between "Valentine Case" and "Valentine Bundle").  
+- Improve **contextual suggestions** (e.g., differentiating between "Valentine Case" and "Valentine Bundle"). **(done)** 
 - Allow **year-based searching** (e.g., `2022-2025`). **(done)**
-- Ensure skins with the "Popular" tag appear first in **name-based searches**.  
+- Ensure skins with the "Popular" tag appear first in **name-based searches**.
 - Improve **autocomplete logic** (e.g., searching "Red S" should return skins like "Salmon" or "Sanctum"). **(done)**  
 - Implement **multilingual support** (Spanish, Russian, etc.) with a language config option.  
-- Add a **favorites** system and the ability to create/edit tags (e.g., "Favorite," "For Trade").  
+- Add a **favorites** system and the ability to create/edit tags (e.g., "Favorite," "For Trade"). **(done for favorites)**
 - Support **light mode and high contrast themes** via persistent background color settings.  
 - Enable **importing skin data** from CSV or JSON.  
 - Allow selecting multiple skins via **Shift + Up/Down** for exporting, favoriting, or comparison.  
@@ -67,7 +67,8 @@
 - Support **resizable layouts**.  
 - Enhance **mouse interactions**, including clickable suggestions, close buttons (`X`), and panel controls.  
 - Add **fast clickable filters** (e.g., clicking "Pink" instantly filters pink skins).  
-- Prevent **duplicate tags** in suggestions and block excessive suggestion acceptance spam.  
+- Prevent **duplicate tags** in suggestions and block excessive suggestion acceptance spam.
+- Make TUI "hackable"
 
 ---
 
