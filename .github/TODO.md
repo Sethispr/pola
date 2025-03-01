@@ -78,7 +78,8 @@
 - Resolve **Ctrl + Y (redo) not working**.  
 - Fix **click offset bug** when there are more than 12 results.  
 - Ensure the **number of suggestions feature** displays correctly **(fixed)**.  
-- Prevent the **caret from appearing in block-styled tags** when scrolling fast.  
+- Prevent the **caret from appearing in block-styled tags** when scrolling fast.
+- Fix the scrollbar issues
 
 ---
 
