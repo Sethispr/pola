@@ -89,6 +89,8 @@ Option 3: You can also install the `pola` package directly using Cargo:
 <details>
 <summary>Website</summary>
 
-![image](https://github.com/user-attachments/assets/958aa469-e7ed-40c4-836b-b119d09b43dd)
+[Online Demo](https://sethispr.github.io/pola)
+
+![demo](https://github.com/user-attachments/assets/958aa469-e7ed-40c4-836b-b119d09b43dd)
 
 </details>
