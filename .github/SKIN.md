@@ -161,5 +161,4 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 
 [🔼 Back to ToC](#table-of-contents)  
 
-[![image](https://github.com/user-attachments/assets/6ac79736-56f8-48b2-a525-4c2ed386048f)(#table-of-contents)
-
+[![image](https://www.kindpng.com/picc/m/11-115926_filled-icon-free-download-back-to-top-arrow.png)](#table-of-contents)
