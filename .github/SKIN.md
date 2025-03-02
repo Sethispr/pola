@@ -159,6 +159,6 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 | <kbd>Pattern Case</kbd>    | Monochrome                  | Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus                       |
 | <kbd>Refined Case</kbd>    | -                           | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
 
-[🔼 Back to ToC](#table-of-contents)  
-
-[![image](https://www.kindpng.com/picc/m/11-115926_filled-icon-free-download-back-to-top-arrow.png)](#table-of-contents)
+<a href="#table-of-contents">
+    <img src="https://www.kindpng.com/picc/m/11-115926_filled-icon-free-download-back-to-top-arrow.png" width="100">
+</a>
