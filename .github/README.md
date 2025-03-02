@@ -93,13 +93,6 @@ Option 3: You can also install the `pola` package directly using Cargo:
 
 ![demo](https://github.com/user-attachments/assets/958aa469-e7ed-40c4-836b-b119d09b43dd) 
 
-
-<p align="center">
-
-![themes](https://github.com/user-attachments/assets/c10cc1fa-a475-4e35-b00c-f9f3f1d65b49) ![shortcuts](https://github.com/user-attachments/assets/4710f939-7072-4ad1-9ddc-986390a8b040)
-
-</p>
-
 <p align="center">
   <img src="https://github.com/user-attachments/assets/c10cc1fa-a475-4e35-b00c-f9f3f1d65b49" alt="themes"><img src="https://github.com/user-attachments/assets/4710f939-7072-4ad1-9ddc-986390a8b040" alt="shortcuts">
 </p>
