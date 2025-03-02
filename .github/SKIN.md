@@ -1,5 +1,3 @@
-UPDATE SOURCES add to toc add back to top button find out other ways to host this md
-
 # Table of Contents  
 
 1. [Seasonal Case Skins](#seasonal-case-skins)  
@@ -34,7 +32,9 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 | <kbd>Halloween Case</kbd> | All Hallow's, Anansi, Dusekkkar       |
 | <kbd>Christmas Case</kbd> | Evergreen, Icycle, Santa              |
 
-[🔼 Back to ToC](#table-of-contents)  
+<a href="#table-of-contents">
+   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
+</a> 
 
 ### Reds  
 
@@ -48,7 +48,9 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 | <kbd>Halloween Case</kbd> | Count, Dracula, Hallowing, Orange Energy, Pumpkin                                                         |
 | <kbd>Christmas Case</kbd> | Candy Energy, Festive Periastron, Snowflake, Snowman                                                      |
 
-[🔼 Back to ToC](#table-of-contents)  
+<a href="#table-of-contents">
+   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
+</a>
 
 ---
 
@@ -66,7 +68,9 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 | <kbd>Pink</kbd> | Golden Rod, Whisper (2022)                             |
 | <kbd>Teal</kbd> | Gingerblade (2022), Candy Cane (2023), Iceblade (2024) |
 
-[🔼 Back to ToC](#table-of-contents)  
+<a href="#table-of-contents">
+   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
+</a>
 
 ### Easter Event  
 
@@ -74,7 +78,9 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 |-----------------|-----------------------------------------------------|
 | <kbd>Pink</kbd> | Azurite (2022), Corrupted (2023), Sun Slayer (2024) |
 
-[🔼 Back to ToC](#table-of-contents)  
+<a href="#table-of-contents">
+   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
+</a>
 
 ### Summer Bundle  
 
@@ -83,7 +89,9 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 | <kbd>2023</kbd> | <kbd>Teal</kbd> | Cartoony Rainbow, Cyberlight, Frostburn, Inferno Angel |
 | <kbd>2024</kbd> | <kbd>Teal</kbd> | Azure Dragon, Darkness, Vilethorn, Winged              |
 
-[🔼 Back to ToC](#table-of-contents)  
+<a href="#table-of-contents">
+   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
+</a>
 
 ### Valentine Bundle  
 
@@ -91,7 +99,9 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 |-----------------|------------------|--------------------------------------------|
 | <kbd>2025</kbd> | <kbd>Teal</kbd>  | Cupid's Revenge, Love Scepter, Wicked Rose |
 
-[🔼 Back to ToC](#table-of-contents)  
+<a href="#table-of-contents">
+   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
+</a>
 
 ---
 
@@ -108,7 +118,9 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 | Pearl     | AR, Shotgun, Raygun only                      |
 | Tin       | Atomic, Shotgun only                          |
 
-[🔼 Back to ToC](#table-of-contents)  
+<a href="#table-of-contents">
+   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
+</a> 
 
 ---
 
@@ -121,7 +133,9 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 |----------|-------------|
 | Blastoff | Pistol only |
 
-[🔼 Back to ToC](#table-of-contents)  
+<a href="#table-of-contents">
+   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
+</a>
 
 ---
 
@@ -140,7 +154,9 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 | <kbd>Pink</kbd> | Behemoth, Blizzard, Crescendo, Demon, Overseer, Rainbow Periastron (Valentine), Redcliff, Skeletal, Telamonster, Unseen |
 | <kbd>Red</kbd>  | Bombastic, Crimsonwrath, Sanctum, Surge (Birthday)                                                                      |
 
-[🔼 Back to ToC](#table-of-contents)  
+<a href="#table-of-contents">
+   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
+</a>
 
 ---
 
@@ -160,5 +176,5 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 | <kbd>Refined Case</kbd>    | -                           | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
 
 <a href="#table-of-contents">
-   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=purple" alt="Back to Top">
+   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
 </a>
