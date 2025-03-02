@@ -91,10 +91,8 @@ Option 3: You can also install the `pola` package directly using Cargo:
 
 [Online Demo](https://sethispr.github.io/pola)
 
-![demo](https://github.com/user-attachments/assets/958aa469-e7ed-40c4-836b-b119d09b43dd)
+![demo](https://github.com/user-attachments/assets/958aa469-e7ed-40c4-836b-b119d09b43dd) 
 
-![themes](https://github.com/user-attachments/assets/c10cc1fa-a475-4e35-b00c-f9f3f1d65b49)
-
-![shortcuts](https://github.com/user-attachments/assets/4710f939-7072-4ad1-9ddc-986390a8b040)
+![themes](https://github.com/user-attachments/assets/c10cc1fa-a475-4e35-b00c-f9f3f1d65b49) ![shortcuts](https://github.com/user-attachments/assets/4710f939-7072-4ad1-9ddc-986390a8b040)
 
 </details>
