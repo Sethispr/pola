@@ -160,5 +160,5 @@ UPDATE SOURCES add to toc add back to top button find out other ways to host thi
 | <kbd>Refined Case</kbd>    | -                           | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
 
 <a href="#table-of-contents">
-    <img src="https://www.kindpng.com/picc/m/11-115926_filled-icon-free-download-back-to-top-arrow.png" width="100">
+    <img src="https://github.com/user-attachments/assets/2c6978a8-8934-4fa5-9e8a-d420331613a0" width="60">
 </a>
