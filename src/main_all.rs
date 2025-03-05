@@ -18,6 +18,7 @@ use ratatui::{
     },
     Terminal,
 };
+use regex::Regex;
 use std::{
     collections::{HashMap, HashSet},
     fs, io,
@@ -165,21 +166,7 @@ impl AppState {
             return;
         }
 
-        let binding = self.input.to_lowercase();
-        let tags: HashSet<&str> = binding.split_whitespace().collect();
-        let last_part = binding.split_whitespace().last().unwrap_or("");
-
-        if "favorite".starts_with(last_part) && !self.favorites.is_empty() {
-            self.results = self
-                .skins
-                .iter()
-                .filter(|skin| self.favorites.contains(&skin.name))
-                .cloned()
-                .collect();
-        } else {
-            self.results = search_skins(&self.skins, &self.name_map, &tags, &self.favorites);
-        }
-
+        self.results = search_skins(&self.skins, &self.name_map, &self.input, &self.favorites);
         self.sort_results();
 
         let total_pages = self.results.len().div_ceil(self.items_per_page);
@@ -3286,59 +3273,89 @@ fn load_skins() -> Vec<Skin> {
 
 fn search_skins(
     skins: &[Skin],
-    name_map: &HashMap<String, usize>,
-    tags: &HashSet<&str>,
+    _name_map: &HashMap<String, usize>,
+    query: &str,
     favorites: &HashSet<String>,
 ) -> Vec<Skin> {
-    let exact_matches: Vec<Skin> =
-        tags.iter().filter_map(|tag| name_map.get(*tag)).map(|&i| skins[i].clone()).collect();
+    let mut filters: HashMap<String, String> = HashMap::new();
+    let mut terms: HashSet<String> = HashSet::new();
+    let mut regex: Option<Regex> = None;
 
-    if !exact_matches.is_empty() {
-        return exact_matches;
+    // Parse query
+    let parts: Vec<&str> = query.split_whitespace().collect();
+    for part in parts {
+        if part.contains(':') {
+            let (field, value) = part.split_once(':').unwrap();
+            filters.insert(field.to_lowercase(), value.to_lowercase());
+        } else if part.starts_with('/') && part.ends_with('/') {
+            if let Ok(re) = Regex::new(&part[1..part.len() - 1]) {
+                regex = Some(re);
+            }
+        } else {
+            terms.insert(part.to_lowercase());
+        }
     }
 
     let matcher = fuzzy_matcher::skim::SkimMatcherV2::default();
     let mut scored_skins: Vec<(i64, &Skin)> = skins
         .iter()
         .filter_map(|skin| {
-            let all_tags_matched = tags.iter().all(|&tag| {
-                let tag_lower = tag.to_lowercase();
-                if tag_lower == "favorite" {
-                    favorites.contains(&skin.name)
-                } else {
-                    skin.name_lower.contains(&tag_lower)
-                        || skin.rarity_lower == tag_lower
-                        || skin.event_lower.contains(&tag_lower)
-                        || skin.year_str.contains(&tag_lower)
-                        || skin.tags_lower.iter().any(|t| t.contains(&tag_lower))
+            // Apply explicit filters
+            if let Some(rarity) = filters.get("rarity") {
+                if skin.rarity_lower != *rarity {
+                    return None;
                 }
-            });
+            }
+            if let Some(event) = filters.get("event") {
+                if !skin.event_lower.contains(event) {
+                    return None;
+                }
+            }
+            if let Some(year) = filters.get("year") {
+                if skin.year_str != *year {
+                    return None;
+                }
+            }
 
-            if !all_tags_matched {
+            // Apply regex if present
+            if let Some(re) = &regex {
+                if !re.is_match(&skin.name_lower) && !re.is_match(&skin.event_lower) {
+                    return None;
+                }
+            }
+
+            // Check favorites
+            if terms.contains("favorite") && !favorites.contains(&skin.name) {
                 return None;
             }
+
+            // Fuzzy match remaining terms
             let mut score = 0;
-            for tag in tags {
-                // Boost exact matches in special fields
-                if skin.rarity_lower == *tag {
+            for term in &terms {
+                if term == "favorite" {
+                    continue;
+                }
+                if skin.rarity_lower == *term {
                     score += 1000;
                 }
-                if skin.year_str == *tag {
+                if skin.year_str == *term {
                     score += 800;
                 }
-                if skin.tags_lower.contains(*tag) {
+                if skin.tags_lower.contains(term) {
                     score += 600;
                 }
-
-                // Fuzzy match scoring
-                if let Some(s) = matcher.fuzzy_match(&skin.name_lower, tag) {
+                if let Some(s) = matcher.fuzzy_match(&skin.name_lower, term) {
                     score += s;
                 }
-                if let Some(s) = matcher.fuzzy_match(&skin.event_lower, tag) {
+                if let Some(s) = matcher.fuzzy_match(&skin.event_lower, term) {
                     score += s;
                 }
             }
-            Some((score, skin))
+            if score > 0 || (!filters.is_empty() && terms.is_empty()) {
+                Some((score, skin))
+            } else {
+                None
+            }
         })
         .collect();
 
