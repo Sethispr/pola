@@ -534,7 +534,7 @@ impl AppState {
                                     format!("[{}] ", binding),
                                     Style::default().fg(D_CYAN),
                                 ),
-                                Span::raw(": "),
+                                Span::styled(": ", Style::default().fg(D_FOREGROUND)),
                                 Span::styled(*description, Style::default().fg(D_FOREGROUND)),
                             ])
                         };
@@ -1301,7 +1301,7 @@ fn render_table_view<B: Backend>(f: &mut Frame<B>, app: &mut AppState, area: Rec
             .begin_symbol(Some("▲"))
             .end_symbol(Some("▼"))
             .track_symbol(Some("│"))
-            .thumb_symbol("▓")
+            .thumb_symbol("█")
             .style(Style::default().fg(D_CYAN))
             .thumb_style(Style::default().fg(D_PINK).bg(D_BACKGROUND));
 
