@@ -2,15 +2,15 @@
 default = "start"
 
 [tasks.fmt]
-description = "Format the code with rustfmt"
+description = "format the code with rustfmt"
 command = "cargo"
 args = ["fmt", "--all"]
 
 [tasks.run]
-description = "Run the project in release mode"
+description = "run the project in release mode"
 command = "cargo"
 args = ["run", "--release"]
 
 [tasks.start]
-description = "Format the code then run the project"
+description = "format the code then run the project"
 dependencies = ["fmt", "run"]
