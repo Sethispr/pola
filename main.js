@@ -621,7 +621,7 @@ const SKIN_COLLECTION = [
     event: "Exquisite Case",
     year: null,
     tags: ["case", "exquisite"],
-    img: https://i.ibb.co/FLYCGZYg/IMG-0940-waifu2x-art-scan-noise3-scale-1.png
+    img: "https://i.ibb.co/FLYCGZYg/IMG-0940-waifu2x-art-scan-noise3-scale-1.png"
   },
   {
     name: "Overseer",
