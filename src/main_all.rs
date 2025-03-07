@@ -3325,34 +3325,46 @@ fn search_skins(
                 }
             }
 
-            // Check favorites
-            if terms.contains("favorite") && !favorites.contains(&skin.name) {
-                return None;
-            }
-
-            // Fuzzy match remaining terms
+            // Score based on terms
             let mut score = 0;
+            let mut matched = false;
+
             for term in &terms {
-                if term == "favorite" {
-                    continue;
+                if term.contains("fav") {
+                    if favorites.contains(&skin.name) {
+                        score += 1000;
+                        matched = true;
+                    }
                 }
-                if skin.rarity_lower == *term {
-                    score += 1000;
-                }
-                if skin.year_str == *term {
+                
+                if !skin.year_str.is_empty() && skin.year_str.contains(term) {
                     score += 800;
+                    matched = true;
                 }
-                if skin.tags_lower.contains(term) {
-                    score += 600;
+
+                for tag in &skin.tags_lower {
+                    if tag.contains(term) {
+                        score += 600;
+                        matched = true;
+                    }
                 }
+
+                // Fuzzy match name and event
                 if let Some(s) = matcher.fuzzy_match(&skin.name_lower, term) {
                     score += s;
+                    matched = true;
                 }
                 if let Some(s) = matcher.fuzzy_match(&skin.event_lower, term) {
                     score += s;
+                    matched = true;
+                }
+                if skin.rarity_lower.contains(term) {
+                    score += 1000;
+                    matched = true;
                 }
             }
-            if score > 0 || (!filters.is_empty() && terms.is_empty()) {
+
+            if matched || (!filters.is_empty() && terms.is_empty()) {
                 Some((score, skin))
             } else {
                 None
