@@ -145,7 +145,7 @@ impl AppState {
             self.results = self.skins.clone();
             self.sort_field = SortField::Name;
             self.sort_descending = false;
-            self.sort_results();
+            self.sort_results(); // Sort by name ascending when empty
 
             let total_pages = self.results.len().div_ceil(self.items_per_page);
             self.current_page = current_page.min(total_pages.saturating_sub(1));
@@ -163,25 +163,26 @@ impl AppState {
             self.suggestion_list.clear();
             self.suggestion_index = 0;
             self.suggestion = None;
-            return;
-        }
-
-        self.results = search_skins(&self.skins, &self.name_map, &self.input, &self.favorites);
-        self.sort_results();
-
-        let total_pages = self.results.len().div_ceil(self.items_per_page);
-        self.current_page = current_page.min(total_pages.saturating_sub(1));
-        let start = self.current_page * self.items_per_page;
-        let end = (start + self.items_per_page).min(self.results.len());
-        let page_items = end - start;
-
-        let new_selection = if selected_index < page_items {
-            Some(selected_index)
         } else {
-            Some(page_items.saturating_sub(1))
-        };
-        self.table_state.select(new_selection);
-        self.update_suggestion();
+            self.results = search_skins(&self.skins, &self.name_map, &self.input, &self.favorites);
+            if self.sort_field != SortField::Name || self.sort_descending {
+                self.sort_results();
+            }
+
+            let total_pages = self.results.len().div_ceil(self.items_per_page);
+            self.current_page = current_page.min(total_pages.saturating_sub(1));
+            let start = self.current_page * self.items_per_page;
+            let end = (start + self.items_per_page).min(self.results.len());
+            let page_items = end - start;
+
+            let new_selection = if selected_index < page_items {
+                Some(selected_index)
+            } else {
+                Some(page_items.saturating_sub(1))
+            };
+            self.table_state.select(new_selection);
+            self.update_suggestion();
+        }
     }
 
     fn toggle_favorite(&mut self) {
