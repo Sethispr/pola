@@ -150,10 +150,9 @@ Blastoff skin given to players on launch week.
 
 ### Exquisite Case (Pinks & Reds)  
 
-Cost: 3200 coins
-
 > [!TIP]  
 > *Exquisite Case skins are often considered more valuable than event case skins.*
+> *1 Exquisite Case costs 3200 coins.*
 
 | Rarity          | Skins                                                                                                                   |
 |-----------------|-------------------------------------------------------------------------------------------------------------------------|
