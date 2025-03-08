@@ -43,7 +43,8 @@ Option 3: You can also install the `pola` package directly using [Cargo](https:/
 
 <https://crates.io/crates/pola>
 
-<br></br>
+---
+
 If you are a developer, contributing is very much appreciated!
 
 <https://sethispr.github.io/> - Simple code documentation of the flow and on focused components/functions
