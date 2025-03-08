@@ -19,7 +19,7 @@
 ## Seasonal Case Skins  
 
 > [!NOTE]  
-> Some skins mentioned here are also obtainable through Exquisite case.  
+> *Some skins listed here are also available in the `Exquisite` case.*
 
 ### Pinks  
 
@@ -57,8 +57,8 @@
 ## Event Skins and Event Bundle Skins  
 
 > [!NOTE]  
-> Each bundle costs 249 RBX, usually 1 teal is worth 2-3 pinks. Newer ones are worth 2-3 reds.  
-> Event seasonal skins are obtained through event tasks or finishing top 100 in leaderboard.  
+> *Bundles cost 249 RBX. Typically, 1 Teal is worth 2 Pinks. or 2-3 Reds for recent bundle skins.*
+> *Event seasonal skins are obtained through event tasks or by finishing top 100 on the leaderboard.*
 
 ### Christmas Event  
 
@@ -108,7 +108,7 @@
 ## Code Redeemed Skins (Teal)  
 
 > [!NOTE]  
-> These skins are not available to all guns.  
+> *These skins are not available to all guns.*
 
 | Skin      | Guns                                          |
 |-----------|-----------------------------------------------|
@@ -127,7 +127,7 @@
 ## Launch Skins (Teal)  
 
 > [!NOTE]  
-> The only current known player with all guns of Blastoff is Iceman_dashe.  
+> *The only known player with all `Blastoff` skins accross all guns is `iceman_dashe`.*
 
 | Skin     | Guns        |
 |----------|-------------|
@@ -142,12 +142,13 @@
 ## Non-event Case Skins  
 
 > [!NOTE]  
-> Some skins mentioned here are also obtainable through event cases, these are noted in brackets beside the name of the skin.  
+> *Some skins listed here are also available in event cases, these are noted in brackets next to the skin name.* 
 
 ### Exquisite Case (Pinks & Reds)  
 
 > [!TIP]  
-> Some people consider exquisite case skins more valuable than event cases.  
+> *Exquisite Case skins are often considered more valuable than event case skins.*
+> *1 Exquisite Case costs 3200 coins*
 
 | Rarity          | Skins                                                                                                                   |
 |-----------------|-------------------------------------------------------------------------------------------------------------------------|
@@ -163,7 +164,8 @@
 ### Normal Shop Cases  
 
 > [!NOTE]  
-> Skins in the Refined case are also found in the Exquisite case.  
+> *Skins in the Refined case are also available in the Exquisite case.*
+> *Refined case costs 800 coins while other listed cases are worth 200*
 
 | Case                       | Pink                        | Red                                                                                   |
 |----------------------------|-----------------------------|---------------------------------------------------------------------------------------|
