@@ -47,7 +47,7 @@ Option 3: You can also install the `pola` package directly using [Cargo](https:/
 
 If you are a developer, contributing is very much appreciated!
 
-<https://sethispr.github.io/> - Simple code documentation of the flow and on focused components/functions
+<https://sethispr.github.io/> Simple code documentation of the flow and on focused components/functions
 
 > [!TIP]
 > If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/pola) or [Skin List](https://github.com/Sethispr/pola/blob/main/.github/SKIN.md)
