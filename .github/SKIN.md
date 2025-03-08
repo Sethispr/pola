@@ -29,7 +29,7 @@
 | <kbd>Birthday Case</kbd>  | Ghostly, Hellfire, Surge (Exquisite)  |
 | <kbd>Easter Case</kbd>    | Spring Growth                         |
 | <kbd>Summer Case</kbd>    | Midsummer, Mystic, Void Lord, Warlord |
-| <kbd>Halloween Case</kbd> | All Hallow's, Anansi, Dusekkkar       |
+| <kbd>Halloween Case</kbd> | All Hallow's, Anansi, Dusekkar       |
 | <kbd>Christmas Case</kbd> | Evergreen, Icycle, Santa              |
 
 <a href="#table-of-contents">
