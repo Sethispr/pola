@@ -107,6 +107,8 @@
 
 ## Code Redeemed Skins (Teal)  
 
+Limited Codes are given out during a gamenight or through social media.
+
 > [!NOTE]  
 > *These skins are not available to all guns.*
 
@@ -124,7 +126,9 @@
 
 ---
 
-## Launch Skins (Teal)  
+## Launch Skins (Teal) 
+
+Blastoff skin given to players on launch week.
 
 > [!NOTE]  
 > *The only known player with all Blastoff skins accross all guns is `iceman_dashe`.*
@@ -146,9 +150,10 @@
 
 ### Exquisite Case (Pinks & Reds)  
 
+Cost: 3200 coins
+
 > [!TIP]  
 > *Exquisite Case skins are often considered more valuable than event case skins.*
-> *1 Exquisite Case costs 3200 coins*
 
 | Rarity          | Skins                                                                                                                   |
 |-----------------|-------------------------------------------------------------------------------------------------------------------------|
