@@ -127,7 +127,7 @@
 ## Launch Skins (Teal)  
 
 > [!NOTE]  
-> *The only known player with all `Blastoff` skins accross all guns is `iceman_dashe`.*
+> *The only known player with all Blastoff skins accross all guns is `iceman_dashe`.*
 
 | Skin     | Guns        |
 |----------|-------------|
@@ -165,7 +165,7 @@
 
 > [!NOTE]  
 > *Skins in the Refined case are also available in the Exquisite case.*
-> *Refined case costs 800 coins while other listed cases are worth 200*
+> *1 Refined case costs 800 coins while other cases costs 200 coins*
 
 | Case                       | Pink                        | Red                                                                                   |
 |----------------------------|-----------------------------|---------------------------------------------------------------------------------------|
