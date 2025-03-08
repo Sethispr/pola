@@ -25,7 +25,7 @@ Option 2: Install the latest stable versions of [Rust](https://www.rust-lang.org
    cargo run --release
    ```
 
-Option 3: You can also install the `pola` package directly using Cargo:
+Option 3: You can also install the `pola` package directly using [Cargo](https://www.rust-lang.org/tools/install):
 
 1. Install the package
 
@@ -42,6 +42,10 @@ Option 3: You can also install the `pola` package directly using Cargo:
 <img src="https://img.shields.io/crates/d/pola" alt="Crates.io Download Badge">
 
 <https://crates.io/crates/pola>
+
+If you are a developer, contributing is very much appreciated
+
+<https://sethispr.github.io/> - simple code documentation of the flow and an overview on focused components/functions
 
 > [!TIP]
 > If installing isn't your thing, feel free to look at the [Online Demo](https://sethispr.github.io/pola) or [Skin List](https://github.com/Sethispr/pola/blob/main/.github/SKIN.md)
