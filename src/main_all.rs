@@ -951,6 +951,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         ])
         .split(f.size());
 
+    // Build the input text with proper spacing and suggestions
     let input_text = if app.input.is_empty() {
         Text::from(Line::from(Span::styled(
             "Type to search skins...",
@@ -958,72 +959,53 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
         )))
     } else {
         let mut line = Line::default();
-        let mut current_token = String::new();
-        let mut current_is_whitespace = false;
+        let input_trimmed = app.input.trim_end();
+        let has_trailing_space = app.input.len() > input_trimmed.len();
+        let parts: Vec<&str> = input_trimmed.split_whitespace().collect();
 
-        for c in app.input.chars() {
-            if c.is_whitespace() {
-                if !current_is_whitespace && !current_token.is_empty() {
-                    let lower_token = current_token.to_lowercase();
-                    let style = get_term_style(&lower_token, &app.all_terms);
-                    line.spans.push(Span::styled(current_token.clone(), style));
-                    current_token.clear();
-                }
-                current_is_whitespace = true;
-                current_token.push(c);
-            } else {
-                if current_is_whitespace && !current_token.is_empty() {
-                    line.spans.push(Span::raw(current_token.clone()));
-                    current_token.clear();
-                }
-                current_is_whitespace = false;
-                current_token.push(c);
+        if has_trailing_space {
+            // Render all parts as complete terms, including the trailing space
+            for part in &parts {
+                let style = get_term_style(&part.to_lowercase(), &app.all_terms);
+                line.spans.push(Span::styled(*part, style));
+                line.spans.push(Span::raw(" "));
             }
-        }
-
-        if !current_token.is_empty() {
-            if current_is_whitespace {
-                line.spans.push(Span::raw(current_token));
-            } else if let Some(suggestion) = &app.suggestion {
-                let last_part = current_token.clone();
-                let last_part_lower = last_part.to_lowercase();
-                let style = get_term_style(&last_part_lower, &app.all_terms);
-                let suggestion_lower = suggestion.to_lowercase();
-
-                if suggestion_lower.contains(&last_part_lower) {
-                    let start_idx = suggestion_lower.find(&last_part_lower).unwrap_or(0);
-                    let end_idx = start_idx + last_part.len();
-
-                    let before_match = &suggestion[..start_idx];
-                    let matched_part = &suggestion[start_idx..end_idx];
-                    let after_match = &suggestion[end_idx..];
-
-                    if !before_match.is_empty() {
+            // No inline suggestion when there's a trailing space (new term starting)
+        } else {
+            // Render all but the last part as complete terms
+            for (i, part) in parts.iter().enumerate() {
+                if i < parts.len() - 1 {
+                    let style = get_term_style(&part.to_lowercase(), &app.all_terms);
+                    line.spans.push(Span::styled(*part, style));
+                    line.spans.push(Span::raw(" "));
+                }
+            }
+            // Handle the last part with a smart suggestion
+            if let Some(last) = parts.last() {
+                let last_lower = last.to_lowercase();
+                let style = get_term_style(&last_lower, &app.all_terms);
+                if let Some(suggestion) = &app.suggestion {
+                    let suggestion_lower = suggestion.to_lowercase();
+                    if suggestion_lower.starts_with(&last_lower) {
+                        let remaining = &suggestion[last.len()..];
                         line.spans.push(Span::styled(
-                            before_match,
-                            Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM),
+                            *last,
+                            style.fg(D_PINK).add_modifier(Modifier::UNDERLINED),
                         ));
-                    }
-                    line.spans.push(Span::styled(
-                        matched_part,
-                        style.fg(D_PINK).add_modifier(Modifier::UNDERLINED),
-                    ));
-                    if !after_match.is_empty() {
-                        line.spans.push(Span::styled(
-                            after_match,
-                            Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM),
-                        ));
+                        if !remaining.is_empty() {
+                            line.spans.push(Span::styled(
+                                remaining,
+                                Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM),
+                            ));
+                        }
+                    } else {
+                        line.spans.push(Span::styled(*last, style));
                     }
                 } else {
-                    line.spans.push(Span::styled(current_token, style));
+                    line.spans.push(Span::styled(*last, style));
                 }
-            } else {
-                let lower_token = current_token.to_lowercase();
-                let style = get_term_style(&lower_token, &app.all_terms);
-                line.spans.push(Span::styled(current_token, style));
             }
         }
-
         Text::from(line)
     };
 
@@ -1037,27 +1019,13 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
 
     f.render_widget(search_input, chunks[0]);
 
+    // Perfect caret placement
     let inner_area = chunks[0].inner(&Margin { horizontal: 1, vertical: 1 });
-    let cursor_x = if app.input.is_empty() {
-        inner_area.x
-    } else if let Some(suggestion) = &app.suggestion {
-        let last_part = app.input.split_whitespace().last().unwrap_or("");
-        let last_part_lower = last_part.to_lowercase();
-        let suggestion_lower = suggestion.to_lowercase();
-
-        if suggestion_lower.contains(&last_part_lower) {
-            let start_idx = suggestion_lower.find(&last_part_lower).unwrap_or(0);
-            let end_idx = start_idx + last_part.len();
-            inner_area.x + end_idx as u16
-        } else {
-            inner_area.x + app.input.len() as u16
-        }
-    } else {
-        inner_area.x + app.input.len() as u16
-    };
+    let cursor_x = inner_area.x + app.input.len() as u16; // Right at the end of what you typed
     let cursor_y = inner_area.y;
     f.set_cursor(cursor_x, cursor_y);
 
+    // Rest of your UI (suggestions list, table, status bar) stays the same
     let suggestions: Vec<ListItem> = app
         .suggestion_list
         .iter()
@@ -1086,7 +1054,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
             if suggestion_lower.contains(&last_part) && !last_part.is_empty() {
                 let start_idx = suggestion_lower.find(&last_part).unwrap_or(0);
                 let end_idx = start_idx + last_part.len();
-
                 let before_match = &t[..start_idx];
                 let matched_part = &t[start_idx..end_idx];
                 let after_match = &t[end_idx..];
@@ -1121,7 +1088,6 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut AppState) {
             };
 
             spans.push(Span::styled(format!(" ({})", count), Style::default().fg(D_FOREGROUND)));
-
             ListItem::new(Line::from(spans))
         })
         .collect();
