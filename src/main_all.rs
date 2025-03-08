@@ -3336,7 +3336,7 @@ fn search_skins(
                         matched = true;
                     }
                 }
-                
+
                 if !skin.year_str.is_empty() && skin.year_str.contains(term) {
                     score += 800;
                     matched = true;
