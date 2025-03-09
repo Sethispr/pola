@@ -126,7 +126,7 @@ Limited Codes are given out during a gamenight or through the Discord Server.
 
 > [!NOTE]  
 > *These skins are not available to all guns.*
-> *Gamenight-released code skins are Bubbles, Pearl and Tin*
+> *Gamenight-released code skins are **Bubbles, Pearl and Tin***
 
 | Skin      | Guns                                          |
 |-----------|-----------------------------------------------|
