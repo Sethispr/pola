@@ -3,15 +3,14 @@
 1. [Seasonal Case Skins](#seasonal-case-skins)  
    - [Pinks](#pinks)  
    - [Reds](#reds)  
-2. [Merged Seasonal Case Rarity Table](#merged-seasonal-case-rarity-table)  
-3. [Event Skins and Event Bundle Skins](#event-skins-and-event-bundle-skins)  
+2. [Event Skins and Event Bundle Skins](#event-skins-and-event-bundle-skins)  
    - [Christmas Event](#christmas-event)  
    - [Easter Event](#easter-event)  
    - [Summer Bundle](#summer-bundle)  
    - [Valentine Bundle](#valentine-bundle)  
-4. [Code Redeemed Skins (Teal)](#code-redeemed-skins-teal)  
-5. [Launch Skins (Teal)](#launch-skins-teal)  
-6. [Non-event Case Skins](#non-event-case-skins)  
+3. [Code Redeemed Skins (Teal)](#code-redeemed-skins-teal)  
+4. [Launch Skins (Teal)](#launch-skins-teal)  
+5. [Non-event Case Skins](#non-event-case-skins)  
    - [Exquisite Case (Pinks & Reds)](#exquisite-case-pinks--reds)  
    - [Normal Shop Cases](#normal-shop-cases)  
      - [Pinks](#pinks-1)
@@ -37,7 +36,7 @@
 
 <a href="#table-of-contents">
    <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
-</a> 
+</a>
 
 ### Reds  
 
@@ -141,11 +140,11 @@ Limited Codes are given out during a gamenight or through the Discord Server.
 
 <a href="#table-of-contents">
    <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
-</a> 
+</a>
 
 ---
 
-## Launch Skins (Teal) 
+## Launch Skins (Teal)
 
 Blastoff skin given to players on launch week.
 
@@ -165,7 +164,7 @@ Blastoff skin given to players on launch week.
 ## Non-event Case Skins  
 
 > [!NOTE]  
-> *Some skins listed here are also available in event cases, these are noted in brackets next to the skin name.* 
+> *Some skins listed here are also available in event cases, these are noted in brackets next to the skin name.*
 
 ### Exquisite Case (Pinks & Reds)  
 
@@ -204,7 +203,7 @@ Blastoff skin given to players on launch week.
 
 <a href="#table-of-contents">
    <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
-</a> 
+</a>
 
 ### Reds
 
