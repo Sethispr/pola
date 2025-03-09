@@ -107,10 +107,11 @@
 
 ## Code Redeemed Skins (Teal)  
 
-Limited Codes are given out during a gamenight or through social media.
+Limited Codes are given out during a gamenight or through the Discord Server.
 
 > [!NOTE]  
 > *These skins are not available to all guns.*
+> *Gamenight-released code skins are Bubbles, Pearl and Tin*
 
 | Skin      | Guns                                          |
 |-----------|-----------------------------------------------|
@@ -184,3 +185,11 @@ Blastoff skin given to players on launch week.
 <a href="#table-of-contents">
    <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
 </a>
+
+- add sources and credits
+- add gamenight tags to code skins
+- add popular skins
+- add special skins (mod, artist, etc)
+- improve back to top functionality
+- logo
+- add descriptions
