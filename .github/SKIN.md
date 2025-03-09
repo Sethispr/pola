@@ -193,3 +193,4 @@ Blastoff skin given to players on launch week.
 - improve back to top functionality
 - logo
 - add descriptions
+- for normal case skins seprate pink and red, add merged but ina detaile summary spoiler button
