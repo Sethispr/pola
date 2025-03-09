@@ -131,7 +131,7 @@ body.light-mode header {
   font-weight: 700;
   color: var(--text-light);
   letter-spacing: 1px;
-  text-transform: uppercase;
+  text-transform: lowercase;
   position: relative;
   display: inline-block;
 }
