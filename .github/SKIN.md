@@ -172,6 +172,33 @@ Blastoff skin given to players on launch week.
 > *Skins in the Refined case are also available in the Exquisite case.*
 > *1 Refined case costs 800 coins while other cases costs 200 coins*
 
+### Pinks
+
+| Case                       | Pink                        |
+|----------------------------|-----------------------------|
+| <kbd>Animal Case</kbd>     | Spider, Unicorn             |
+| <kbd>Camouflage Case</kbd> | Dragon's Forge, Glacial     |
+| <kbd>Future Case</kbd>     | Laser, Orinthan             |
+| <kbd>Material Case</kbd>   | Crystal                     |
+| <kbd>Nature Case</kbd>     | Crystallised, Elven, Molten |
+| <kbd>Pattern Case</kbd>    | Monochrome                  |
+| <kbd>Refined Case</kbd>    | -                           |
+
+### Reds
+
+| Case                       | Red                                                                                   |
+|----------------------------|---------------------------------------------------------------------------------------|
+| <kbd>Animal Case</kbd>     | Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither                           |
+| <kbd>Camouflage Case</kbd> | Chartreuse Periastron, Fallen, Prehistoric, Shadow, Violet Energy                     |
+| <kbd>Future Case</kbd>     | Azure Periastron, Celestial, Galactic, Green Energy, Motherboard, Omega               |
+| <kbd>Material Case</kbd>   | Adurite, Bluesteel, Diamond (Valentine), Golden (Birthday), Wooden                    |
+| <kbd>Nature Case</kbd>     | Autumnal, Beach, Breeze, Earth, Ocean                                                 |
+| <kbd>Pattern Case</kbd>    | Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus                       |
+| <kbd>Refined Case</kbd>    | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
+
+<details>
+<summary>Merged Table</summary>
+
 | Case                       | Pink                        | Red                                                                                   |
 |----------------------------|-----------------------------|---------------------------------------------------------------------------------------|
 | <kbd>Animal Case</kbd>     | Spider, Unicorn             | Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither                           |
@@ -182,19 +209,7 @@ Blastoff skin given to players on launch week.
 | <kbd>Pattern Case</kbd>    | Monochrome                  | Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus                       |
 | <kbd>Refined Case</kbd>    | -                           | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
 
-<summary>
-<detail>Yes</detail>
-| Case                       | Pink                        | Red                                                                                   |
-|----------------------------|-----------------------------|---------------------------------------------------------------------------------------|
-| <kbd>Animal Case</kbd>     | Spider, Unicorn             | Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither                           |
-| <kbd>Camouflage Case</kbd> | Dragon's Forge, Glacial     | Chartreuse Periastron, Fallen, Prehistoric, Shadow, Violet Energy                     |
-| <kbd>Future Case</kbd>     | Laser, Orinthan             | Azure Periastron, Celestial, Galactic, Green Energy, Motherboard, Omega               |
-| <kbd>Material Case</kbd>   | Crystal                     | Adurite, Bluesteel, Diamond (Valentine), Golden (Birthday), Wooden                    |
-| <kbd>Nature Case</kbd>     | Crystallised, Elven, Molten | Autumnal, Beach, Breeze, Earth, Ocean                                                 |
-| <kbd>Pattern Case</kbd>    | Monochrome                  | Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus                       |
-| <kbd>Refined Case</kbd>    | -                           | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
-
-</summary>
+</details>
 
 <a href="#table-of-contents">
    <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
