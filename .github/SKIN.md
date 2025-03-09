@@ -12,7 +12,7 @@
 4. [Launch Skins (Teal)](#launch-skins-teal)  
 5. [Non-event Case Skins](#non-event-case-skins)  
    - [Exquisite Case (Pinks & Reds)](#exquisite-case-pinks--reds)  
-   - [Normal Shop Cases](#normal-shop-cases)  
+   - [Normal Shop Cases](#normal-shop-cases)
 
 ---
 
@@ -23,7 +23,7 @@
 
 ### Pinks  
 
-| Event                     | Skins                                 |
+| Case                      | Skins                                 |
 |---------------------------|---------------------------------------|
 | <kbd>Valentine Case</kbd> | Cupid, Rainbow Periastron (Exquisite) |
 | <kbd>Birthday Case</kbd>  | Ghostly, Hellfire, Surge (Exquisite)  |
@@ -38,7 +38,7 @@
 
 ### Reds  
 
-| Event                     | Skins                                                                                                     |
+| Case                      | Skins                                                                                                     |
 |---------------------------|-----------------------------------------------------------------------------------------------------------|
 | <kbd>Valentine Case</kbd> | Crimson Periastron, Heartsong, Ivory Periastron (Exquisite), Diamond (Exquisite), Epicredness (Exquisite) |
 | <kbd>Birthday Case</kbd>  | Epicblueness (Exquisite), Golden (Exquisite), Grimgold Periastron                                         |
@@ -199,6 +199,10 @@ Blastoff skin given to players on launch week.
 | <kbd>Pattern Case</kbd>    | Monochrome                  |
 | <kbd>Refined Case</kbd>    | -                           |
 
+<a href="#table-of-contents">
+   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
+</a> 
+
 ### Reds
 
 | Case                       | Red Skins                                                                             |
@@ -229,12 +233,3 @@ Blastoff skin given to players on launch week.
 <a href="#table-of-contents">
    <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
 </a>
-
-- add sources and credits
-- add gamenight tags to code skins
-- add popular skins
-- add special skins (mod, artist, etc)
-- improve back to top functionality
-- logo
-- add descriptions
-- for normal case skins seprate pink and red, add merged but ina detaile summary spoiler button
