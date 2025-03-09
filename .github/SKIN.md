@@ -3,16 +3,19 @@
 1. [Seasonal Case Skins](#seasonal-case-skins)  
    - [Pinks](#pinks)  
    - [Reds](#reds)  
-2. [Event Skins and Event Bundle Skins](#event-skins-and-event-bundle-skins)  
+2. [Merged Seasonal Case Rarity Table](#merged-seasonal-case-rarity-table)  
+3. [Event Skins and Event Bundle Skins](#event-skins-and-event-bundle-skins)  
    - [Christmas Event](#christmas-event)  
    - [Easter Event](#easter-event)  
    - [Summer Bundle](#summer-bundle)  
    - [Valentine Bundle](#valentine-bundle)  
-3. [Code Redeemed Skins (Teal)](#code-redeemed-skins-teal)  
-4. [Launch Skins (Teal)](#launch-skins-teal)  
-5. [Non-event Case Skins](#non-event-case-skins)  
+4. [Code Redeemed Skins (Teal)](#code-redeemed-skins-teal)  
+5. [Launch Skins (Teal)](#launch-skins-teal)  
+6. [Non-event Case Skins](#non-event-case-skins)  
    - [Exquisite Case (Pinks & Reds)](#exquisite-case-pinks--reds)  
-   - [Normal Shop Cases](#normal-shop-cases)
+   - [Normal Shop Cases](#normal-shop-cases)  
+     - [Pinks](#pinks-1)
+     - [Reds](#reds-1)
 
 ---
 
@@ -23,13 +26,13 @@
 
 ### Pinks  
 
-| Case                      | Skins                                 |
+| Case                      | Pink Skins                            |
 |---------------------------|---------------------------------------|
 | <kbd>Valentine Case</kbd> | Cupid, Rainbow Periastron (Exquisite) |
 | <kbd>Birthday Case</kbd>  | Ghostly, Hellfire, Surge (Exquisite)  |
 | <kbd>Easter Case</kbd>    | Spring Growth                         |
 | <kbd>Summer Case</kbd>    | Midsummer, Mystic, Void Lord, Warlord |
-| <kbd>Halloween Case</kbd> | All Hallow's, Anansi, Dusekkar       |
+| <kbd>Halloween Case</kbd> | All Hallow's, Anansi, Dusekkar        |
 | <kbd>Christmas Case</kbd> | Evergreen, Icycle, Santa              |
 
 <a href="#table-of-contents">
@@ -38,7 +41,7 @@
 
 ### Reds  
 
-| Case                      | Skins                                                                                                     |
+| Case                      | Red Skins                                                                                                 |
 |---------------------------|-----------------------------------------------------------------------------------------------------------|
 | <kbd>Valentine Case</kbd> | Crimson Periastron, Heartsong, Ivory Periastron (Exquisite), Diamond (Exquisite), Epicredness (Exquisite) |
 | <kbd>Birthday Case</kbd>  | Epicblueness (Exquisite), Golden (Exquisite), Grimgold Periastron                                         |
@@ -89,7 +92,7 @@
 
 ### Easter Event  
 
-| Rarity          | Skins                                               |
+| Rarity          | Pink Skins                                          |
 |-----------------|-----------------------------------------------------|
 | <kbd>Pink</kbd> | Azurite (2022), Corrupted (2023), Sun Slayer (2024) |
 
@@ -99,7 +102,7 @@
 
 ### Summer Bundle  
 
-| Year            | Rarity          | Skins                                                  |
+| Year            | Rarity          | Teal Skins                                             |
 |-----------------|-----------------|--------------------------------------------------------|
 | <kbd>2023</kbd> | <kbd>Teal</kbd> | Cartoony Rainbow, Cyberlight, Frostburn, Inferno Angel |
 | <kbd>2024</kbd> | <kbd>Teal</kbd> | Azure Dragon, Darkness, Vilethorn, Winged              |
@@ -110,7 +113,7 @@
 
 ### Valentine Bundle  
 
-| Year            | Rarity           | Skins                                      |
+| Year            | Rarity           | Teal Skins                                 |
 |-----------------|------------------|--------------------------------------------|
 | <kbd>2025</kbd> | <kbd>Teal</kbd>  | Cupid's Revenge, Love Scepter, Wicked Rose |
 
