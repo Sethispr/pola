@@ -215,6 +215,10 @@ Blastoff skin given to players on launch week.
 | <kbd>Pattern Case</kbd>    | Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus                       |
 | <kbd>Refined Case</kbd>    | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
 
+<a href="#table-of-contents">
+   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
+</a>
+<br></br>
 <details>
 <summary>Click to Show Merged Table</summary>
 
@@ -229,7 +233,3 @@ Blastoff skin given to players on launch week.
 | <kbd>Refined Case</kbd>    | -                           | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
 
 </details>
-
-<a href="#table-of-contents">
-   <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
-</a>
