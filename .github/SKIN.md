@@ -52,6 +52,21 @@
    <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
 </a>
 
+<details>
+<summary>Click to Show Merged Table</summary>
+
+| Event                     | Pink Skins                            | Red Skins                                                                                                 |
+|---------------------------|---------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| <kbd>Valentine Case</kbd> | Cupid, Rainbow Periastron (Exquisite) | Crimson Periastron, Heartsong, Ivory Periastron (Exquisite), Diamond (Exquisite), Epicredness (Exquisite) |
+| <kbd>Birthday Case</kbd>  | Ghostly, Hellfire, Surge (Exquisite)  | Epicblueness (Exquisite), Golden (Exquisite), Grimgold Periastron                                         |
+| <kbd>Easter Case</kbd>    | Spring Growth                         | Amethyst Periastron, Bunny, Guitar, Joyful Periastron, Noir Periastron                                    |
+| <kbd>Summer Case</kbd>    | Midsummer, Mystic, Void Lord, Warlord | Cythrex, Dog, Fire Wyvern, Ghostfire, Inscription, Mummy, Retrowave, Shikai                               |
+| <kbd>Halloween Case</kbd> | All Hallow's, Anansi, Dusekkar        | Count, Dracula, Hallowing, Orange Energy, Pumpkin                                                         |
+| <kbd>Christmas Case</kbd> | Evergreen, Icycle, Santa              | Candy Energy, Festive Periastron, Snowflake, Snowman                                                      |
+| <kbd>April Fool's</kbd>   | -                                     | 33% of Reds (No Dagger)                                                                                   |
+
+</details>
+
 ---
 
 ## Event Skins and Event Bundle Skins  
@@ -174,7 +189,7 @@ Blastoff skin given to players on launch week.
 
 ### Pinks
 
-| Case                       | Pink                        |
+| Case                       | Pink Skins                  |
 |----------------------------|-----------------------------|
 | <kbd>Animal Case</kbd>     | Spider, Unicorn             |
 | <kbd>Camouflage Case</kbd> | Dragon's Forge, Glacial     |
@@ -186,7 +201,7 @@ Blastoff skin given to players on launch week.
 
 ### Reds
 
-| Case                       | Red                                                                                   |
+| Case                       | Red Skins                                                                             |
 |----------------------------|---------------------------------------------------------------------------------------|
 | <kbd>Animal Case</kbd>     | Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither                           |
 | <kbd>Camouflage Case</kbd> | Chartreuse Periastron, Fallen, Prehistoric, Shadow, Violet Energy                     |
@@ -197,9 +212,9 @@ Blastoff skin given to players on launch week.
 | <kbd>Refined Case</kbd>    | Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk |
 
 <details>
-<summary>Merged Table</summary>
+<summary>Click to Show Merged Table</summary>
 
-| Case                       | Pink                        | Red                                                                                   |
+| Case                       | Pink Skins                  | Red Skins                                                                             |
 |----------------------------|-----------------------------|---------------------------------------------------------------------------------------|
 | <kbd>Animal Case</kbd>     | Spider, Unicorn             | Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither                           |
 | <kbd>Camouflage Case</kbd> | Dragon's Forge, Glacial     | Chartreuse Periastron, Fallen, Prehistoric, Shadow, Violet Energy                     |
