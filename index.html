@@ -1,160 +1,649 @@
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Skin Search</title>
-  <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/fuzzysort@2.0.4/fuzzysort.min.js" defer></script>
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-  <meta name="description" content="Search and filter for skins with this interactive app">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POLA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body>
-  <div class="app-container">
-    <div class="search-container">
-      <div class="input-wrapper">
-        <div class="search-icon">
-          <i class="ri-search-line"></i>
+    <div class="gradient-overlay"></div>
+    
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>POLA</h1>
+            </div>
+            <nav>
+                <button id="theme-toggle" aria-label="Toggle theme">
+                    <i data-feather="moon"></i>
+                </button>
+                <button id="menu-toggle" aria-label="Toggle menu">
+                    <i data-feather="menu"></i>
+                </button>
+            </nav>
         </div>
-        <input type="text" id="search-input" placeholder="Search skins by name, rarity, event...">
-        <div class="suggestions-container"></div>
-        <div class="clear-icon">
-          <i class="ri-close-line"></i>
+    </header>
+
+    <div class="mobile-nav">
+        <div class="mobile-nav-content">
+            <ul class="mobile-toc"></ul>
         </div>
-      </div>
-      <div class="toggle-favorites-container">
-        <button id="toggle-favorites" class="qol-btn" title="Toggle Favorites (Alt+F)">
-          <i class="ri-star-line"></i> <span>Favorites</span>
-        </button>
-        <button id="filter-btn" class="qol-btn" title="Filters (Alt+Z)">
-          <i class="ri-filter-2-line"></i> <span>Filters</span>
-        </button>
-        <button id="settings-btn" class="qol-btn" title="Themes (Alt+S)">
-          <i class="ri-palette-line"></i> <span>Themes</span>
-        </button>
-        <button id="help-btn" class="qol-btn" title="Help (Alt+H)">
-          <i class="ri-information-line"></i> <span>Help</span>
-        </button>
-        <button id="copy-table" class="qol-btn" title="Copy Table (Alt+C)">
-          <i class="ri-clipboard-line"></i> <span>Copy</span>
-        </button>
-        <button id="toggle-details" class="qol-btn" title="Toggle Details Panel (Alt+T)">
-          <i class="ri-eye-line"></i> <span>Details</span>
-        </button>
-      </div>
     </div>
-    <!-- Active filters will appear here -->
-    <div id="active-filters" class="active-filters"></div>
-    <div id="search-stats"></div>
+    
+    <main>
+        <aside class="sidebar">
+            <div class="sidebar-sticky">
+                <div class="search-container">
+                    <div class="search-icon">
+                        <i data-feather="search"></i>
+                    </div>
+                    <input type="text" id="search-input" placeholder="Search skins...">
+                </div>
+                <div class="toc-container">
+                    <h2>Table of Contents</h2>
+                    <ul class="toc">
+                        <li>
+                            <a href="#seasonal-case-skins">Seasonal Case Skins</a>
+                            <ul>
+                                <li><a href="#pinks">Pinks</a></li>
+                                <li><a href="#reds">Reds</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#event-skins">Event Skins and Bundles</a>
+                            <ul>
+                                <li><a href="#christmas-event">Christmas Event</a></li>
+                                <li><a href="#easter-event">Easter Event</a></li>
+                                <li><a href="#summer-bundle">Summer Bundle</a></li>
+                                <li><a href="#valentine-bundle">Valentine Bundle</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#code-redeemed-skins">Code Redeemed Skins</a></li>
+                        <li><a href="#launch-skins">Launch Skins</a></li>
+                        <li>
+                            <a href="#non-event-case-skins">Non-event Case Skins</a>
+                            <ul>
+                                <li><a href="#exquisite-case">Exquisite Case</a></li>
+                                <li>
+                                    <a href="#normal-shop-cases">Normal Shop Cases</a>
+                                    <ul>
+                                        <li><a href="#pinks-1">Pinks</a></li>
+                                        <li><a href="#reds-1">Reds</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
 
-    <div class="main-content">
-      <div class="results-container">
-        <!-- Top pagination and stats will appear here -->
-        <div class="table-header"></div>
-        <table id="results-table">
-          <thead>
-            <tr>
-              <th class="fav-header"><i class="ri-star-line"></i></th>
-              <th data-sort="name">Name</th>
-              <th data-sort="rarity">Rarity</th>
-              <th data-sort="event">Event</th>
-              <th data-sort="year">Year</th>
-              <th data-sort="tags">Tags</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+        <div class="content">
+            <section id="seasonal-case-skins" class="section-card">
+                <div class="section-header">
+                    <h2>Seasonal Case Skins</h2>
+                </div>
+                <div class="note">
+                    <div class="note-icon"><i data-feather="info"></i></div>
+                    <p>Some skins listed here are also available in the <code>Exquisite</code> case.</p>
+                </div>
 
-      <div class="details-panel" id="skin-details">
-      </div>
-    </div>
+                <div id="pinks" class="subsection">
+                    <h3><span class="rarity pink">Pinks</span></h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Case</th>
+                                    <th>Pink Skins</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><kbd>Valentine Case</kbd></td>
+                                    <td>Cupid, Rainbow Periastron <span class="tag exquisite">Exquisite</span></td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>Birthday Case</kbd></td>
+                                    <td>Ghostly, Hellfire, Surge <span class="tag exquisite">Exquisite</span></td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>Easter Case</kbd></td>
+                                    <td>Spring Growth</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>Summer Case</kbd></td>
+                                    <td>Midsummer, Mystic, Void Lord, Warlord</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>Halloween Case</kbd></td>
+                                    <td>All Hallow's, Anansi, Dusekkar</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>Christmas Case</kbd></td>
+                                    <td>Evergreen, Icycle, Santa</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-    <!-- Bottom Pagination Controls - REMOVED -->
-    <div id="pagination-controls" class="pagination-controls" style="display:none;"></div>
+                <div id="reds" class="subsection">
+                    <h3><span class="rarity red">Reds</span></h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Case</th>
+                                    <th>Red Skins</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><kbd>Valentine Case</kbd></td>
+                                    <td>Crimson Periastron, Heartsong, Ivory Periastron <span class="tag exquisite">Exquisite</span>, Diamond <span class="tag exquisite">Exquisite</span>, Epicredness <span class="tag exquisite">Exquisite</span></td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>Birthday Case</kbd></td>
+                                    <td>Epicblueness <span class="tag exquisite">Exquisite</span>, Golden <span class="tag exquisite">Exquisite</span>, Grimgold Periastron</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>April Fool's</kbd></td>
+                                    <td>33% of Reds (No Dagger)</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>Easter Case</kbd></td>
+                                    <td>Amethyst Periastron, Bunny, Guitar, Joyful Periastron, Noir Periastron</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>Summer Case</kbd></td>
+                                    <td>Cythrex, Dog, Fire Wyvern, Ghostfire, Inscription, Mummy, Retrowave, Shikai</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>Halloween Case</kbd></td>
+                                    <td>Count, Dracula, Hallowing, Orange Energy, Pumpkin</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>Christmas Case</kbd></td>
+                                    <td>Candy Energy, Festive Periastron, Snowflake, Snowman</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="expandable-section">
+                        <button class="expandable-toggle">
+                            <i data-feather="plus-circle"></i>
+                            <span>Show Merged Table</span>
+                        </button>
+                        <div class="expandable-content">
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Event</th>
+                                            <th>Pink Skins</th>
+                                            <th>Red Skins</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><kbd>Valentine Case</kbd></td>
+                                            <td>Cupid, Rainbow Periastron <span class="tag exquisite">Exquisite</span></td>
+                                            <td>Crimson Periastron, Heartsong, Ivory Periastron <span class="tag exquisite">Exquisite</span>, Diamond <span class="tag exquisite">Exquisite</span>, Epicredness <span class="tag exquisite">Exquisite</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><kbd>Birthday Case</kbd></td>
+                                            <td>Ghostly, Hellfire, Surge <span class="tag exquisite">Exquisite</span></td>
+                                            <td>Epicblueness <span class="tag exquisite">Exquisite</span>, Golden <span class="tag exquisite">Exquisite</span>, Grimgold Periastron</td>
+                                        </tr>
+                                        <tr>
+                                            <td><kbd>Easter Case</kbd></td>
+                                            <td>Spring Growth</td>
+                                            <td>Amethyst Periastron, Bunny, Guitar, Joyful Periastron, Noir Periastron</td>
+                                        </tr>
+                                        <tr>
+                                            <td><kbd>Summer Case</kbd></td>
+                                            <td>Midsummer, Mystic, Void Lord, Warlord</td>
+                                            <td>Cythrex, Dog, Fire Wyvern, Ghostfire, Inscription, Mummy, Retrowave, Shikai</td>
+                                        </tr>
+                                        <tr>
+                                            <td><kbd>Halloween Case</kbd></td>
+                                            <td>All Hallow's, Anansi, Dusekkar</td>
+                                            <td>Count, Dracula, Hallowing, Orange Energy, Pumpkin</td>
+                                        </tr>
+                                        <tr>
+                                            <td><kbd>Christmas Case</kbd></td>
+                                            <td>Evergreen, Icycle, Santa</td>
+                                            <td>Candy Energy, Festive Periastron, Snowflake, Snowman</td>
+                                        </tr>
+                                        <tr>
+                                            <td><kbd>April Fool's</kbd></td>
+                                            <td>-</td>
+                                            <td>33% of Reds (No Dagger)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-  </div>
+            <section id="event-skins" class="section-card">
+                <div class="section-header">
+                    <h2>Event Skins and Event Bundle Skins</h2>
+                </div>
+                <div class="note">
+                    <div class="note-icon"><i data-feather="info"></i></div>
+                    <p>Bundles cost 249 RBX. Typically, 1 Teal is worth 2 Pinks. or 2-3 Reds for recent bundle skins.<br>
+                    Event seasonal skins are obtained through event tasks or by finishing top 100 on the leaderboard.</p>
+                </div>
 
-  <!-- Back-To-Top Button - REMOVED -->
-  <!-- <button id="back-to-top" class="back-to-top" title="Back to top">
-    <i class="ri-arrow-up-line"></i>
-  </button> -->
+                <div id="christmas-event" class="subsection">
+                    <h3>Christmas Event</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rarity</th>
+                                    <th>Skins</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><kbd class="red">Red</kbd></td>
+                                    <td>Redmaster, Yellowflame (2022)</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd class="pink">Pink</kbd></td>
+                                    <td>Golden Rod, Whisper (2022)</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd class="teal">Teal</kbd></td>
+                                    <td>Gingerblade (2022), Candy Cane (2023), Iceblade (2024)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-  <div id="help-modal" class="help-modal">
-    <div class="help-modal-content">
-      <button id="help-modal-close" class="help-modal-close">
-        <i class="ri-close-line"></i>
-      </button>
-      <h2>Keyboard Shortcuts</h2>
-      <ul>
-        <li><strong>/</strong>: Focus the search input</li>
-        <li><strong>Arrow Up/Down</strong>: Navigate search results</li>
-        <li><strong>Tab</strong>: Accept first suggestion</li>
-        <li><strong>Esc</strong>: Clear search input</li>
-        <li><strong>Alt+C</strong>: Copy table contents</li>
-        <li><strong>Alt+T</strong>: Toggle details panel</li>
-        <li><strong>Alt+L</strong>: Toggle light/dark theme</li>
-        <li><strong>Alt+F</strong>: Toggle favorites</li>
-        <li><strong>Alt+X</strong>: Clear search</li>
-        <li><strong>Alt+H</strong>: Show help</li>
-      </ul>
-    </div>
-  </div>
+                <div id="easter-event" class="subsection">
+                    <h3>Easter Event</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rarity</th>
+                                    <th>Skins</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><kbd class="pink">Pink</kbd></td>
+                                    <td>Azurite (2022), Corrupted (2023), Sun Slayer (2024)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-  <!-- Filter Modal -->
-  <div id="filter-modal" class="filter-modal">
-    <div class="filter-modal-content">
-      <button id="filter-modal-close" class="filter-modal-close">
-        <i class="ri-close-line"></i>
-      </button>
-      <h2>Filter Skins</h2>
-      <p>Click tags to cycle through: neutral, include, exclude.</p>
-      
-      <h3>Tag Filters</h3>
-      <div id="filter-tags-container" class="filter-tags-container"></div>
-      
-      <h3>Rarity Filters</h3>
-      <div id="filter-rarities-container" class="filter-tags-container"></div>
-      
-      <h3>Year Filters</h3>
-      <div id="filter-years-container" class="filter-tags-container"></div>
-      
-      <h3>Case Filters</h3>
-      <div id="filter-cases-container" class="filter-tags-container"></div>
-      
-      <h3>Event Filters</h3>
-      <div id="filter-events-container" class="filter-tags-container"></div>
-      
-      <div class="filter-modal-actions">
-        <button id="clear-all-filters" class="qol-btn">
-          <i class="ri-format-clear"></i> <span>Clear All</span>
-        </button>
-        <button id="cancel-filters" class="qol-btn">
-          <i class="ri-close-line"></i> <span>Close</span>
-        </button>
-      </div>
-    </div>
-  </div>
+                <div id="summer-bundle" class="subsection">
+                    <h3>Summer Bundle</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Rarity</th>
+                                    <th>Skins</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><kbd>2023</kbd></td>
+                                    <td><kbd class="teal">Teal</kbd></td>
+                                    <td>Cartoony Rainbow, Cyberlight, Frostburn, Inferno Angel</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd>2024</kbd></td>
+                                    <td><kbd class="teal">Teal</kbd></td>
+                                    <td>Azure Dragon, Darkness, Vilethorn, Winged</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-  <!-- Settings Modal -->
-  <div id="settings-modal" class="settings-modal">
-    <div class="settings-modal-content">
-      <button id="settings-modal-close" class="settings-modal-close">
-        <i class="ri-close-line"></i>
-      </button>
-      <h2>Themes</h2>
-      
-      <div class="settings-section">
-        <h3>Theme Selection</h3>
-        <p>Choose a color theme for the application.</p>
-        <div id="theme-options" class="theme-options">
-          <!-- Theme options will be generated here -->
+                <div id="valentine-bundle" class="subsection">
+                    <h3>Valentine Bundle</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Rarity</th>
+                                    <th>Skins</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><kbd>2025</kbd></td>
+                                    <td><kbd class="teal">Teal</kbd></td>
+                                    <td>Cupid's Revenge, Love Scepter, Wicked Rose</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="code-redeemed-skins" class="section-card">
+                <div class="section-header">
+                    <h2>Code Redeemed Skins (Teal)</h2>
+                </div>
+                <p>Limited Codes are given out during a gamenight or through the Discord Server.</p>
+                <div class="note">
+                    <div class="note-icon"><i data-feather="info"></i></div>
+                    <p>These skins are not available to all guns.<br>
+                    Gamenight-released code skins are <strong>Bubbles, Pearl and Tin</strong></p>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Skin</th>
+                                <th>Guns</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Bubbles</td>
+                                <td>SMG, Shotgun, Revolver only</td>
+                            </tr>
+                            <tr>
+                                <td>Butter</td>
+                                <td>Dagger</td>
+                            </tr>
+                            <tr>
+                                <td>Fireworks</td>
+                                <td>All (including dagger) except SMG, AR, Raygun</td>
+                            </tr>
+                            <tr>
+                                <td>Pearl</td>
+                                <td>AR, Shotgun, Raygun only</td>
+                            </tr>
+                            <tr>
+                                <td>Tin</td>
+                                <td>Atomic, Shotgun only</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="launch-skins" class="section-card">
+                <div class="section-header">
+                    <h2>Launch Skins (Teal)</h2>
+                </div>
+                <p>Blastoff skin given to players on launch week.</p>
+                <div class="note">
+                    <div class="note-icon"><i data-feather="info"></i></div>
+                    <p>The only known player with all Blastoff skins accross all guns is <code>iceman_dashe</code>.</p>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Skin</th>
+                                <th>Guns</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Blastoff</td>
+                                <td>Pistol only</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="non-event-case-skins" class="section-card">
+                <div class="section-header">
+                    <h2>Non-event Case Skins</h2>
+                </div>
+                <div class="note">
+                    <div class="note-icon"><i data-feather="info"></i></div>
+                    <p>Some skins listed here are also available in event cases, these are noted in brackets next to the skin name.</p>
+                </div>
+
+                <div id="exquisite-case" class="subsection">
+                    <h3>Exquisite Case (Pinks & Reds)</h3>
+                    <div class="tip">
+                        <div class="tip-icon"><i data-feather="award"></i></div>
+                        <p>Exquisite Case skins are often considered more valuable than event case skins.<br>
+                        1 Exquisite Case costs 3200 coins.</p>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rarity</th>
+                                    <th>Skins</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><kbd class="pink">Pink</kbd></td>
+                                    <td>Behemoth, Blizzard, Crescendo, Demon, Overseer, Rainbow Periastron (Valentine), Redcliff, Skeletal, Telamonster, Unseen</td>
+                                </tr>
+                                <tr>
+                                    <td><kbd class="red">Red</kbd></td>
+                                    <td>Bombastic, Crimsonwrath, Sanctum, Surge (Birthday)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="normal-shop-cases" class="subsection">
+                    <h3>Normal Shop Cases</h3>
+                    <div class="note">
+                        <div class="note-icon"><i data-feather="info"></i></div>
+                        <p>Skins in the Refined case are also available in the Exquisite case.<br>
+                        1 Refined case costs 800 coins while other cases costs 200 coins</p>
+                    </div>
+
+                    <div id="pinks-1" class="subsubsection">
+                        <h4><span class="rarity pink">Pinks</span></h4>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Case</th>
+                                        <th>Pink Skins</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><kbd>Animal Case</kbd></td>
+                                        <td>Spider, Unicorn</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Camouflage Case</kbd></td>
+                                        <td>Dragon's Forge, Glacial</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Future Case</kbd></td>
+                                        <td>Laser, Orinthan</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Material Case</kbd></td>
+                                        <td>Crystal</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Nature Case</kbd></td>
+                                        <td>Crystallised, Elven, Molten</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Pattern Case</kbd></td>
+                                        <td>Monochrome</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Refined Case</kbd></td>
+                                        <td>-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="reds-1" class="subsubsection">
+                        <h4><span class="rarity red">Reds</span></h4>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Case</th>
+                                        <th>Red Skins</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><kbd>Animal Case</kbd></td>
+                                        <td>Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Camouflage Case</kbd></td>
+                                        <td>Chartreuse Periastron, Fallen, Prehistoric, Shadow, Violet Energy</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Future Case</kbd></td>
+                                        <td>Azure Periastron, Celestial, Galactic, Green Energy, Motherboard, Omega</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Material Case</kbd></td>
+                                        <td>Adurite, Bluesteel, Diamond (Valentine), Golden (Birthday), Wooden</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Nature Case</kbd></td>
+                                        <td>Autumnal, Beach, Breeze, Earth, Ocean</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Pattern Case</kbd></td>
+                                        <td>Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus</td>
+                                    </tr>
+                                    <tr>
+                                        <td><kbd>Refined Case</kbd></td>
+                                        <td>Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="expandable-section">
+                            <button class="expandable-toggle">
+                                <i data-feather="plus-circle"></i>
+                                <span>Show Merged Table</span>
+                            </button>
+                            <div class="expandable-content">
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Case</th>
+                                                <th>Pink Skins</th>
+                                                <th>Red Skins</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><kbd>Animal Case</kbd></td>
+                                                <td>Spider, Unicorn</td>
+                                                <td>Bacon, Ivory Periastron (Valentine), Salmon, Shark, Slither</td>
+                                            </tr>
+                                            <tr>
+                                                <td><kbd>Camouflage Case</kbd></td>
+                                                <td>Dragon's Forge, Glacial</td>
+                                                <td>Chartreuse Periastron, Fallen, Prehistoric, Shadow, Violet Energy</td>
+                                            </tr>
+                                            <tr>
+                                                <td><kbd>Future Case</kbd></td>
+                                                <td>Laser, Orinthan</td>
+                                                <td>Azure Periastron, Celestial, Galactic, Green Energy, Motherboard, Omega</td>
+                                            </tr>
+                                            <tr>
+                                                <td><kbd>Material Case</kbd></td>
+                                                <td>Crystal</td>
+                                                <td>Adurite, Bluesteel, Diamond (Valentine), Golden (Birthday), Wooden</td>
+                                            </tr>
+                                            <tr>
+                                                <td><kbd>Nature Case</kbd></td>
+                                                <td>Crystallised, Elven, Molten</td>
+                                                <td>Autumnal, Beach, Breeze, Earth, Ocean</td>
+                                            </tr>
+                                            <tr>
+                                                <td><kbd>Pattern Case</kbd></td>
+                                                <td>Monochrome</td>
+                                                <td>Epicblueness (Birthday), Epicredness (Valentine), Relic, Sorcus</td>
+                                            </tr>
+                                            <tr>
+                                                <td><kbd>Refined Case</kbd></td>
+                                                <td>-</td>
+                                                <td>Archon, Breaker, Divine, Enforcer, Frosted, Hunter, Neon, Pharaoh, Skyward, Steampunk</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
-      </div>
-      
-    </div>
-  </div>
+    </main>
 
-  <script src="main.js" defer></script>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>POLA</h3>
+                <p>A comprehensive guide to all available skins and their sources</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#seasonal-case-skins">Seasonal Cases</a></li>
+                    <li><a href="#event-skins">Event Skins</a></li>
+                    <li><a href="#non-event-case-skins">Shop Cases</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <div class="social-links">
+                    <a href="#" aria-label="Discord">
+                        <i data-feather="message-circle"></i>
+                    </a>
+                    <a href="https://github.com/sethispr/pola" aria-label="GitHub">
+                        <i data-feather="github"></i>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <i data-feather="twitter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p> 2024 POLA. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
