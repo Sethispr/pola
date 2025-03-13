@@ -137,6 +137,210 @@ impl AppState {
         }
     }
 
+    fn show_statistics<B: Backend>(&mut self, terminal: &mut Terminal<B>) -> io::Result<()> {
+        // Calculate statistics
+        let total_skins = self.skins.len();
+        let favorite_skins = self.favorites.len();
+
+        // Skins by rarity
+        let mut rarity_counts: HashMap<String, usize> = HashMap::new();
+        for skin in &self.skins {
+            *rarity_counts.entry(skin.rarity_lower.clone()).or_insert(0) += 1;
+        }
+        let mut rarity_vec: Vec<(String, usize)> = rarity_counts.into_iter().collect();
+        rarity_vec.sort_by(|a, b| a.0.cmp(&b.0)); // Sort alphabetically by rarity
+
+        // Skins by event
+        let mut event_counts: HashMap<String, usize> = HashMap::new();
+        for skin in &self.skins {
+            *event_counts.entry(skin.event_lower.clone()).or_insert(0) += 1;
+        }
+        let mut event_vec: Vec<(String, usize)> = event_counts.into_iter().collect();
+        event_vec.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0))); // Sort by count descending, then alphabetically
+
+        // Skins by year
+        let mut year_counts: HashMap<String, usize> = HashMap::new();
+        for skin in &self.skins {
+            let year_key = if skin.year_str.is_empty() {
+                "No Year".to_string()
+            } else {
+                skin.year_str.clone()
+            };
+            *year_counts.entry(year_key).or_insert(0) += 1;
+        }
+        let mut year_vec: Vec<(String, usize)> = year_counts.into_iter().collect();
+        year_vec.sort_by(|a, b| {
+            if a.0 == "No Year" {
+                std::cmp::Ordering::Greater
+            } else if b.0 == "No Year" {
+                std::cmp::Ordering::Less
+            } else {
+                a.0.parse::<u32>().unwrap_or(0).cmp(&b.0.parse::<u32>().unwrap_or(0))
+            }
+        }); // Sort years numerically, "No Year" last
+
+        // Tags
+        let mut tag_counts: HashMap<String, usize> = HashMap::new();
+        for skin in &self.skins {
+            for tag in &skin.tags_lower {
+                *tag_counts.entry(tag.clone()).or_insert(0) += 1;
+            }
+        }
+        let mut tag_vec: Vec<(String, usize)> = tag_counts.into_iter().collect();
+        tag_vec.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0))); // Sort by count descending, then alphabetically
+
+        // Build list items
+        let mut items: Vec<ListItem> = Vec::new();
+
+        // General section
+        items.push(ListItem::new(Span::styled(
+            "General",
+            Style::default().fg(D_RED).add_modifier(Modifier::BOLD),
+        )));
+        items.push(ListItem::new(Span::styled(
+            format!("Total Skins: {}", total_skins),
+            Style::default().fg(D_YELLOW),
+        )));
+        items.push(ListItem::new(Span::styled(
+            format!("Favorite Skins: {}", favorite_skins),
+            Style::default().fg(D_YELLOW),
+        )));
+
+        // By Rarity section
+        items.push(ListItem::new(Span::styled(
+            "By Rarity",
+            Style::default().fg(D_RED).add_modifier(Modifier::BOLD),
+        )));
+        for (rarity, count) in &rarity_vec {
+            items.push(ListItem::new(Span::styled(
+                format!("{}: {}", rarity, count),
+                Style::default().fg(D_YELLOW),
+            )));
+        }
+
+        // By Event section
+        items.push(ListItem::new(Span::styled(
+            "By Event",
+            Style::default().fg(D_RED).add_modifier(Modifier::BOLD),
+        )));
+        for (event, count) in &event_vec {
+            items.push(ListItem::new(Span::styled(
+                format!("{}: {}", event, count),
+                Style::default().fg(D_YELLOW),
+            )));
+        }
+
+        // By Year section
+        items.push(ListItem::new(Span::styled(
+            "By Year",
+            Style::default().fg(D_RED).add_modifier(Modifier::BOLD),
+        )));
+        for (year, count) in &year_vec {
+            items.push(ListItem::new(Span::styled(
+                format!("{}: {}", year, count),
+                Style::default().fg(D_YELLOW),
+            )));
+        }
+
+        // Tags section
+        items.push(ListItem::new(Span::styled(
+            "Tags",
+            Style::default().fg(D_RED).add_modifier(Modifier::BOLD),
+        )));
+        for (tag, count) in &tag_vec {
+            items.push(ListItem::new(Span::styled(
+                format!("{}: {}", tag, count),
+                Style::default().fg(D_YELLOW),
+            )));
+        }
+
+        // Display the modal with scrolling
+        let mut stats_state = ListState::default();
+        stats_state.select(Some(0));
+
+        loop {
+            terminal.draw(|f| {
+                let size = f.size();
+                let modal_area = Layout::default()
+                    .direction(Direction::Vertical)
+                    .margin(5)
+                    .constraints([Constraint::Percentage(100)].as_ref())
+                    .split(size)[0];
+
+                let block = Block::default()
+                    .title("Skin Statistics (Press Esc to close, ▲/▼ or scroll to navigate)")
+                    .borders(Borders::ALL)
+                    .border_type(BorderType::Rounded)
+                    .border_style(Style::default().fg(D_CYAN));
+
+                let modal_chunks = Layout::default()
+                    .direction(Direction::Horizontal)
+                    .constraints([Constraint::Min(1), Constraint::Length(1)].as_ref())
+                    .split(modal_area);
+
+                let list_area = modal_chunks[0];
+                let scrollbar_area = modal_chunks[1];
+
+                let list = List::new(items.clone())
+                    .block(block)
+                    .highlight_style(Style::default().bg(D_BACKGROUND).fg(D_FOREGROUND));
+
+                f.render_stateful_widget(list, list_area, &mut stats_state);
+
+                let mut scrollbar_state = ScrollbarState::default()
+                    .content_length(items.len().try_into().unwrap())
+                    .position(stats_state.selected().unwrap_or(0).try_into().unwrap())
+                    .viewport_content_length(list_area.height.saturating_sub(2));
+
+                let scrollbar = Scrollbar::new(ScrollbarOrientation::VerticalRight)
+                    .begin_symbol(Some("▲"))
+                    .end_symbol(Some("▼"))
+                    .track_symbol(Some("│"))
+                    .thumb_symbol("█")
+                    .style(Style::default().fg(D_CYAN))
+                    .thumb_style(Style::default().fg(D_PINK).bg(D_BACKGROUND));
+
+                f.render_stateful_widget(scrollbar, scrollbar_area, &mut scrollbar_state);
+            })?;
+
+            if event::poll(Duration::from_millis(50))? {
+                match event::read()? {
+                    Event::Key(key) => {
+                        if key.kind == KeyEventKind::Press {
+                            match key.code {
+                                KeyCode::Esc => break,
+                                KeyCode::Up => {
+                                    let i = stats_state.selected().unwrap_or(0).saturating_sub(1);
+                                    stats_state.select(Some(i));
+                                },
+                                KeyCode::Down => {
+                                    let i = stats_state.selected().unwrap_or(0) + 1;
+                                    let max = items.len().saturating_sub(1);
+                                    stats_state.select(Some(i.min(max)));
+                                },
+                                _ => {},
+                            }
+                        }
+                    },
+                    Event::Mouse(mouse_event) => match mouse_event.kind {
+                        MouseEventKind::ScrollUp => {
+                            let i = stats_state.selected().unwrap_or(0).saturating_sub(1);
+                            stats_state.select(Some(i));
+                        },
+                        MouseEventKind::ScrollDown => {
+                            let i = stats_state.selected().unwrap_or(0) + 1;
+                            let max = items.len().saturating_sub(1);
+                            stats_state.select(Some(i.min(max)));
+                        },
+                        _ => {},
+                    },
+                    _ => {},
+                }
+            }
+        }
+        Ok(())
+    }
+
     fn update_search(&mut self) {
         let selected_index = self.table_state.selected().unwrap_or(0);
         let current_page = self.current_page;
@@ -633,6 +837,7 @@ impl AppState {
         vec![
             ("clear_search", "Clear search bar"),
             ("show_help", "Show this help page"),
+            ("show_statistics", "Show skin statistics page"),
             ("toggle_detail", "Toggle detailed view"),
             ("undo_input", "Undo input in search bar"),
             ("redo_input", "Redo input in search bar"),
@@ -677,10 +882,10 @@ fn main() -> io::Result<()> {
                         continue;
                     }
                     if let Some(action) = app.get_action_for_key(&key) {
-                        if action == "show_help" {
-                            app.show_help(&mut terminal)?;
-                        } else {
-                            app.handle_action(&action);
+                        match action.as_str() {
+                            "show_help" => app.show_help(&mut terminal)?,
+                            "show_statistics" => app.show_statistics(&mut terminal)?,
+                            _ => app.handle_action(&action),
                         }
                     } else {
                         match key.code {
@@ -808,6 +1013,7 @@ fn default_key_bindings() -> HashMap<String, (KeyCode, KeyModifiers)> {
     bindings.insert("cycle_suggestion_next".to_string(), (KeyCode::Tab, KeyModifiers::NONE));
     bindings.insert("cycle_suggestion_prev".to_string(), (KeyCode::Tab, KeyModifiers::SHIFT));
     bindings.insert("accept_suggestion".to_string(), (KeyCode::Right, KeyModifiers::NONE));
+    bindings.insert("show_statistics".to_string(), (KeyCode::Char('s'), KeyModifiers::CONTROL));
     bindings.insert("exit".to_string(), (KeyCode::Esc, KeyModifiers::NONE));
     bindings
 }
