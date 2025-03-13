@@ -13,8 +13,8 @@
 5. [Non-event Case Skins](#non-event-case-skins)  
    - [Exquisite Case (Pinks & Reds)](#exquisite-case-pinks--reds)  
    - [Normal Shop Cases](#normal-shop-cases)  
-     - [Pinks](#pinks-1)
-     - [Reds](#reds-1)
+     - [Pinks](#pink)
+     - [Reds](#red)
 
 ---
 
@@ -189,7 +189,7 @@ Blastoff skin given to players on launch week.
 > *Skins in the Refined case are also available in the Exquisite case.*
 > *1 Refined case costs 800 coins while other cases costs 200 coins*
 
-### Pinks
+### Pink
 
 | Case                       | Pink Skins                  |
 |----------------------------|-----------------------------|
@@ -205,7 +205,7 @@ Blastoff skin given to players on launch week.
    <img src="https://img.shields.io/badge/Back%20to%20Top-000000?style=for-the-badge&logo=github&logoColor=white" alt="Back to Top">
 </a>
 
-### Reds
+### Red
 
 | Case                       | Red Skins                                                                             |
 |----------------------------|---------------------------------------------------------------------------------------|
